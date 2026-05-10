@@ -316,7 +316,7 @@ export async function summarizeGroupMessages(groupId: string): Promise<{ summary
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
+    model: "claude-haiku-4-5-20251001",
     max_tokens: 300,
     messages: [
       {
@@ -369,7 +369,7 @@ export async function askGroupChat(groupId: string, question: string): Promise<{
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
+    model: "claude-haiku-4-5-20251001",
     max_tokens: 400,
     messages: [
       {
