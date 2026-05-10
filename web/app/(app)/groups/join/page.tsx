@@ -16,8 +16,6 @@ export default async function GroupJoinPage({ searchParams }: Props) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase.from("users").select("plan_type").eq("id", user.id).maybeSingle();
-  if ((profile?.plan_type ?? "beta") === "individual") redirect("/groups");
 
   if (!code) {
     return (

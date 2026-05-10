@@ -10,9 +10,7 @@ export default async function GroupsPage() {
 
   const { data: profile } = await supabase.from("users").select("display_name, plan_type").eq("id", user.id).maybeSingle();
   const myDisplayName = profile?.display_name ?? "";
-  const isGroupLocked = (profile?.plan_type ?? "beta") === "individual";
-
-  if (isGroupLocked) {
+  if (false) {
     return <GroupUpgradeWall />;
   }
 
