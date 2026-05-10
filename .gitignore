@@ -1,0 +1,58 @@
+# ===================================================================
+# TORU .gitignore
+# ===================================================================
+
+# --- 環境変数（絶対にコミット禁止） ---
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# --- 依存パッケージ ---
+node_modules/
+.pnp
+.pnp.js
+
+# --- ビルド成果物 ---
+dist/
+build/
+.next/
+out/
+.expo/
+.expo-shared/
+
+# --- ログ ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# --- OS / IDE ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- TypeScript ---
+*.tsbuildinfo
+next-env.d.ts
+
+# --- テスト・カバレッジ ---
+coverage/
+.nyc_output/
+
+# --- Supabase CLI ---
+.supabase/
+
+# --- その他 ---
+*.pem
+.turbo/
+
+# --- 動画・音声ファイル ---
+TORU 紹介動画/
+*.mkv
+*.mp4
+*.mp3

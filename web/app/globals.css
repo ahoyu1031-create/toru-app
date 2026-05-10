@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+/* ===================================================================
+   TORU デザインシステム v0.2 — Dark Pro
+   ===================================================================
+   コンセプト: ダークサイドバー × ライトコンテンツ × 建設業プロ感
+   - サイドバー: ディープネイビー #0E1726
+   - コンテンツ: 青みグレー #EDF1F7
+   - ブランド: インディゴブルー #2563EB + オレンジアクセント #F97316
+   =================================================================== */
+
+:root {
+  /* Sidebar */
+  --sidebar-bg: #0E1726;
+  --sidebar-border: #1A2B3F;
+  --sidebar-text: #8EA3B8;
+  --sidebar-text-hover: #C8D8E8;
+  --sidebar-active-bg: rgba(37, 99, 235, 0.15);
+  --sidebar-active-text: #FFFFFF;
+  --sidebar-active-border: #3B82F6;
+
+  /* Brand */
+  --color-primary: #2563EB;
+  --color-primary-hover: #1D4ED8;
+  --color-primary-soft: #EFF6FF;
+
+  /* Accent */
+  --color-accent: #F97316;
+  --color-accent-hover: #EA580C;
+
+  /* Surface */
+  --color-bg: #EDF1F7;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-border-strong: #CBD5E0;
+
+  /* Text */
+  --color-text: #1A202C;
+  --color-text-muted: #64748B;
+  --color-text-subtle: #94A3B8;
+
+  /* State */
+  --color-success: #059669;
+  --color-warning: #D97706;
+  --color-danger: #DC2626;
+
+  /* Typography */
+  --font-sans: var(--font-noto-jp), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-soft: var(--color-primary-soft);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-subtle: var(--color-text-subtle);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+  --font-sans: var(--font-sans);
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.toast-enter {
+  animation: toast-in 180ms ease-out both;
+}
+
+html {
+  font-size: 17px;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LP アニメーション ───────────────────────────────── */
+@keyframes lp-fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes lp-glow-pulse {
+  0%, 100% { box-shadow: 0 8px 32px rgba(249,115,22,0.38); }
+  50%       { box-shadow: 0 8px 56px rgba(249,115,22,0.72), 0 0 0 6px rgba(249,115,22,0.08); }
+}
+
+/* ヒーロー要素の順次登場 */
+.lp-hero {
+  animation: lp-fade-up 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* スクロールで出てくる要素 */
+.lp-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.lp-reveal-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+/* モバイルではアニメーションなしで即表示 */
+@media (max-width: 767px) {
+  .lp-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* CTAボタングロー */
+.lp-glow-btn {
+  animation: lp-glow-pulse 2.8s ease-in-out infinite;
+}
+
+/* デモステージのフェードイン */
+@keyframes stage-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stage-enter {
+  animation: stage-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── 印刷 / PDF出力 ── */
+@media print {
+  /* アプリのクロム（サイドバー・ヘッダー）を非表示 */
+  [data-print="hide"] { display: none !important; }
+
+  /* レイアウトの高さ・overflow制約を解除して全コンテンツを出力 */
+  [data-print="root"] {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  [data-print="main"] {
+    display: block !important;
+    overflow: visible !important;
+    flex: none !important;
+    height: auto !important;
+  }
+
+  /* 用紙余白 */
+  @page { margin: 16mm 12mm; }
+
+  body { background: white; }
+}
