@@ -665,7 +665,7 @@ function Pricing() {
             🎉 ベータ期間中は全機能を無料でご利用いただけます
           </p>
           <p className="mt-1 text-xs" style={{ color: "#64748B" }}>
-            正式リリース後に上記の料金プランへ移行予定。事前登録ユーザーには特別価格を提供します。
+            正式リリース後に上記の料金プランへ移行予定。※ 料金・プラン内容は変更の可能性があります。
           </p>
         </div>
 
@@ -727,26 +727,13 @@ function CtaSection() {
     >
       <ScrollReveal>
         <div className="mx-auto max-w-xl">
-          <span
-            className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest"
-            style={{
-              background: "rgba(249,115,22,0.12)",
-              border: "1px solid rgba(249,115,22,0.3)",
-              color: "#FB923C",
-            }}
-          >
-            <Zap size={10} />
-            期間限定
-          </span>
           <h2 className="text-3xl font-black text-white sm:text-4xl">
-            リリース最初の10社に、
+            今すぐ始めて、
             <br />
-            <span style={{ color: "#F97316" }}>特別価格で。</span>
+            <span style={{ color: "#F97316" }}>現場の手間を減らそう。</span>
           </h2>
           <p className="mt-5 text-base" style={{ color: "#64748B" }}>
-            今すぐ無料登録すれば、正式版リリース後も
-            <br />
-            ベータユーザー特別価格が適用されます。
+            ベータ期間中は全機能を無料でご利用いただけます。
           </p>
 
           <div className="mt-10">
@@ -772,7 +759,7 @@ function CtaSection() {
           >
             <div className="h-2 w-2 animate-pulse rounded-full" style={{ background: "#10B981" }} />
             <span className="text-sm" style={{ color: "#94A3B8" }}>
-              現在 <span className="font-bold text-white">ベータ登録受付中</span>
+              現在 <span className="font-bold text-white">ベータ版公開中</span>
             </span>
           </div>
         </div>
@@ -794,7 +781,7 @@ function FAQ() {
     },
     {
       q: "ベータ期間中は本当に無料ですか？",
-      a: "はい、ベータ期間中は全機能を無料でご利用いただけます。正式版リリースの際には事前にご案内します。ベータユーザーには特別価格が適用される予定です。",
+      a: "はい、ベータ期間中は全機能を無料でご利用いただけます。正式版リリースの際には事前にご案内します。",
     },
     {
       q: "チームメンバーはどうやって追加しますか？",
