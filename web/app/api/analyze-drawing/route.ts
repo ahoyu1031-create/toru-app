@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 
-const MONTHLY_ANALYSIS_LIMIT = 10; // ベータ期間中の月次上限
+const MONTHLY_ANALYSIS_LIMIT = 15; // ベータ期間中の月次上限
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
