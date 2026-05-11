@@ -220,7 +220,7 @@ export function QuoteForm({ masters }: { masters: UnitPriceMaster[] }) {
 
     <form action={action} className="space-y-8">
       {/* header fields */}
-      <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6">
+      <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 sm:p-6">
         <h2 className="text-lg font-semibold">基本情報</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <div>
@@ -231,7 +231,8 @@ export function QuoteForm({ masters }: { masters: UnitPriceMaster[] }) {
               name="project_name"
               type="text"
               placeholder="例: ○○ビル配管工事"
-              className="mt-1 w-full rounded-lg border-2 border-[color:var(--color-border)] bg-white px-4 py-2.5 text-base focus:border-[color:var(--color-primary)] focus:outline-none"
+              className="mt-1 block w-full appearance-none rounded-lg border-2 border-[color:var(--color-border)] bg-white px-4 py-2.5 text-base focus:border-[color:var(--color-primary)] focus:outline-none"
+              style={{ minHeight: 44 }}
             />
           </div>
           <div>
@@ -242,7 +243,8 @@ export function QuoteForm({ masters }: { masters: UnitPriceMaster[] }) {
               name="client_name"
               type="text"
               placeholder="例: 株式会社○○"
-              className="mt-1 w-full rounded-lg border-2 border-[color:var(--color-border)] bg-white px-4 py-2.5 text-base focus:border-[color:var(--color-primary)] focus:outline-none"
+              className="mt-1 block w-full appearance-none rounded-lg border-2 border-[color:var(--color-border)] bg-white px-4 py-2.5 text-base focus:border-[color:var(--color-primary)] focus:outline-none"
+              style={{ minHeight: 44 }}
             />
           </div>
           <div>
@@ -251,14 +253,15 @@ export function QuoteForm({ masters }: { masters: UnitPriceMaster[] }) {
               name="quote_date"
               type="date"
               defaultValue={today}
-              className="mt-1 w-full rounded-lg border-2 border-[color:var(--color-border)] bg-white px-4 py-2.5 text-base focus:border-[color:var(--color-primary)] focus:outline-none"
+              className="mt-1 block w-full appearance-none rounded-lg border-2 border-[color:var(--color-border)] bg-white px-4 py-2.5 text-base focus:border-[color:var(--color-primary)] focus:outline-none"
+              style={{ minHeight: 44, WebkitAppearance: "none" }}
             />
           </div>
         </div>
       </section>
 
       {/* conditions */}
-      <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6">
+      <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 sm:p-6">
         <h2 className="text-lg font-semibold">見積条件</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
@@ -310,7 +313,7 @@ export function QuoteForm({ masters }: { masters: UnitPriceMaster[] }) {
       </section>
 
       {/* items */}
-      <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6">
+      <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 sm:p-6">
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-lg font-semibold">明細</h2>
           <div className="flex items-center gap-2">

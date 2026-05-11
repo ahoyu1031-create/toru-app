@@ -22,16 +22,16 @@ export default async function NewQuotePage() {
     .order("material_name");
 
   return (
-    <main className="flex flex-1 flex-col px-6 py-10">
+    <main className="flex flex-1 flex-col px-4 py-6 sm:px-6 sm:py-10">
       <div className="mx-auto w-full max-w-4xl">
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <Link
             href="/quotes"
             className="text-sm text-[color:var(--color-text-muted)] hover:underline"
           >
             ← 見積書一覧
           </Link>
-          <h1 className="mt-2 text-3xl font-bold">新規見積書</h1>
+          <h1 className="mt-2 text-2xl font-bold leading-tight sm:text-3xl">新規見積書</h1>
         </div>
 
         <QuoteForm masters={masters ?? []} />

@@ -166,6 +166,7 @@ export function GroupDetailClient({
   const [membersOpen, setMembersOpen] = useState(true);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [filesOpen, setFilesOpen] = useState(true);
+  const [mobileInfoOpen, setMobileInfoOpen] = useState(false);
   const [groupFiles, setGroupFiles] = useState<GroupFile[]>(initialFiles);
   const [pendingMention, setPendingMention] = useState<string | null>(null);
   const [confirmModal, setConfirmModal] = useState<"leave" | "delete" | null>(null);
@@ -413,6 +414,25 @@ export function GroupDetailClient({
         {/* Mobile share drawer */}
         <MobileShareDrawer code={group.group_code} groupName={group.name} />
 
+        {/* Mobile info button — ファイル・メンバー・AI を表示 */}
+        <button
+          type="button"
+          onClick={() => setMobileInfoOpen(true)}
+          className="relative flex h-8 w-8 items-center justify-center rounded-lg transition hover:opacity-80 lg:hidden"
+          style={{ background: "var(--color-bg)", border: "1px solid var(--color-border)", color: "var(--color-text-muted)" }}
+          aria-label="ファイルとメンバーを表示"
+        >
+          <Paperclip size={14} />
+          {groupFiles.length > 0 && (
+            <span
+              className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-bold text-white"
+              style={{ background: "var(--color-primary)" }}
+            >
+              {groupFiles.length}
+            </span>
+          )}
+        </button>
+
         {/* Sidebar toggle (desktop only) */}
         <button
           type="button"
@@ -460,12 +480,43 @@ export function GroupDetailClient({
           />
         )}
 
-        {/* 詳細パネル */}
-        {sidebarOpen && (
+        {/* モバイル：背景オーバーレイ */}
+        {mobileInfoOpen && (
           <div
-            className="hidden shrink-0 flex-col gap-4 overflow-y-auto p-4 lg:flex"
-            style={{ width: sidebarWidth, borderLeft: "none", background: "var(--color-surface)" }}
+            className="fixed inset-0 z-40 lg:hidden"
+            style={{ background: "rgba(0,0,0,0.5)" }}
+            onClick={() => setMobileInfoOpen(false)}
+          />
+        )}
+
+        {/* 詳細パネル */}
+        {(sidebarOpen || mobileInfoOpen) && (
+          <div
+            className={`${mobileInfoOpen ? "fixed inset-y-0 right-0 z-50 flex w-[85vw] max-w-sm shrink-0" : "hidden lg:flex"} flex-col gap-4 overflow-y-auto p-4`}
+            style={{
+              width: mobileInfoOpen ? undefined : sidebarWidth,
+              borderLeft: "none",
+              background: "var(--color-surface)",
+              boxShadow: mobileInfoOpen ? "-8px 0 24px rgba(0,0,0,0.15)" : undefined,
+            }}
           >
+            {/* モバイル用クローズボタン */}
+            {mobileInfoOpen && (
+              <div className="-mx-4 -mt-4 mb-2 flex shrink-0 items-center justify-between px-4 py-3 lg:hidden" style={{ borderBottom: "1px solid var(--color-border)" }}>
+                <p className="text-sm font-bold" style={{ color: "var(--color-text)" }}>
+                  グループ情報
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setMobileInfoOpen(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-lg font-bold transition hover:opacity-70"
+                  style={{ color: "var(--color-text-muted)", background: "var(--color-bg)" }}
+                  aria-label="閉じる"
+                >
+                  ×
+                </button>
+              </div>
+            )}
 
             {/* 参加申請（オーナーのみ） */}
             {isOwner && joinRequests.length > 0 && (
