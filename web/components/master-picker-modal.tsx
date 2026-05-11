@@ -56,7 +56,7 @@ export function MasterPickerModal({
       onClick={onClose}
     >
       <div
-        className="flex h-[72vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl shadow-2xl"
+        className="flex h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl shadow-2xl sm:h-[72vh]"
         style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -100,11 +100,71 @@ export function MasterPickerModal({
           />
         </div>
 
-        {/* 2ペイン */}
+        {/* モバイル：上部カテゴリタブ（横スクロール） */}
+        <div
+          className="flex shrink-0 gap-1.5 overflow-x-auto px-3 py-2 sm:hidden"
+          style={{
+            borderBottom: "1px solid var(--color-border)",
+            background: "var(--color-bg)",
+            scrollbarWidth: "none",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setActiveCategory("")}
+            className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold transition"
+            style={{
+              background: activeCategory === "" ? "var(--color-primary)" : "var(--color-surface)",
+              color: activeCategory === "" ? "#fff" : "var(--color-text-muted)",
+              border: "1px solid " + (activeCategory === "" ? "var(--color-primary)" : "var(--color-border)"),
+            }}
+          >
+            すべて
+            <span
+              className="rounded-full px-1.5 text-[10px] font-bold"
+              style={{
+                background: activeCategory === "" ? "rgba(255,255,255,0.22)" : "var(--color-primary-soft)",
+                color: activeCategory === "" ? "#fff" : "var(--color-primary)",
+              }}
+            >
+              {masters.length}
+            </span>
+          </button>
+          {allCategories.map((cat) => {
+            const count = masters.filter((m) => (m.category ?? "その他") === cat).length;
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setActiveCategory(cat)}
+                className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition"
+                style={{
+                  background: isActive ? "var(--color-primary)" : "var(--color-surface)",
+                  color: isActive ? "#fff" : "var(--color-text-muted)",
+                  border: "1px solid " + (isActive ? "var(--color-primary)" : "var(--color-border)"),
+                }}
+              >
+                {cat}
+                <span
+                  className="rounded-full px-1.5 text-[10px] font-bold"
+                  style={{
+                    background: isActive ? "rgba(255,255,255,0.22)" : "var(--color-primary-soft)",
+                    color: isActive ? "#fff" : "var(--color-primary)",
+                  }}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 本体（デスクトップ：2ペイン / モバイル：単一カラム） */}
         <div className="flex flex-1 overflow-hidden">
-          {/* 左サイドバー */}
+          {/* デスクトップ用左サイドバー */}
           <div
-            className="flex w-44 shrink-0 flex-col overflow-y-auto"
+            className="hidden w-44 shrink-0 flex-col overflow-y-auto sm:flex"
             style={{ borderRight: "1px solid var(--color-border)", background: "var(--color-bg)" }}
           >
             <button
@@ -158,7 +218,7 @@ export function MasterPickerModal({
             })}
           </div>
 
-          {/* 右パネル */}
+          {/* 右パネル（モバイルでは全幅） */}
           <div className="flex-1 overflow-y-auto">
             {filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20">
@@ -186,13 +246,13 @@ export function MasterPickerModal({
                       key={m.id}
                       type="button"
                       onClick={() => onPick(m)}
-                      className="flex w-full items-center justify-between px-5 py-3 text-left transition"
+                      className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition sm:px-5"
                       style={{ borderBottom: "1px solid var(--color-border)" }}
                       onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-primary-soft)")}
                       onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                     >
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium" style={{ color: "var(--color-text)" }}>
+                        <p className="break-words text-sm font-medium leading-snug" style={{ color: "var(--color-text)" }}>
                           {m.material_name}
                         </p>
                         <p className="mt-0.5 text-xs" style={{ color: "var(--color-text-muted)" }}>
@@ -200,7 +260,7 @@ export function MasterPickerModal({
                         </p>
                       </div>
                       <span
-                        className="ml-6 shrink-0 text-base font-bold tabular-nums"
+                        className="shrink-0 whitespace-nowrap text-base font-bold tabular-nums"
                         style={{ color: "var(--color-primary)" }}
                       >
                         ¥{Number(m.unit_price).toLocaleString()}

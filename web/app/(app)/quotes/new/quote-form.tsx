@@ -330,7 +330,8 @@ export function QuoteForm({ masters }: { masters: UnitPriceMaster[] }) {
           </div>
         </div>
 
-        <div className="mt-4 overflow-x-auto">
+        {/* デスクトップ：テーブルレイアウト */}
+        <div className="mt-4 hidden overflow-x-auto sm:block">
           <table className="min-w-full">
             <thead>
               <tr className="border-b border-[color:var(--color-border)]">
@@ -437,7 +438,6 @@ export function QuoteForm({ masters }: { masters: UnitPriceMaster[] }) {
                                 : "var(--color-border)",
                           }}
                         />
-                        {/* 状態バッジ（入力欄内・右端） */}
                         {isMasterApplied ? (
                           <span
                             className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded-full px-1.5 py-0.5 text-[9px] font-bold"
@@ -480,7 +480,7 @@ export function QuoteForm({ masters }: { masters: UnitPriceMaster[] }) {
                     </td>
                   </tr>
 
-                  {/* 候補展開行（テーブルの行として自然に展開） */}
+                  {/* 候補展開行 */}
                   {isCandidateOpen && hasCandidates && (
                     <tr className="border-b border-[color:var(--color-border)]">
                       <td colSpan={6} style={{ padding: 0 }}>
@@ -523,6 +523,188 @@ export function QuoteForm({ masters }: { masters: UnitPriceMaster[] }) {
           </table>
         </div>
 
+        {/* モバイル：カードレイアウト */}
+        <div className="mt-4 space-y-3 sm:hidden">
+          {rows.map((row, idx) => {
+            const candidates = rowCandidates.get(row.key) ?? [];
+            const hasCandidates = candidates.length > 0;
+            const isMasterApplied = !!row.unit_price_master_id;
+            const isCandidateOpen = openCandidateRow === row.key;
+
+            return (
+              <div
+                key={row.key}
+                className="rounded-xl border-2 border-[color:var(--color-border)] bg-white p-3"
+              >
+                {/* ヘッダー：番号と削除 */}
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[color:var(--color-text-muted)]">
+                    No. {idx + 1}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeRow(row.key)}
+                    disabled={rows.length === 1}
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-[color:var(--color-text-subtle)] hover:bg-red-50 hover:text-[color:var(--color-danger)] disabled:opacity-30"
+                    aria-label="行を削除"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                {/* 材料名 + マスタ選択 */}
+                <label className="block text-[11px] font-semibold text-[color:var(--color-text-muted)]">
+                  材料名
+                </label>
+                <div className="mt-1 flex gap-1.5">
+                  <input
+                    type="text"
+                    value={row.material_name}
+                    onChange={(e) =>
+                      updateRow(row.key, {
+                        material_name: e.target.value,
+                        unit_price_master_id: null,
+                      })
+                    }
+                    placeholder="塩ビ管 VU50"
+                    className="min-w-0 flex-1 rounded-lg border-2 border-[color:var(--color-border)] bg-white px-3 py-2 text-sm focus:border-[color:var(--color-primary)] focus:outline-none"
+                  />
+                  {masters.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setShowMasterPicker(row.key)}
+                      className="shrink-0 rounded-lg border-2 border-[color:var(--color-border)] bg-white px-3 text-xs font-medium text-[color:var(--color-text-muted)] hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
+                    >
+                      マスタ
+                    </button>
+                  )}
+                </div>
+
+                {/* 単位 / 数量 / 単価 */}
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[color:var(--color-text-muted)]">
+                      単位
+                    </label>
+                    <div className="mt-1">
+                      <UnitInput
+                        value={row.unit}
+                        onChange={(v) => updateRow(row.key, { unit: v })}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[color:var(--color-text-muted)]">
+                      数量
+                    </label>
+                    <input
+                      type="number"
+                      value={row.quantity}
+                      onChange={(e) => updateRow(row.key, { quantity: e.target.value })}
+                      placeholder="0"
+                      min="0"
+                      step="1"
+                      className="mt-1 w-full rounded-lg border-2 border-[color:var(--color-border)] bg-white px-2 py-2 text-right text-sm focus:border-[color:var(--color-primary)] focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[color:var(--color-text-muted)]">
+                      単価
+                    </label>
+                    <div className="relative mt-1">
+                      <input
+                        type="number"
+                        value={row.unit_price}
+                        onChange={(e) =>
+                          updateRow(row.key, {
+                            unit_price: e.target.value,
+                            unit_price_master_id: null,
+                          })
+                        }
+                        placeholder="0"
+                        min="0"
+                        step="1"
+                        className="w-full rounded-lg border-2 bg-white py-2 pl-2 pr-2 text-right text-sm focus:outline-none"
+                        style={{
+                          borderColor: isMasterApplied
+                            ? "var(--color-success)"
+                            : hasCandidates
+                              ? "#f59e0b"
+                              : "var(--color-border)",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 状態バッジ＋小計 */}
+                <div className="mt-3 flex items-center justify-between border-t border-[color:var(--color-border)] pt-2.5">
+                  <div className="flex items-center gap-1.5">
+                    {isMasterApplied && (
+                      <span
+                        className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                        style={{ background: "var(--color-success)", color: "#fff" }}
+                      >
+                        マスタ適用
+                      </span>
+                    )}
+                    {!isMasterApplied && hasCandidates && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setOpenCandidateRow((prev) =>
+                            prev === row.key ? null : row.key,
+                          )
+                        }
+                        className="rounded-full px-2 py-0.5 text-[10px] font-bold transition hover:opacity-80"
+                        style={{ background: "#f59e0b", color: "#fff" }}
+                      >
+                        {isCandidateOpen ? "候補を閉じる ▲" : "候補を表示 ▼"}
+                      </button>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <span className="block text-[10px] text-[color:var(--color-text-muted)]">小計</span>
+                    <span className="text-base font-bold">
+                      ¥{subtotal(row).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 候補展開 */}
+                {isCandidateOpen && hasCandidates && (
+                  <div
+                    className="mt-2 flex flex-wrap items-center gap-1.5 rounded-lg px-2.5 py-2"
+                    style={{ background: "#fffbeb", border: "1px solid #fde68a" }}
+                  >
+                    {candidates.map((c) => (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => {
+                          pickMaster(row.key, c);
+                          setOpenCandidateRow(null);
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition hover:opacity-80"
+                        style={{
+                          background: "#fff",
+                          borderColor: "#f59e0b",
+                          color: "#78350f",
+                        }}
+                      >
+                        <span className="max-w-[120px] truncate">{c.material_name}</span>
+                        <span className="shrink-0 font-bold" style={{ color: "#d97706" }}>
+                          ¥{Number(c.unit_price).toLocaleString()}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
         <button
           type="button"
           onClick={addRow}
@@ -550,30 +732,28 @@ export function QuoteForm({ masters }: { masters: UnitPriceMaster[] }) {
       {/* hidden items json */}
       <input type="hidden" name="items" value={buildItemsJson()} />
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <button
+          type="submit"
+          disabled={pending || draftPending}
+          className="order-1 inline-flex h-12 w-full items-center justify-center whitespace-nowrap rounded-lg bg-[color:var(--color-primary)] px-8 text-base font-semibold text-white shadow-sm transition hover:bg-[color:var(--color-primary-hover)] disabled:opacity-60 sm:order-3 sm:w-auto"
+        >
+          {pending ? "保存中..." : "見積書を作成する"}
+        </button>
+        <button
+          type="submit"
+          formAction={draftAction}
+          disabled={draftPending || pending}
+          className="order-2 inline-flex h-12 w-full items-center justify-center whitespace-nowrap rounded-lg border-2 border-[color:var(--color-border)] px-6 text-base font-medium text-[color:var(--color-text-muted)] transition hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)] disabled:opacity-50 sm:order-2 sm:w-auto"
+        >
+          {draftPending ? "保存中..." : "下書き保存"}
+        </button>
         <a
           href="/quotes"
-          className="inline-flex h-12 items-center justify-center rounded-lg border-2 border-[color:var(--color-border)] px-6 text-base font-medium text-[color:var(--color-text-muted)] hover:border-[color:var(--color-border-strong)]"
+          className="order-3 inline-flex h-12 w-full items-center justify-center whitespace-nowrap rounded-lg border-2 border-[color:var(--color-border)] px-6 text-base font-medium text-[color:var(--color-text-muted)] hover:border-[color:var(--color-border-strong)] sm:order-1 sm:w-auto"
         >
           キャンセル
         </a>
-        <div className="flex items-center gap-3">
-          <button
-            type="submit"
-            formAction={draftAction}
-            disabled={draftPending || pending}
-            className="inline-flex h-12 items-center justify-center rounded-lg border-2 border-[color:var(--color-border)] px-6 text-base font-medium text-[color:var(--color-text-muted)] transition hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)] disabled:opacity-50"
-          >
-            {draftPending ? "保存中..." : "下書き保存"}
-          </button>
-          <button
-            type="submit"
-            disabled={pending || draftPending}
-            className="inline-flex h-12 items-center justify-center rounded-lg bg-[color:var(--color-primary)] px-8 text-base font-semibold text-white shadow-sm transition hover:bg-[color:var(--color-primary-hover)] disabled:opacity-60"
-          >
-            {pending ? "保存中..." : "見積書を作成する"}
-          </button>
-        </div>
       </div>
     </form>
     </>
