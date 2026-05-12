@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
 import { TrendingUp, TrendingDown, ArrowRight, Package, FileText, ScanLine, Settings, Clock } from "lucide-react";
 import { PlanStatusBar } from "./plan-status-bar";
@@ -47,11 +47,11 @@ const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
 type PageProps = { searchParams: Promise<{ view?: string }> };
 
 export default async function DashboardPage({ searchParams }: PageProps) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
 
   await ensureCompany();
+  const supabase = await createClient();
 
   const admin = createAdminClient();
   const [

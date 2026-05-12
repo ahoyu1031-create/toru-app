@@ -1,6 +1,18 @@
 import { createServerClient } from "@supabase/ssr";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import { cache } from "react";
+
+/**
+ * 同一リクエスト内で `getUser()` 呼び出しをメモ化。
+ * proxy.ts ですでに検証済みのトークンを使うが、複数の Server Component で
+ * 呼ばれた場合に Supabase Auth へ重複アクセスしないようにする。
+ */
+export const getCurrentUser = cache(async () => {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
+});
 
 export async function createClient() {
   const cookieStore = await cookies();

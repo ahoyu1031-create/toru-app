@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const supabase = await createClient();
 
   const [{ data: profile }, { data: companies }, { data: memberships }] = await Promise.all([
     supabase.from("users").select("display_name").eq("id", user.id).maybeSingle(),
@@ -22,32 +22,34 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const plan = companies?.[0]?.plan ?? "individual";
 
   const allGroupIds = (memberships ?? []).map((m: any) => m.group_id as string);
-
-  // グループ名を adminClient で取得（RLS 回避）
-  let myGroups: { id: string; name: string }[] = [];
-  if (allGroupIds.length > 0) {
-    const admin = createAdminClient();
-    const { data: groupRows } = await admin
-      .from("project_groups")
-      .select("id, name")
-      .in("id", allGroupIds)
-      .is("deleted_at", null);
-    myGroups = (groupRows ?? []).map((g: any) => ({ id: g.id, name: g.name }));
-  }
-
-  // オーナーのグループへの承認待ち申請数を取得
-  let pendingJoinCount = 0;
   const ownedGroupIds = (memberships ?? [])
     .filter((m: any) => m.role === "owner")
     .map((m: any) => m.group_id as string);
-  if (ownedGroupIds.length > 0) {
+
+  // グループ名と参加申請数を並列取得（adminClientは一度だけ生成）
+  let myGroups: { id: string; name: string }[] = [];
+  let pendingJoinCount = 0;
+
+  if (allGroupIds.length > 0 || ownedGroupIds.length > 0) {
     const admin = createAdminClient();
-    const { count } = await admin
-      .from("group_join_requests")
-      .select("*", { count: "exact", head: true })
-      .in("group_id", ownedGroupIds)
-      .eq("status", "pending");
-    pendingJoinCount = count ?? 0;
+    const [groupNamesResult, joinCountResult] = await Promise.all([
+      allGroupIds.length > 0
+        ? admin
+            .from("project_groups")
+            .select("id, name")
+            .in("id", allGroupIds)
+            .is("deleted_at", null)
+        : Promise.resolve({ data: [] as { id: string; name: string }[] }),
+      ownedGroupIds.length > 0
+        ? admin
+            .from("group_join_requests")
+            .select("*", { count: "exact", head: true })
+            .in("group_id", ownedGroupIds)
+            .eq("status", "pending")
+        : Promise.resolve({ count: 0 }),
+    ]);
+    myGroups = ((groupNamesResult.data ?? []) as any[]).map((g) => ({ id: g.id, name: g.name }));
+    pendingJoinCount = (joinCountResult as { count: number | null }).count ?? 0;
   }
 
   return (

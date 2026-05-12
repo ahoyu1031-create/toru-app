@@ -21,7 +21,7 @@ function LoginForm() {
     setError(null);
 
     const supabase = createClient();
-    const { data: signInData, error: loginError } = await supabase.auth.signInWithPassword({
+    const { error: loginError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -38,15 +38,8 @@ function LoginForm() {
       return;
     }
 
-    // 会社・表示名が未設定ならオンボーディングへ
-    const userId = signInData.user?.id;
-    const [{ data: companies }, { data: profile }] = await Promise.all([
-      supabase.from("companies").select("id").limit(1),
-      supabase.from("users").select("display_name").eq("id", userId!).maybeSingle(),
-    ]);
-
-    const needsOnboarding = !companies?.length || !profile?.display_name;
-    router.push(needsOnboarding ? "/onboarding" : redirect);
+    // オンボーディング判定はサーバー側 layout に任せる（重複クエリ削減）
+    router.push(redirect);
     router.refresh();
   }
 
