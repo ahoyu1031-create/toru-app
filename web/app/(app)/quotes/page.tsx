@@ -21,25 +21,53 @@ const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
 
 const COLS = "grid-cols-[1fr_140px_96px_112px_88px_40px]";
 
-export default async function QuotesPage() {
+const STATUS_ORDER = ["draft", "issued", "accepted", "rejected"] as const;
+type StatusKey = (typeof STATUS_ORDER)[number];
+
+export default async function QuotesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: rawStatus } = await searchParams;
+  const activeFilter: StatusKey | null =
+    rawStatus && (STATUS_ORDER as readonly string[]).includes(rawStatus) ? (rawStatus as StatusKey) : null;
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
   await ensureCompany();
 
-  const { data: rows } = await supabase
+  const { data: allRows } = await supabase
     .from("quotes")
     .select("id, project_name, client_name, quote_date, total_amount, status, created_at")
     .is("deleted_at", null)
     .order("created_at", { ascending: false });
+
+  const safeRows = allRows ?? [];
+  const counts: Record<StatusKey | "all", number> = {
+    all: safeRows.length,
+    draft: 0,
+    issued: 0,
+    accepted: 0,
+    rejected: 0,
+  };
+  for (const r of safeRows) {
+    const k = r.status as StatusKey;
+    if (k in counts) counts[k] += 1;
+  }
+
+  const rows = activeFilter
+    ? safeRows.filter((r) => r.status === activeFilter)
+    : safeRows;
 
   return (
     <div className="px-4 py-6 sm:px-6 sm:py-8">
       <div className="mx-auto w-full max-w-5xl">
 
         {/* Page Header */}
-        <div className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+        <div className="flex flex-col gap-3 mb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div>
             <h1 className="text-2xl font-bold text-[color:var(--color-text)]">見積書</h1>
             <p className="mt-1 text-sm text-[color:var(--color-text-muted)]">
@@ -54,6 +82,26 @@ export default async function QuotesPage() {
             新規作成
           </Link>
         </div>
+
+        {/* フィルタピル（ステータス別） */}
+        {safeRows.length > 0 && (
+          <div
+            className="mb-4 flex gap-2 overflow-x-auto pb-1"
+            style={{ scrollbarWidth: "none" }}
+          >
+            <FilterPill href="/quotes" active={activeFilter === null} label="すべて" count={counts.all} />
+            {STATUS_ORDER.map((k) => (
+              <FilterPill
+                key={k}
+                href={`/quotes?status=${k}`}
+                active={activeFilter === k}
+                label={STATUS_LABEL[k]}
+                count={counts[k]}
+                accent={STATUS_STYLE[k]}
+              />
+            ))}
+          </div>
+        )}
 
         {/* List Card */}
         <section className="overflow-hidden rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm">
@@ -154,6 +202,18 @@ export default async function QuotesPage() {
                 })}
               </div>
             </>
+          ) : activeFilter ? (
+            <div className="px-6 py-16 text-center">
+              <p className="font-medium text-[color:var(--color-text-muted)]">
+                「{STATUS_LABEL[activeFilter]}」の見積書はありません
+              </p>
+              <Link
+                href="/quotes"
+                className="mt-4 inline-flex h-9 items-center gap-2 rounded-lg border-2 border-[color:var(--color-border)] px-4 text-sm font-medium text-[color:var(--color-text-muted)] hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
+              >
+                すべて表示
+              </Link>
+            </div>
           ) : (
             <div className="px-6 py-20 text-center">
               <div
@@ -180,5 +240,44 @@ export default async function QuotesPage() {
         </section>
       </div>
     </div>
+  );
+}
+
+function FilterPill({
+  href,
+  active,
+  label,
+  count,
+  accent,
+}: {
+  href: string;
+  active: boolean;
+  label: string;
+  count: number;
+  accent?: { bg: string; color: string };
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition"
+      style={{
+        background: active
+          ? accent?.color ?? "var(--color-primary)"
+          : "var(--color-surface)",
+        color: active ? "#fff" : accent?.color ?? "var(--color-text-muted)",
+        border: "1px solid " + (active ? "transparent" : "var(--color-border)"),
+      }}
+    >
+      {label}
+      <span
+        className="rounded-full px-1.5 text-[10px] font-bold tabular-nums"
+        style={{
+          background: active ? "rgba(255,255,255,0.22)" : "var(--color-bg)",
+          color: active ? "#fff" : "var(--color-text-subtle)",
+        }}
+      >
+        {count}
+      </span>
+    </Link>
   );
 }
