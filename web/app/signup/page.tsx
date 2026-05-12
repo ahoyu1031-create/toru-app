@@ -191,6 +191,20 @@ export default function SignupPage() {
                 {loading ? "登録中..." : "登録する"}
               </button>
 
+              <p className="text-center text-xs leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
+                登録することで{" "}
+                <Link
+                  href="/privacy"
+                  target="_blank"
+                  className="font-semibold underline"
+                  style={{ color: "var(--color-primary)" }}
+                >
+                  プライバシーポリシー
+                </Link>
+                {" "}に同意したものとみなします。<br />
+                図面PDFは解析時にAnthropic Claude APIに送信されます。
+              </p>
+
               <p className="text-center text-sm" style={{ color: "var(--color-text-muted)" }}>
                 すでにアカウントをお持ちですか？{" "}
                 <Link

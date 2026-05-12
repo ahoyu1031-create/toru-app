@@ -856,7 +856,8 @@ function Footer() {
               <p className="text-xs" style={{ color: "#334155" }}>建設現場向け AI 業務効率化ツール</p>
             </div>
           </div>
-          <div className="flex items-center gap-6 text-xs" style={{ color: "#475569" }}>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs" style={{ color: "#475569" }}>
+            <Link href="/privacy" className="transition-colors hover:text-white">プライバシーポリシー</Link>
             <Link href="/login" className="transition-colors hover:text-white">ログイン</Link>
             <Link href="/signup" className="transition-colors hover:text-white">新規登録</Link>
           </div>
