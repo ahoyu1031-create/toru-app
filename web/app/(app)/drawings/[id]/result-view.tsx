@@ -95,23 +95,28 @@ export function DrawingResultView({
         onGoToQuote={goToNewQuote}
       />
 
+      {/* モバイル：セクションピル（lg未満） */}
+      {sections.length > 1 && (
+        <MobileSectionPills sections={sections.map((s) => s.key)} />
+      )}
+
       {/* 上部アクションバー */}
-      <div className="drawing-no-print mb-6 flex flex-wrap items-center gap-3">
+      <div className="drawing-no-print mb-6 flex flex-wrap items-center gap-2 sm:gap-3">
         {hasMaterials && (
           <button
             type="button"
             onClick={goToNewQuote}
             disabled={selectedCount === 0}
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-[color:var(--color-primary)] px-5 text-sm font-semibold text-white shadow-sm hover:bg-[color:var(--color-primary-hover)] disabled:opacity-50"
+            className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[color:var(--color-primary)] px-4 text-sm font-semibold text-white shadow-sm hover:bg-[color:var(--color-primary-hover)] disabled:opacity-50 sm:flex-none sm:px-5"
           >
             <FileText size={15} />
-            見積書を作成（{selectedCount} 件選択中）
+            <span className="whitespace-nowrap">見積書作成（{selectedCount}件）</span>
           </button>
         )}
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex h-10 items-center gap-2 rounded-lg border border-[color:var(--color-border)] bg-white px-5 text-sm font-semibold transition hover:bg-[color:var(--color-bg)]"
+          className="inline-flex h-10 items-center gap-2 rounded-lg border border-[color:var(--color-border)] bg-white px-4 text-sm font-semibold transition hover:bg-[color:var(--color-bg)] sm:px-5"
           style={{ color: "var(--color-text)" }}
         >
           <Printer size={15} />
@@ -132,6 +137,57 @@ export function DrawingResultView({
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+// ── モバイル用セクションピル（lg未満で表示） ─────────────────────
+
+function MobileSectionPills({ sections }: { sections: Exclude<Mode, "all">[] }) {
+  const [activeKey, setActiveKey] = useState<string>(sections[0] ?? "");
+
+  useEffect(() => {
+    const scroller = document.querySelector<HTMLElement>('[data-print="main"]') ?? document.documentElement;
+    function onScroll() {
+      let current = sections[0] ?? "";
+      for (const key of sections) {
+        const el = document.getElementById(`section-${key}`);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= 120) current = key;
+      }
+      setActiveKey(current);
+    }
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => scroller.removeEventListener("scroll", onScroll);
+  }, [sections]);
+
+  return (
+    <div
+      className="drawing-no-print sticky top-0 z-20 -mx-4 mb-4 flex gap-2 overflow-x-auto bg-[color:var(--color-bg)] px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden"
+      style={{ scrollbarWidth: "none", borderBottom: "1px solid var(--color-border)" }}
+    >
+      {sections.map((key) => {
+        const isActive = activeKey === key;
+        return (
+          <button
+            key={key}
+            type="button"
+            onClick={() => {
+              setActiveKey(key);
+              document.getElementById(`section-${key}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            className="flex shrink-0 items-center whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition"
+            style={{
+              background: isActive ? "var(--color-primary)" : "var(--color-surface)",
+              color: isActive ? "#fff" : "var(--color-text-muted)",
+              border: "1px solid " + (isActive ? "transparent" : "var(--color-border)"),
+            }}
+          >
+            {MODE_LABELS[key]}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -282,10 +338,13 @@ function ResultSection({
   const isMat = isMaterialsResult(result);
 
   return (
-    <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">{label} — 解析結果</h2>
-        <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>
+    <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 sm:p-6">
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <h2 className="text-base font-semibold sm:text-lg">
+          <span className="sm:hidden">{label}</span>
+          <span className="hidden sm:inline">{label} — 解析結果</span>
+        </h2>
+        <span className="shrink-0 whitespace-nowrap text-sm" style={{ color: "var(--color-text-muted)" }}>
           {result.items.length} 件
         </span>
       </div>

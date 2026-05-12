@@ -29,9 +29,9 @@ export default async function DrawingAnalysisDetailPage({
   if (!data) notFound();
 
   return (
-    <div className="px-6 py-8">
+    <div className="px-4 py-6 sm:px-6 sm:py-8">
       <div className="mx-auto w-full max-w-4xl">
-        <div className="mb-6 flex items-center gap-3">
+        <div className="mb-4 flex items-center gap-3">
           <Link
             href="/drawings"
             className="flex items-center gap-1.5 text-sm font-medium"
@@ -42,8 +42,8 @@ export default async function DrawingAnalysisDetailPage({
           </Link>
         </div>
 
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold" style={{ color: "var(--color-text)" }}>
+        <div className="mb-5">
+          <h1 className="text-xl font-bold leading-tight sm:text-2xl" style={{ color: "var(--color-text)" }}>
             {data.file_name}
           </h1>
           <p className="mt-1 text-sm" style={{ color: "var(--color-text-muted)" }}>
