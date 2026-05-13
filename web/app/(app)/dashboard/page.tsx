@@ -182,8 +182,8 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   };
 
   return (
-    <div className="px-6 py-6">
-      <div className="mx-auto w-full max-w-6xl space-y-6">
+    <div className="px-4 py-6 sm:px-6">
+      <div className="mx-auto w-full max-w-6xl space-y-5 sm:space-y-6">
 
         {/* Plan status widget */}
         <PlanStatusBar
@@ -326,53 +326,93 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </div>
 
           {recentQuotes.length > 0 ? (
-            <div className="overflow-x-auto">
-              <div className="min-w-[560px]">
-              <div
-                className="grid grid-cols-[1fr_120px_88px_104px_80px] gap-3 border-b px-4 py-3 text-xs font-semibold uppercase tracking-wider"
-                style={{ background: "var(--color-bg)", borderColor: "var(--color-border)", color: "var(--color-text-muted)" }}
-              >
-                <span>プロジェクト名</span>
-                <span>クライアント</span>
-                <span>見積日</span>
-                <span className="text-right">金額</span>
-                <span>ステータス</span>
+            <>
+              {/* デスクトップ：テーブル */}
+              <div className="hidden sm:block">
+                <div
+                  className="grid grid-cols-[1fr_120px_88px_104px_80px] gap-3 border-b px-4 py-3 text-xs font-semibold uppercase tracking-wider"
+                  style={{ background: "var(--color-bg)", borderColor: "var(--color-border)", color: "var(--color-text-muted)" }}
+                >
+                  <span>プロジェクト名</span>
+                  <span>クライアント</span>
+                  <span>見積日</span>
+                  <span className="text-right">金額</span>
+                  <span>ステータス</span>
+                </div>
+                <div className="divide-y divide-[color:var(--color-border)]">
+                  {recentQuotes.map((r) => {
+                    const s = STATUS_STYLE[r.status] ?? STATUS_STYLE.draft;
+                    return (
+                      <div
+                        key={r.id}
+                        className="relative grid grid-cols-[1fr_120px_88px_104px_80px] gap-3 items-center px-4 py-3 transition-colors hover:bg-[color:var(--color-bg)] cursor-pointer"
+                      >
+                        <Link href={`/quotes/${r.id}`} className="absolute inset-0" style={{ zIndex: 1 }} aria-label={r.project_name ?? "見積書の詳細"} />
+                        <span className="relative min-w-0 truncate text-sm font-medium" style={{ color: "var(--color-text)" }}>
+                          {r.project_name ?? "（未設定）"}
+                        </span>
+                        <span className="relative min-w-0 truncate text-sm" style={{ color: "var(--color-text-muted)" }}>
+                          {r.client_name ?? "-"}
+                        </span>
+                        <span className="relative text-sm" style={{ color: "var(--color-text-muted)" }}>
+                          {new Date(r.created_at).toLocaleDateString("ja-JP")}
+                        </span>
+                        <span className="relative text-right text-sm font-medium tabular-nums" style={{ color: "var(--color-text)" }}>
+                          ¥{Number(r.total_amount).toLocaleString()}
+                        </span>
+                        <span className="relative">
+                          <span
+                            className="inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                            style={{ background: s.bg, color: s.color }}
+                          >
+                            {STATUS_LABEL[r.status] ?? r.status}
+                          </span>
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="divide-y divide-[color:var(--color-border)]">
+
+              {/* モバイル：カードリスト */}
+              <div className="divide-y divide-[color:var(--color-border)] sm:hidden">
                 {recentQuotes.map((r) => {
                   const s = STATUS_STYLE[r.status] ?? STATUS_STYLE.draft;
                   return (
-                    <div
+                    <Link
                       key={r.id}
-                      className="relative grid grid-cols-[1fr_120px_88px_104px_80px] gap-3 items-center px-4 py-3 transition-colors hover:bg-[color:var(--color-bg)] cursor-pointer"
+                      href={`/quotes/${r.id}`}
+                      className="block px-4 py-3 transition hover:bg-[color:var(--color-bg)]"
                     >
-                      <Link href={`/quotes/${r.id}`} className="absolute inset-0" style={{ zIndex: 1 }} aria-label={r.project_name ?? "見積書の詳細"} />
-                      <span className="relative min-w-0 truncate text-sm font-medium" style={{ color: "var(--color-text)" }}>
-                        {r.project_name ?? "（未設定）"}
-                      </span>
-                      <span className="relative min-w-0 truncate text-sm" style={{ color: "var(--color-text-muted)" }}>
-                        {r.client_name ?? "-"}
-                      </span>
-                      <span className="relative text-sm" style={{ color: "var(--color-text-muted)" }}>
-                        {new Date(r.created_at).toLocaleDateString("ja-JP")}
-                      </span>
-                      <span className="relative text-right text-sm font-medium tabular-nums" style={{ color: "var(--color-text)" }}>
-                        ¥{Number(r.total_amount).toLocaleString()}
-                      </span>
-                      <span className="relative">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-semibold" style={{ color: "var(--color-text)" }}>
+                            {r.project_name ?? "（未設定）"}
+                          </p>
+                          <p className="mt-0.5 truncate text-xs" style={{ color: "var(--color-text-muted)" }}>
+                            {r.client_name ?? "クライアント未設定"}
+                          </p>
+                        </div>
                         <span
-                          className="inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                          className="shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-semibold"
                           style={{ background: s.bg, color: s.color }}
                         >
                           {STATUS_LABEL[r.status] ?? r.status}
                         </span>
-                      </span>
-                    </div>
+                      </div>
+                      <div className="mt-1.5 flex items-center justify-between">
+                        <span className="text-xs" style={{ color: "var(--color-text-muted)" }}>
+                          {new Date(r.created_at).toLocaleDateString("ja-JP")}
+                        </span>
+                        <span className="text-sm font-bold tabular-nums" style={{ color: "var(--color-text)" }}>
+                          ¥{Number(r.total_amount).toLocaleString()}
+                        </span>
+                      </div>
+                    </Link>
                   );
                 })}
               </div>
-              </div>
-            </div>
+            </>
           ) : (
             <div className="px-6 py-16 text-center">
               <p className="text-sm text-[color:var(--color-text-muted)]">まだ見積書がありません</p>

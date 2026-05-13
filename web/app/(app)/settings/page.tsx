@@ -22,8 +22,8 @@ export default async function SettingsPage() {
   if (!company) redirect("/dashboard");
 
   return (
-    <div className="px-6 py-8">
-      <div className="mx-auto w-full max-w-2xl space-y-6">
+    <div className="px-4 py-6 sm:px-6 sm:py-8">
+      <div className="mx-auto w-full max-w-2xl space-y-5 sm:space-y-6">
 
         {/* Page Header */}
         <div>
@@ -35,13 +35,13 @@ export default async function SettingsPage() {
 
         {/* プロフィール */}
         <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-[color:var(--color-border)]">
+          <div className="px-4 py-3 border-b border-[color:var(--color-border)] sm:px-6 sm:py-4">
             <h2 className="text-base font-semibold">プロフィール</h2>
             <p className="mt-0.5 text-sm text-[color:var(--color-text-muted)]">
               グループ内でのあなたの表示名
             </p>
           </div>
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <ProfileForm
               displayName={profile?.display_name ?? null}
               email={user.email ?? ""}
@@ -52,11 +52,11 @@ export default async function SettingsPage() {
 
         {/* 会社情報 */}
         <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-[color:var(--color-border)] flex items-center justify-between">
+          <div className="flex flex-col gap-1 px-4 py-3 border-b border-[color:var(--color-border)] sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
             <h2 className="text-base font-semibold">会社情報</h2>
             <span className="text-xs text-[color:var(--color-text-muted)]">※ 見積書PDF出力に使用</span>
           </div>
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <CompanyForm company={company} />
           </div>
         </section>

@@ -65,11 +65,11 @@ export default async function UnitPricesPage({
   const totalPages = Math.ceil((totalCount ?? 0) / PAGE_SIZE);
 
   return (
-    <div className="px-6 py-8">
+    <div className="px-4 py-6 sm:px-6 sm:py-8">
       <div className="mx-auto w-full max-w-5xl">
 
         {/* Page Header */}
-        <div className="flex items-start justify-between gap-4 mb-6">
+        <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div>
             <h1 className="text-2xl font-bold text-[color:var(--color-text)]">単価マスタ</h1>
             <p className="mt-1 text-sm text-[color:var(--color-text-muted)]">
@@ -79,14 +79,14 @@ export default async function UnitPricesPage({
           <div className="flex items-center gap-2">
             <Link
               href="/unit-prices/import"
-              className="inline-flex h-10 items-center gap-2 rounded-lg border border-[color:var(--color-border)] px-4 text-sm font-medium text-[color:var(--color-text-muted)] transition hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
+              className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-[color:var(--color-border)] px-3 text-sm font-medium text-[color:var(--color-text-muted)] transition hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)] sm:flex-none sm:px-4"
             >
               <Upload size={15} />
-              一括インポート
+              <span className="hidden sm:inline">一括</span>インポート
             </Link>
             <Link
               href="/unit-prices/new"
-              className="inline-flex h-10 items-center gap-2 rounded-lg bg-[color:var(--color-primary)] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[color:var(--color-primary-hover)]"
+              className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[color:var(--color-primary)] px-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[color:var(--color-primary-hover)] sm:flex-none sm:px-4"
             >
               <Plus size={16} />
               新規登録

@@ -79,8 +79,8 @@ export default async function GroupsPage() {
   }
 
   return (
-    <div className="px-6 py-8">
-      <div className="mx-auto w-full max-w-4xl space-y-8">
+    <div className="px-4 py-6 sm:px-6 sm:py-8">
+      <div className="mx-auto w-full max-w-4xl space-y-6 sm:space-y-8">
 
         {/* ページヘッダー */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
@@ -94,7 +94,7 @@ export default async function GroupsPage() {
           </div>
           <Link
             href="/groups/new"
-            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 sm:justify-start"
+            className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 sm:w-auto sm:justify-start"
             style={{ background: "var(--color-primary)" }}
           >
             <Plus size={15} />
@@ -104,7 +104,7 @@ export default async function GroupsPage() {
 
         {/* グループ一覧 or 空ステート */}
         {groups.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
             {groups.map((g: any) => (
               <GroupCard key={g.id} group={g} latestMsg={latestMsgMap.get(g.id) ?? null} myDisplayName={myDisplayName} memberCount={memberCountMap.get(g.id) ?? 1} pendingCount={pendingCountMap.get(g.id) ?? 0} />
             ))}
@@ -115,7 +115,7 @@ export default async function GroupsPage() {
 
         {/* 招待コードで参加 */}
         <section
-          className="rounded-2xl p-6"
+          className="rounded-2xl p-4 sm:p-6"
           style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}
         >
           <h2 className="mb-1 text-base font-semibold" style={{ color: "var(--color-text)" }}>
@@ -167,7 +167,7 @@ export default async function GroupsPage() {
 function EmptyState() {
   return (
     <div
-      className="flex flex-col items-center justify-center rounded-2xl py-20 text-center"
+      className="flex flex-col items-center justify-center rounded-2xl px-4 py-12 text-center sm:py-20"
       style={{ background: "var(--color-surface)", border: "2px dashed var(--color-border)" }}
     >
       <div
