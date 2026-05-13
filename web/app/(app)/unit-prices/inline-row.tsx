@@ -370,6 +370,79 @@ function ViewRow({ row }: { row: Row }) {
   );
 }
 
+function MobileViewCard({
+  row,
+  isSelected,
+  editMode,
+  onToggle,
+}: {
+  row: Row;
+  isSelected: boolean;
+  editMode: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div
+      className="flex items-start gap-3 px-4 py-3.5"
+      style={{
+        borderBottom: "1px solid var(--color-border)",
+        background: isSelected ? "var(--color-primary-soft)" : "var(--color-surface)",
+      }}
+    >
+      {editMode && (
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={onToggle}
+          className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-[color:var(--color-primary)]"
+        />
+      )}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold" style={{ color: "var(--color-text)" }}>
+              {row.material_name}
+            </p>
+            {row.memo && (
+              <p className="mt-0.5 text-xs" style={{ color: "var(--color-text-subtle)" }}>{row.memo}</p>
+            )}
+          </div>
+          <div className="shrink-0 text-right">
+            <p className="text-sm font-bold tabular-nums" style={{ color: row.unit_price > 0 ? "var(--color-text)" : "var(--color-text-subtle)" }}>
+              {row.unit_price > 0 ? `¥${Number(row.unit_price).toLocaleString()}` : "—"}
+            </p>
+            <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
+              {row.unit || "単位未設定"}
+            </p>
+          </div>
+        </div>
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <span
+            className="rounded-full px-2 py-0.5 text-[11px] font-medium"
+            style={{
+              background: row.category ? "var(--color-primary-soft)" : "var(--color-bg)",
+              color: row.category ? "var(--color-primary)" : "var(--color-text-subtle)",
+              border: "1px solid var(--color-border)",
+            }}
+          >
+            {row.category ?? "未設定"}
+          </span>
+          <div className="flex gap-1.5">
+            <Link
+              href={`/unit-prices/${row.id}`}
+              className="inline-flex h-7 items-center justify-center rounded-lg border px-2.5 text-xs font-medium transition hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
+              style={{ borderColor: "var(--color-border)", color: "var(--color-text-muted)" }}
+            >
+              編集
+            </Link>
+            <DeleteButton id={row.id} label={row.material_name} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function UnitPriceTable({ rows }: { rows: Row[] }) {
   const [editMode, setEditMode] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -505,7 +578,68 @@ export function UnitPriceTable({ rows }: { rows: Row[] }) {
       </div>
 
       <section className="overflow-hidden rounded-xl shadow-sm" style={{ border: "1px solid var(--color-border)" }}>
-        <div className="overflow-x-auto">
+
+        {/* ── モバイル：カードリスト ── */}
+        <div className="sm:hidden">
+          {groups.map(([category, categoryRows]) => {
+            const isCollapsed = collapsed.has(category);
+            return (
+              <React.Fragment key={category}>
+                {/* カテゴリヘッダー */}
+                <div
+                  onClick={() => toggleCategory(category)}
+                  className="flex cursor-pointer items-center gap-2 px-4 py-2.5 hover:opacity-80 transition-opacity"
+                  style={{ background: "var(--color-bg)", borderBottom: "1px solid var(--color-border)" }}
+                >
+                  {editMode && (
+                    <span onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={categoryRows.every((r) => selected.has(r.id))}
+                        onChange={() => toggleGroup(categoryRows.map((r) => r.id))}
+                        className="h-4 w-4 cursor-pointer accent-[color:var(--color-primary)]"
+                      />
+                    </span>
+                  )}
+                  <svg
+                    width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth={2.5}
+                    style={{
+                      color: "var(--color-text-muted)",
+                      transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                      transition: "transform 0.18s",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                  <span className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>
+                    {category}
+                  </span>
+                  <span
+                    className="rounded-full px-2 py-0.5 text-[11px] font-medium"
+                    style={{ background: "var(--color-primary-soft)", color: "var(--color-primary)" }}
+                  >
+                    {categoryRows.length}件
+                  </span>
+                </div>
+                {/* カード */}
+                {!isCollapsed && categoryRows.map((r) => (
+                  <MobileViewCard
+                    key={r.id}
+                    row={r}
+                    isSelected={selected.has(r.id)}
+                    editMode={editMode}
+                    onToggle={() => toggleSelect(r.id)}
+                  />
+                ))}
+              </React.Fragment>
+            );
+          })}
+        </div>
+
+        {/* ── デスクトップ：テーブル ── */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="min-w-full">
             <thead>
               <tr style={{ background: "var(--color-bg)", borderBottom: "1px solid var(--color-border)" }}>
@@ -538,7 +672,6 @@ export function UnitPriceTable({ rows }: { rows: Row[] }) {
                 const isCollapsed = collapsed.has(category);
                 return (
                   <React.Fragment key={category}>
-                    {/* カテゴリ行 */}
                     <tr
                       onClick={() => toggleCategory(category)}
                       style={{
@@ -584,7 +717,6 @@ export function UnitPriceTable({ rows }: { rows: Row[] }) {
                         </div>
                       </td>
                     </tr>
-                    {/* アイテム行 */}
                     {!isCollapsed && categoryRows.map((r) =>
                       editMode
                         ? <EditableRow key={r.id} row={r} isSelected={selected.has(r.id)} onToggle={() => toggleSelect(r.id)} />
