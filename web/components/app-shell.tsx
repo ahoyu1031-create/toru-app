@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText, ScanLine, Users, Settings } from "lucide-react";
+import { LayoutDashboard, FileText, ScanLine, Users, Package } from "lucide-react";
 import { AppSidebar } from "./app-sidebar";
 import { AppHeader } from "./app-header";
 import { RightPanel } from "./right-panel";
@@ -24,11 +24,11 @@ interface AppShellProps {
 }
 
 const BOTTOM_TABS = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "ホーム" },
-  { href: "/quotes",    icon: FileText,         label: "見積書" },
-  { href: "/drawings",  icon: ScanLine,         label: "図面解析" },
-  { href: "/groups",    icon: Users,            label: "グループ" },
-  { href: "/settings",  icon: Settings,         label: "設定" },
+  { href: "/dashboard",   icon: LayoutDashboard, label: "ホーム" },
+  { href: "/quotes",      icon: FileText,        label: "見積書" },
+  { href: "/drawings",    icon: ScanLine,        label: "図面解析" },
+  { href: "/groups",      icon: Users,           label: "グループ" },
+  { href: "/unit-prices", icon: Package,         label: "単価マスタ" },
 ];
 
 function MobileBottomNav() {

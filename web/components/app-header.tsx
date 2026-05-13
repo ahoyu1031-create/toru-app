@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bell, ChevronDown, LogOut, CheckCircle, AlertCircle, Loader2, UserCheck } from "lucide-react";
+import { Bell, ChevronDown, LogOut, CheckCircle, AlertCircle, Loader2, UserCheck, Settings } from "lucide-react";
 import Link from "next/link";
 import { SearchBar } from "./search-bar";
 import { useRouter } from "next/navigation";
@@ -244,6 +244,15 @@ export function AppHeader({ displayName, email, pendingJoinCount = 0 }: AppHeade
                   {email}
                 </p>
               </div>
+              <Link
+                href="/settings"
+                onClick={() => setDropOpen(false)}
+                className="flex w-full items-center gap-3 px-4 py-2.5 text-sm transition hover:bg-[color:var(--color-bg)]"
+                style={{ color: "var(--color-text)" }}
+              >
+                <Settings size={15} style={{ color: "var(--color-text-muted)" }} />
+                設定
+              </Link>
               <button
                 type="button"
                 onClick={handleLogout}
