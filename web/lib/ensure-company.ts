@@ -1,4 +1,5 @@
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { cache } from "react";
+import { createClient, createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 
 /**
  * 現在のユーザーに会社が紐付いていなければ、個人用会社を自動作成する。
@@ -8,14 +9,13 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
  *
  * company/company_member の INSERT は RLS をバイパスするために
  * service_role クライアントを使用する（鶏と卵問題の回避）。
+ *
+ * React cache で1リクエスト内の重複呼び出しを排除。
  */
-export async function ensureCompany(): Promise<{ companyId: string } | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+export const ensureCompany = cache(async (): Promise<{ companyId: string } | null> => {
+  const user = await getCurrentUser();
   if (!user) return null;
+  const supabase = await createClient();
 
   // admin クライアントで確認（RLS の循環依存を回避するため）
   const admin = createAdminClient();
@@ -70,4 +70,4 @@ export async function ensureCompany(): Promise<{ companyId: string } | null> {
   }
 
   return { companyId: company.id };
-}
+});

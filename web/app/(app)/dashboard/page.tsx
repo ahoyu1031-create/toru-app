@@ -114,8 +114,6 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   ]);
 
   const company = companies?.[0] ?? null;
-  const plan = company?.plan ?? "individual";
-  void plan; void isCorporate; // 開発中は詳細ビュー固定（将来プラン別切替用）
   const planType = userProfile?.plan_type ?? "beta";
   const bonusAnalyses = userProfile?.bonus_analyses ?? 0;
   const isUnlimited = userProfile?.is_unlimited ?? false;
