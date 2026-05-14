@@ -1,12 +1,12 @@
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Users, Plus, Hash, Crown, MessageSquare, ChevronRight, Bell, Lock } from "lucide-react";
 
 export default async function GroupsPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
+  const supabase = await createClient();
 
   const { data: profile } = await supabase.from("users").select("display_name, plan_type").eq("id", user.id).maybeSingle();
   const myDisplayName = profile?.display_name ?? "";

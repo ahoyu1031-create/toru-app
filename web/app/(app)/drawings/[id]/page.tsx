@@ -1,5 +1,5 @@
 import { redirect, notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { DrawingResultView } from "./result-view";
@@ -10,9 +10,9 @@ export default async function DrawingAnalysisDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
+  const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("drawing_analyses")

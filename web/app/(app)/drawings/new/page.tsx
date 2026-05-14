@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
 import { DrawingAnalyzeClient } from "../analyze-client";
 import Link from "next/link";
@@ -10,8 +10,7 @@ interface Props {
 }
 
 export default async function NewDrawingPage({ searchParams }: Props) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
   await ensureCompany();
 

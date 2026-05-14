@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
 import { GroupDetailClient } from "./group-detail-client";
 
@@ -8,9 +8,9 @@ interface Props {
 
 export default async function GroupDetailPage({ params }: Props) {
   const { id } = await params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
+  const supabase = await createClient();
 
   const { data: group } = await supabase
     .from("project_groups")

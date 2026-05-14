@@ -1,4 +1,4 @@
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Users, Hash, AlertCircle, Clock } from "lucide-react";
@@ -12,9 +12,9 @@ interface Props {
 
 export default async function GroupJoinPage({ searchParams }: Props) {
   const { code, error: paramError, pending: pendingParam } = await searchParams;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
+  const supabase = await createClient();
 
 
   if (!code) {

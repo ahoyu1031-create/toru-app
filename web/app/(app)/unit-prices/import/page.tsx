@@ -1,12 +1,11 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/supabase/server";
 import { ImportWizard } from "./import-wizard";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default async function ImportPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
 
   return (

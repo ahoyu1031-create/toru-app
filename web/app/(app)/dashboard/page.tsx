@@ -52,30 +52,8 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
   await ensureCompany();
   const supabase = await createClient();
-
   const admin = createAdminClient();
-  const [
-    { data: companies },
-    { data: userProfile },
-  ] = await Promise.all([
-    supabase.from("companies").select("name, plan"),
-    admin.from("users").select("plan_type, bonus_analyses, is_unlimited").eq("id", user.id).maybeSingle(),
-  ]);
-  const company = companies?.[0] ?? null;
-  const plan = company?.plan ?? "individual";
 
-  const planType = userProfile?.plan_type ?? "beta";
-  const bonusAnalyses = userProfile?.bonus_analyses ?? 0;
-  const isUnlimited = userProfile?.is_unlimited ?? false;
-  const monthLimit = isUnlimited ? null : (PLAN_LIMITS[planType] ?? 10);
-
-  /* TODO リリース時: プラン別 + ?view=simple 切り替えを復活
-  const params = await searchParams;
-  const viewSimple = params.view === "simple";
-  if (!isCorporate(plan) || viewSimple) {
-    return <IndividualDashboard companyName={company?.name} plan={plan} />;
-  }
-  */
   void searchParams; // 開発中は詳細ビュー固定
 
   /* ─── corporate: 統計ダッシュボード ─── */
@@ -84,33 +62,25 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const lastMonthStart = startOfLastMonth(now).toISOString();
   const sixMonthsAgo   = new Date(now.getFullYear(), now.getMonth() - 5, 1).toISOString();
 
+  // すべてのクエリを1段階で並列実行。月別の見積書は allQuotes から派生（6ヶ月分に直近2ヶ月が含まれる）
   const [
+    { data: companies },
+    { data: userProfile },
     { data: allQuotes },
-    { data: thisMonthQuotes },
-    { data: lastMonthQuotes },
     { data: allTimeQuotes },
     { data: recentAnalyses },
     { count: unitPriceCount },
     { count: analysisCount },
     { count: thisMonthAnalysisCount },
   ] = await Promise.all([
+    supabase.from("companies").select("name, plan"),
+    admin.from("users").select("plan_type, bonus_analyses, is_unlimited").eq("id", user.id).maybeSingle(),
     supabase
       .from("quotes")
       .select("id, project_name, client_name, total_amount, status, created_at")
       .is("deleted_at", null)
       .gte("created_at", sixMonthsAgo)
       .order("created_at", { ascending: false }),
-    supabase
-      .from("quotes")
-      .select("total_amount, status")
-      .is("deleted_at", null)
-      .gte("created_at", thisMonthStart),
-    supabase
-      .from("quotes")
-      .select("total_amount, status")
-      .is("deleted_at", null)
-      .gte("created_at", lastMonthStart)
-      .lt("created_at", thisMonthStart),
     // 受注率・下書き数は全期間
     supabase
       .from("quotes")
@@ -143,9 +113,23 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       .gte("created_at", thisMonthStart),
   ]);
 
-  const thisTotal   = (thisMonthQuotes ?? []).reduce((s, q) => s + Number(q.total_amount), 0);
-  const lastTotal   = (lastMonthQuotes ?? []).reduce((s, q) => s + Number(q.total_amount), 0);
-  const issuedCount = (thisMonthQuotes ?? []).filter((q) => q.status === "issued").length;
+  const company = companies?.[0] ?? null;
+  const plan = company?.plan ?? "individual";
+  void plan; void isCorporate; // 開発中は詳細ビュー固定（将来プラン別切替用）
+  const planType = userProfile?.plan_type ?? "beta";
+  const bonusAnalyses = userProfile?.bonus_analyses ?? 0;
+  const isUnlimited = userProfile?.is_unlimited ?? false;
+  const monthLimit = isUnlimited ? null : (PLAN_LIMITS[planType] ?? 10);
+
+  // allQuotes（6ヶ月分）から今月・先月を派生
+  const thisMonthQuotes = (allQuotes ?? []).filter((q) => q.created_at >= thisMonthStart);
+  const lastMonthQuotes = (allQuotes ?? []).filter(
+    (q) => q.created_at >= lastMonthStart && q.created_at < thisMonthStart
+  );
+
+  const thisTotal   = thisMonthQuotes.reduce((s, q) => s + Number(q.total_amount), 0);
+  const lastTotal   = lastMonthQuotes.reduce((s, q) => s + Number(q.total_amount), 0);
+  const issuedCount = thisMonthQuotes.filter((q) => q.status === "issued").length;
 
   // 受注率（全期間の完了案件ベース）
   const accepted  = (allTimeQuotes ?? []).filter((q) => q.status === "accepted").length;

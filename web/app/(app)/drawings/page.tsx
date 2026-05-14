@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
 import Link from "next/link";
 import { FileText, Plus } from "lucide-react";
@@ -23,9 +23,9 @@ export default async function DrawingsPage({
   searchParams: Promise<{ trade?: string }>;
 }) {
   const { trade: rawTrade } = await searchParams;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
+  const supabase = await createClient();
   await ensureCompany();
 
   const { data: allAnalyses } = await supabase

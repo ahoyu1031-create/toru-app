@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
 import { Plus, ArrowLeft } from "lucide-react";
 import { DeleteQuoteButton } from "../delete-quote-button";
 
 export default async function QuoteDraftsPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
+  const supabase = await createClient();
   await ensureCompany();
 
   const { data: rows } = await supabase

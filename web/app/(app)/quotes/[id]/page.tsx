@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
 import { QuoteDetailClient } from "./quote-detail-client";
 
@@ -11,12 +11,9 @@ export default async function QuoteDetailPage({
 }) {
   const { id } = await params;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
+  const supabase = await createClient();
 
   const companyResult = await ensureCompany();
   const companyId = companyResult?.companyId;

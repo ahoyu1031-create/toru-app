@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
 import { UnitPriceForm } from "../form";
 import { updateUnitPrice } from "../actions";
@@ -14,12 +14,9 @@ export default async function EditUnitPricePage({
 }) {
   const { id } = await params;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
-
+  const supabase = await createClient();
   await ensureCompany();
 
   const { data: row } = await supabase

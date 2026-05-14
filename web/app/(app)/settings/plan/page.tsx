@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { Sparkles } from "lucide-react";
 
 const PLAN_DISPLAY: Record<string, string> = {
@@ -12,9 +12,9 @@ const PLAN_LIMITS: Record<string, number | null> = {
 
 
 export default async function PlanPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
+  const supabase = await createClient();
 
   const admin = createAdminClient();
   const thisMonthStart = new Date();
