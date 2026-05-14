@@ -41,7 +41,7 @@ export default async function PlanPage() {
   const remaining = totalLimit !== null ? Math.max(0, totalLimit - used) : null;
 
   return (
-    <div className="px-6 py-8">
+    <div className="px-4 py-6 sm:px-6 sm:py-8">
       <div className="mx-auto w-full max-w-4xl space-y-8">
 
         <div>
