@@ -9,7 +9,7 @@ export default async function FeedbackPage() {
   if (!user) redirect("/login");
 
   return (
-    <div className="px-6 py-8">
+    <div className="px-4 py-6 sm:px-6 sm:py-8">
       <div className="mx-auto w-full max-w-2xl">
         <div className="mb-6">
           <h1 className="text-2xl font-bold" style={{ color: "var(--color-text)" }}>

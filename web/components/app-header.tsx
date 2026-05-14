@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bell, ChevronDown, LogOut, CheckCircle, AlertCircle, Loader2, UserCheck, Settings } from "lucide-react";
+import { Bell, ChevronDown, LogOut, CheckCircle, AlertCircle, Loader2, UserCheck, Settings, MessageCircleHeart } from "lucide-react";
 import Link from "next/link";
 import { SearchBar } from "./search-bar";
 import { useRouter } from "next/navigation";
@@ -244,6 +244,21 @@ export function AppHeader({ displayName, email, pendingJoinCount = 0 }: AppHeade
                   {email}
                 </p>
               </div>
+              <Link
+                href="/feedback"
+                onClick={() => setDropOpen(false)}
+                className="flex w-full items-center gap-3 px-4 py-2.5 text-sm transition hover:bg-[color:var(--color-bg)]"
+                style={{ color: "var(--color-text)" }}
+              >
+                <MessageCircleHeart size={15} style={{ color: "var(--color-text-muted)" }} />
+                <span className="flex-1">フィードバック</span>
+                <span
+                  className="rounded-full px-1.5 py-0.5 text-[9px] font-bold"
+                  style={{ background: "rgba(139,92,246,0.12)", color: "#7C3AED" }}
+                >
+                  +5回
+                </span>
+              </Link>
               <Link
                 href="/settings"
                 onClick={() => setDropOpen(false)}
