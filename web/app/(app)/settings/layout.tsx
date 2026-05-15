@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, Sparkles } from "lucide-react";
+import { User, Building2, Sparkles } from "lucide-react";
 
 const SETTINGS_TABS = [
-  { href: "/settings",      label: "プロフィール・会社情報", icon: User },
-  { href: "/settings/plan", label: "プラン・請求",          icon: Sparkles },
+  { href: "/settings",         label: "プロフィール", icon: User },
+  { href: "/settings/company", label: "会社情報",     icon: Building2 },
+  { href: "/settings/plan",    label: "プラン・請求", icon: Sparkles },
 ];
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {

@@ -83,8 +83,8 @@ const NAV_ITEMS: NavItem[] = [
     label: "設定",
     children: [
       { href: "/settings",         label: "プロフィール" },
-      { href: "/settings/company", label: "会社情報", soon: true },
-      { href: "/settings/plan",    label: "プラン・請求", soon: true },
+      { href: "/settings/company", label: "会社情報" },
+      { href: "/settings/plan",    label: "プラン・請求" },
     ],
   },
 ];
