@@ -2,6 +2,7 @@ import { createClient, createAdminClient, getCurrentUser } from "@/lib/supabase/
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Users, Plus, Hash, Crown, MessageSquare, ChevronRight, Bell, Lock } from "lucide-react";
+import { canJoinGroup, canCreateGroup } from "@/lib/plan";
 
 export default async function GroupsPage() {
   const user = await getCurrentUser();
@@ -10,7 +11,9 @@ export default async function GroupsPage() {
 
   const { data: profile } = await supabase.from("users").select("display_name, plan_type").eq("id", user.id).maybeSingle();
   const myDisplayName = profile?.display_name ?? "";
-  if (false) {
+  const planType = profile?.plan_type ?? "free";
+
+  if (!canJoinGroup(planType)) {
     return <GroupUpgradeWall />;
   }
 
@@ -92,14 +95,25 @@ export default async function GroupsPage() {
               現場・プロジェクト単位でチームを作り、情報を共有します
             </p>
           </div>
-          <Link
-            href="/groups/new"
-            className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 sm:w-auto sm:justify-start"
-            style={{ background: "var(--color-primary)" }}
-          >
-            <Plus size={15} />
-            グループを作成
-          </Link>
+          {canCreateGroup(planType) ? (
+            <Link
+              href="/groups/new"
+              className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 sm:w-auto sm:justify-start"
+              style={{ background: "var(--color-primary)" }}
+            >
+              <Plus size={15} />
+              グループを作成
+            </Link>
+          ) : (
+            <Link
+              href="/settings/plan"
+              className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold shadow-sm transition hover:opacity-80 sm:w-auto sm:justify-start"
+              style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", color: "var(--color-text-muted)" }}
+            >
+              <Lock size={14} />
+              グループを作成（チームプラン）
+            </Link>
+          )}
         </div>
 
         {/* グループ一覧 or 空ステート */}
@@ -341,11 +355,11 @@ function GroupUpgradeWall() {
             <Lock size={28} style={{ color: "var(--color-primary)" }} />
           </div>
           <h2 className="text-lg font-bold" style={{ color: "var(--color-text)" }}>
-            グループ機能は法人プランで利用できます
+            グループ機能は有料プランで利用できます
           </h2>
           <p className="mt-2 max-w-sm text-sm leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
-            現在お使いの個人プランではグループ機能はご利用いただけません。
-            法人プランにアップグレードすると、チームメンバーとの情報共有が可能になります。
+            individual以上のプランにアップグレードすると、チームへの参加・情報共有が可能になります。
+            グループの作成にはteamプランが必要です。
           </p>
 
           <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm" style={{ color: "var(--color-text-muted)" }}>
@@ -369,7 +383,7 @@ function GroupUpgradeWall() {
             プランを確認する
           </Link>
           <p className="mt-3 text-xs" style={{ color: "var(--color-text-subtle)" }}>
-            ベータ期間終了後に法人プランが利用可能になります
+            individual ¥1,480/月〜 · team ¥9,800/月〜
           </p>
         </div>
       </div>

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Zap, ChevronRight, ChevronDown } from "lucide-react";
 
 const PLAN_NAMES: Record<string, string> = {
-  beta: "ベータ版", individual: "個人", corp_s: "法人 S",
-  corp_m: "法人 M", corp_l: "法人 L", unlimited: "開発者",
+  free: "free", individual: "individual",
+  team_5: "team (5名)", team_10: "team (10名)", team_unlimited: "team (無制限)",
 };
 
 interface Props {
@@ -20,11 +20,11 @@ interface Props {
 export function PlanStatusBar({ planType, isUnlimited, baseLimit, usedThisMonth, bonus, companyName }: Props) {
   const [expanded, setExpanded] = useState(false);
 
-  const planName = isUnlimited ? "開発者" : (PLAN_NAMES[planType] ?? "ベータ版");
+  const planName = isUnlimited ? "開発者" : (PLAN_NAMES[planType] ?? "free");
   const totalLimit = baseLimit !== null ? baseLimit + bonus : null;
   const remaining = totalLimit !== null ? Math.max(0, totalLimit - usedThisMonth) : null;
   const pctUsed = totalLimit ? Math.min(100, Math.round((usedThisMonth / totalLimit) * 100)) : 0;
-  const isLow = remaining !== null && remaining <= 2;
+  const isLow = remaining !== null && remaining <= 3;
 
   return (
     <div
@@ -73,6 +73,12 @@ export function PlanStatusBar({ planType, isUnlimited, baseLimit, usedThisMonth,
                 style={{ color: isLow ? "var(--color-danger)" : "var(--color-text)" }}
               >
                 {usedThisMonth} / {totalLimit}回
+                <span
+                  className="ml-1.5 font-semibold"
+                  style={{ color: isLow ? "var(--color-danger)" : pctUsed >= 70 ? "#F97316" : "var(--color-text-muted)" }}
+                >
+                  ({pctUsed}%)
+                </span>
                 {bonus > 0 && (
                   <span className="ml-1 font-normal" style={{ color: "#7C3AED" }}>
                     (+{bonus}ボーナス)
@@ -138,6 +144,11 @@ export function PlanStatusBar({ planType, isUnlimited, baseLimit, usedThisMonth,
             label="残り"
             value={remaining !== null ? `${remaining}回` : "無制限"}
             valueColor={isLow ? "var(--color-danger)" : "var(--color-text)"}
+          />
+          <StatCell
+            label="使用率"
+            value={totalLimit !== null ? `${pctUsed}%` : "—"}
+            valueColor={isLow ? "var(--color-danger)" : pctUsed >= 70 ? "#F97316" : "var(--color-text)"}
           />
         </div>
       )}

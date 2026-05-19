@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { createClient, getCurrentUser, createAdminClient } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
 import { PublicMasterPicker } from "./public-master-picker";
 import { TRADE_CATEGORIES } from "./category-picker";
 import { UnitPriceTable } from "./inline-row";
-import { Plus, Upload, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Upload, ChevronLeft, ChevronRight, Lock } from "lucide-react";
+import { canUseUnitPrices } from "@/lib/plan";
 
 const PAGE_SIZE = 20;
 
@@ -18,6 +19,40 @@ export default async function UnitPricesPage({
 }) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const admin = createAdminClient();
+  const { data: planProfile } = await admin.from("users").select("plan_type").eq("id", user.id).maybeSingle();
+  if (!canUseUnitPrices(planProfile?.plan_type ?? "free")) {
+    return (
+      <div className="px-4 py-8 sm:px-6">
+        <div className="mx-auto w-full max-w-5xl">
+          <h1 className="text-2xl font-bold" style={{ color: "var(--color-text)" }}>単価マスタ</h1>
+          <div
+            className="mt-6 flex flex-col items-center rounded-2xl px-8 py-16 text-center"
+            style={{ background: "var(--color-surface)", border: "2px dashed var(--color-border)" }}
+          >
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl" style={{ background: "rgba(37,99,235,0.08)" }}>
+              <Lock size={28} style={{ color: "var(--color-primary)" }} />
+            </div>
+            <h2 className="text-lg font-bold" style={{ color: "var(--color-text)" }}>単価マスタは有料プランで利用できます</h2>
+            <p className="mt-2 max-w-sm text-sm leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
+              individual以上のプランにアップグレードすると、自社の材料単価を登録・管理できます。
+              見積書作成時に単価が自動で入力されます。
+            </p>
+            <Link
+              href="/settings/plan"
+              className="mt-8 inline-flex h-11 items-center gap-2 rounded-xl px-8 text-sm font-semibold text-white transition hover:opacity-90"
+              style={{ background: "var(--color-primary)" }}
+            >
+              プランを確認する
+            </Link>
+            <p className="mt-3 text-xs" style={{ color: "var(--color-text-subtle)" }}>individual ¥1,480/月〜</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const supabase = await createClient();
   await ensureCompany();
 

@@ -6,12 +6,12 @@ import { TrendingUp, TrendingDown, ArrowRight, Package, FileText, ScanLine, Sett
 import { PlanStatusBar } from "./plan-status-bar";
 
 const PLAN_LIMITS: Record<string, number | null> = {
-  beta: 10, individual: 30, corp_s: 100, corp_m: 300, corp_l: null, unlimited: null,
+  free: 15, individual: 30, team_5: 100, team_10: 300, team_unlimited: null,
 };
 
 /* ─── plan check ──────────────────────────── */
-function isCorporate(plan: string | null | undefined) {
-  return plan?.startsWith("corporate") ?? false;
+function isTeam(plan: string | null | undefined) {
+  return plan?.startsWith("team") ?? false;
 }
 
 /* ─── helpers ─────────────────────────────── */
@@ -114,10 +114,10 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   ]);
 
   const company = companies?.[0] ?? null;
-  const planType = userProfile?.plan_type ?? "beta";
+  const planType = userProfile?.plan_type ?? "free";
   const bonusAnalyses = userProfile?.bonus_analyses ?? 0;
   const isUnlimited = userProfile?.is_unlimited ?? false;
-  const monthLimit = isUnlimited ? null : (PLAN_LIMITS[planType] ?? 10);
+  const monthLimit = isUnlimited ? null : (PLAN_LIMITS[planType] ?? 15);
 
   // allQuotes（6ヶ月分）から今月・先月を派生
   const thisMonthQuotes = (allQuotes ?? []).filter((q) => q.created_at >= thisMonthStart);
