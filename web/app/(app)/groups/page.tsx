@@ -3,15 +3,16 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Users, Plus, Hash, Crown, MessageSquare, ChevronRight, Bell, Lock } from "lucide-react";
 import { canJoinGroup, canCreateGroup } from "@/lib/plan";
+import { getUserPlan } from "@/lib/get-plan";
 
 export default async function GroupsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   const supabase = await createClient();
 
-  const { data: profile } = await supabase.from("users").select("display_name, plan_type").eq("id", user.id).maybeSingle();
+  const { data: profile } = await supabase.from("users").select("display_name").eq("id", user.id).maybeSingle();
   const myDisplayName = profile?.display_name ?? "";
-  const planType = profile?.plan_type ?? "free";
+  const planType = await getUserPlan(user.id);
 
   if (!canJoinGroup(planType)) {
     return <GroupUpgradeWall />;

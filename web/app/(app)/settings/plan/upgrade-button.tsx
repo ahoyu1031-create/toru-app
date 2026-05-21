@@ -10,7 +10,7 @@ type Props = {
   variant?: "primary" | "secondary";
 };
 
-export function UpgradeButton({ plan, label = "このプランに変更", variant = "primary" }: Props) {
+export function UpgradeButton({ plan, label = "プラン変更", variant = "primary" }: Props) {
   const [loading, setLoading] = useState(false);
   const { error } = useToast();
 

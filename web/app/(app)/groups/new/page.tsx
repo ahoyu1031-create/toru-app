@@ -1,17 +1,17 @@
-import { getCurrentUser, createAdminClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { GroupForm } from "./group-form";
 import { canCreateGroup } from "@/lib/plan";
+import { getUserPlan } from "@/lib/get-plan";
 
 export default async function NewGroupPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const admin = createAdminClient();
-  const { data: profile } = await admin.from("users").select("plan_type").eq("id", user.id).maybeSingle();
-  if (!canCreateGroup(profile?.plan_type ?? "free")) redirect("/groups");
+  const planType = await getUserPlan(user.id);
+  if (!canCreateGroup(planType)) redirect("/groups");
 
 
   return (

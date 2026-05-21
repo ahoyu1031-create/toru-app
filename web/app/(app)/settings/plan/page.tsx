@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { PLAN_PRICES, isTeamPlan, getMonthlyLimit, PAID_PLANS, type PaidPlan } from "@/lib/plan";
+import { getUserPlan } from "@/lib/get-plan";
 import { Zap, Check, Lock } from "lucide-react";
 import { UpgradeButton } from "./upgrade-button";
 import { ManageButton } from "./manage-button";
@@ -28,11 +29,11 @@ export default async function PlanPage() {
 
   const { data: profile } = await admin
     .from("users")
-    .select("bonus_analyses, is_unlimited, plan_type")
+    .select("bonus_analyses, is_unlimited")
     .eq("id", user.id)
     .maybeSingle();
 
-  const planType = profile?.plan_type ?? "free";
+  const planType = await getUserPlan(user.id);
   const isUnlimited = profile?.is_unlimited ?? false;
   const bonus = profile?.bonus_analyses ?? 0;
   const limit = isUnlimited ? null : getMonthlyLimit(planType, bonus);

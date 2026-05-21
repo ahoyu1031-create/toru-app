@@ -2,17 +2,13 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient, createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
-import { TrendingUp, TrendingDown, ArrowRight, Package, FileText, ScanLine, Settings, Clock } from "lucide-react";
+import { getUserPlan } from "@/lib/get-plan";
+import { TrendingUp, TrendingDown, ArrowRight, ScanLine, Clock } from "lucide-react";
 import { PlanStatusBar } from "./plan-status-bar";
 
 const PLAN_LIMITS: Record<string, number | null> = {
   free: 15, individual: 30, team_5: 100, team_10: 300, team_unlimited: null,
 };
-
-/* ─── plan check ──────────────────────────── */
-function isTeam(plan: string | null | undefined) {
-  return plan?.startsWith("team") ?? false;
-}
 
 /* ─── helpers ─────────────────────────────── */
 function startOfMonth(d: Date) {
@@ -74,7 +70,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     { count: thisMonthAnalysisCount },
   ] = await Promise.all([
     supabase.from("companies").select("name, plan"),
-    admin.from("users").select("plan_type, bonus_analyses, is_unlimited").eq("id", user.id).maybeSingle(),
+    admin.from("users").select("bonus_analyses, is_unlimited").eq("id", user.id).maybeSingle(),
     supabase
       .from("quotes")
       .select("id, project_name, client_name, total_amount, status, created_at")
@@ -114,7 +110,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   ]);
 
   const company = companies?.[0] ?? null;
-  const planType = userProfile?.plan_type ?? "free";
+  const planType = await getUserPlan(user.id);
   const bonusAnalyses = userProfile?.bonus_analyses ?? 0;
   const isUnlimited = userProfile?.is_unlimited ?? false;
   const monthLimit = isUnlimited ? null : (PLAN_LIMITS[planType] ?? 15);
@@ -461,88 +457,6 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </div>
         )}
 
-      </div>
-    </div>
-  );
-}
-
-/* ═══ Individual Dashboard ═══════════════════ */
-function IndividualDashboard({
-  companyName,
-  plan,
-}: {
-  companyName?: string | null;
-  plan: string;
-}) {
-  const FEATURES = [
-    { title: "単価マスタ", desc: "自社の材料単価を登録・管理", href: "/unit-prices", icon: Package },
-    { title: "見積作成",   desc: "材料を選んで見積書を作成・PDF出力", href: "/quotes",      icon: FileText },
-    { title: "図面解析",   desc: "AIが材料拾い出し・施工情報を自動抽出", href: "/drawings",  icon: ScanLine },
-    { title: "設定",       desc: "会社情報・プロフィール管理", href: "/settings",   icon: Settings, muted: true },
-  ];
-
-  return (
-    <div className="px-6 py-8">
-      <div className="mx-auto w-full max-w-3xl">
-        <div className="mb-8">
-          <span
-            className="inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold mb-3"
-            style={{ background: "rgba(100,116,139,0.1)", color: "#64748B" }}
-          >
-            個人プラン
-          </span>
-          <h1 className="text-2xl font-bold text-[color:var(--color-text)]">
-            {companyName ? `${companyName}` : "ダッシュボード"}
-          </h1>
-          <p className="mt-1 text-sm text-[color:var(--color-text-muted)]">
-            何をしますか？
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {FEATURES.map(({ title, desc, href, icon: Icon, muted }) => (
-            <Link
-              key={href}
-              href={href}
-              className="group flex flex-col rounded-xl border p-6 shadow-sm transition-all duration-200 hover:border-[color:var(--color-primary)] hover:shadow-md"
-              style={{
-                background: "var(--color-surface)",
-                borderColor: "var(--color-border)",
-              }}
-            >
-              <div className="flex items-start justify-between">
-                <div
-                  className="flex h-11 w-11 items-center justify-center rounded-lg"
-                  style={{ background: muted ? "var(--color-bg)" : "var(--color-primary-soft)" }}
-                >
-                  <Icon
-                    size={20}
-                    style={{ color: muted ? "var(--color-text-subtle)" : "var(--color-primary)" }}
-                  />
-                </div>
-                {muted && (
-                  <span
-                    className="rounded-full px-2.5 py-0.5 text-xs font-medium"
-                    style={{ background: "var(--color-bg)", color: "var(--color-text-subtle)" }}
-                  >
-                    準備中
-                  </span>
-                )}
-              </div>
-              <div className="mt-4">
-                <h3 className="text-base font-semibold group-hover:text-[color:var(--color-primary)] transition-colors">
-                  {title}
-                </h3>
-                <p className="mt-1 text-sm leading-relaxed text-[color:var(--color-text-muted)]">
-                  {desc}
-                </p>
-              </div>
-              <div className="mt-4 flex items-center gap-1 text-xs font-medium text-[color:var(--color-primary)] opacity-0 transition-opacity group-hover:opacity-100">
-                開く <ArrowRight size={12} />
-              </div>
-            </Link>
-          ))}
-        </div>
       </div>
     </div>
   );

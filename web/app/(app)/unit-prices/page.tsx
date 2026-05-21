@@ -7,6 +7,7 @@ import { TRADE_CATEGORIES } from "./category-picker";
 import { UnitPriceTable } from "./inline-row";
 import { Plus, Upload, ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { canUseUnitPrices } from "@/lib/plan";
+import { getUserPlan } from "@/lib/get-plan";
 
 const PAGE_SIZE = 20;
 
@@ -21,8 +22,9 @@ export default async function UnitPricesPage({
   if (!user) redirect("/login");
 
   const admin = createAdminClient();
-  const { data: planProfile } = await admin.from("users").select("plan_type").eq("id", user.id).maybeSingle();
-  if (!canUseUnitPrices(planProfile?.plan_type ?? "free")) {
+  void admin;
+  const planType = await getUserPlan(user.id);
+  if (!canUseUnitPrices(planType)) {
     return (
       <div className="px-4 py-8 sm:px-6">
         <div className="mx-auto w-full max-w-5xl">

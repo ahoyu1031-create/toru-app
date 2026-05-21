@@ -2,6 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { isTeamPlan, getMonthlyLimit } from "@/lib/plan";
+import { getUserPlan } from "@/lib/get-plan";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -123,12 +124,12 @@ export async function POST(req: NextRequest) {
 
   const { data: userProfile } = await admin
     .from("users")
-    .select("bonus_analyses, is_unlimited, plan_type")
+    .select("bonus_analyses, is_unlimited")
     .eq("id", user.id)
     .maybeSingle();
 
   if (!userProfile?.is_unlimited) {
-    const planType = userProfile?.plan_type ?? "free";
+    const planType = await getUserPlan(user.id);
     const bonus = userProfile?.bonus_analyses ?? 0;
     const limit = getMonthlyLimit(planType, bonus);
 
