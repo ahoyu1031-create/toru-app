@@ -33,6 +33,18 @@
 - ⏳ Webhook で `companies.stripe_subscription_id` も保存（要マイグレーション: カラム未存在）
 - ⏳ 本番URLで残り3プラン（individual / team_5 / team_10）の購入動作確認
 
+### `getUserPlan` 複数会社所属バグ修正
+
+**症状**:
+- `aoki1031movie@gmail.com`（カリさん、テスト用）は `company_member` に5行所属（テストで重複作成）
+- 上で実装した `getUserPlan` は `.maybeSingle()` を使っていたため、複数行で error → `null` → `"free"` 返却
+- カリさんの実プラン（最新: `team_unlimited`）が UI で「フリー」表示される乖離が発生
+
+**修正**:
+- `web/lib/get-plan.ts` を `.order("created_at", { ascending: false }).limit(1)` 方式に変更
+- 複数所属時は最新加入の会社プランを採用
+- `npx next build` ✅ 成功
+
 **メモ — 使用量バーが消える件**:
 - `settings/plan/page.tsx:107` と `plan-status-bar.tsx:65` が `{!isUnlimited && ...}` で使用量バーを隠す設計
 - `ahoyu1031@gmail.com` は `users.is_unlimited = true`（developer）のため意図通り非表示
