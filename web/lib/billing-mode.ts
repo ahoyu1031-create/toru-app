@@ -25,4 +25,4 @@ export const IS_TEST_BILLING = BILLING_MODE === "test";
 
 /** アルファテスター申込フォームURL（Google Form等の外部URL） */
 export const ALPHA_FORM_URL =
-  process.env.NEXT_PUBLIC_ALPHA_FORM_URL ?? "https://forms.gle/PLACEHOLDER";
+  process.env.NEXT_PUBLIC_ALPHA_FORM_URL ?? "https://forms.gle/dhtC7BnjkX7Dd8ac9";
