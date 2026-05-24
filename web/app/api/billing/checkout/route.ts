@@ -109,7 +109,8 @@ export async function POST(req: Request) {
 
     await stripe.subscriptions.update(sub.id, {
       items: [{ id: item.id, price: priceId }],
-      proration_behavior: "create_prorations",
+      // 比例配分の請求は一切作らない（ユーザー混乱回避）。今月は追加料金ゼロ、次回請求から新料金。
+      proration_behavior: "none",
       metadata: { company_id: companyId, plan },
     });
     // Webhook customer.subscription.updated が companies.plan を更新

@@ -17,7 +17,7 @@ export function PlanResultToast() {
       if (params.get("nochange") === "1") {
         info("既に同じプランをご利用中です。");
       } else if (params.get("updated") === "1") {
-        success("プランを変更しました。差額は次回請求で精算されます。");
+        success("プランを変更しました。今月は追加料金なし、次回請求から新料金になります。");
       } else {
         success("プランを変更しました。反映まで少し時間がかかる場合があります。");
       }

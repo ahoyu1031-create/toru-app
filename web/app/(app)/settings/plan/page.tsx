@@ -205,6 +205,7 @@ export default async function PlanPage() {
                     {!isCurrent && (PAID_PLANS as readonly string[]).includes(plan) && (
                       <UpgradeButton
                         plan={plan as PaidPlan}
+                        currentPlan={planType}
                         variant={isUpgrade ? "primary" : "secondary"}
                       />
                     )}
