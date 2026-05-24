@@ -11,16 +11,21 @@ const PLAN_NAMES: Record<string, string> = {
 interface Props {
   planType: string;
   isUnlimited: boolean;
+  isAlphaTester?: boolean;
   baseLimit: number | null;
   usedThisMonth: number;
   bonus: number;
   companyName: string | null;
 }
 
-export function PlanStatusBar({ planType, isUnlimited, baseLimit, usedThisMonth, bonus, companyName }: Props) {
+export function PlanStatusBar({ planType, isUnlimited, isAlphaTester = false, baseLimit, usedThisMonth, bonus, companyName }: Props) {
   const [expanded, setExpanded] = useState(false);
 
-  const planName = isUnlimited ? "開発者" : (PLAN_NAMES[planType] ?? "free");
+  const planName = isUnlimited
+    ? "開発者"
+    : isAlphaTester
+      ? "アルファテスター"
+      : (PLAN_NAMES[planType] ?? "free");
   const totalLimit = baseLimit !== null ? baseLimit + bonus : null;
   const remaining = totalLimit !== null ? Math.max(0, totalLimit - usedThisMonth) : null;
   const pctUsed = totalLimit ? Math.min(100, Math.round((usedThisMonth / totalLimit) * 100)) : 0;
@@ -54,6 +59,14 @@ export function PlanStatusBar({ planType, isUnlimited, baseLimit, usedThisMonth,
                   無制限
                 </span>
               )}
+              {!isUnlimited && isAlphaTester && (
+                <span
+                  className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                  style={{ background: "rgba(245,158,11,0.12)", color: "#B45309" }}
+                >
+                  アルファ
+                </span>
+              )}
             </div>
             {companyName && (
               <p className="text-xs truncate" style={{ color: "var(--color-text-muted)" }}>{companyName}</p>
@@ -61,8 +74,8 @@ export function PlanStatusBar({ planType, isUnlimited, baseLimit, usedThisMonth,
           </div>
         </div>
 
-        {/* 中：解析プログレス */}
-        {!isUnlimited && totalLimit !== null && (
+        {/* 中：解析プログレス（dev/alphaは無制限なので非表示） */}
+        {!isUnlimited && !isAlphaTester && totalLimit !== null && (
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs font-medium" style={{ color: "var(--color-text-muted)" }}>

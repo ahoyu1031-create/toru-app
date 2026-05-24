@@ -99,20 +99,20 @@ export async function saveDrawingAnalysis(params: {
   }
 
   // トライアル中ユーザーは消費カウンタを +1（race condition 防止のため admin で直接）
-  // 有料プラン / is_unlimited はノーオペ。
+  // 有料プラン / is_unlimited / is_alpha_tester はノーオペ。
   try {
     const admin = createAdminClient();
-    const { data: membership } = await admin
-      .from("company_member")
-      .select("company_id, companies(plan, trial_drawings_used)")
-      .eq("user_id", user.id)
-      .maybeSingle();
+    const [{ data: userFlags }, { data: membership }] = await Promise.all([
+      admin.from("users").select("is_unlimited, is_alpha_tester").eq("id", user.id).maybeSingle(),
+      admin.from("company_member").select("company_id, companies(plan, trial_drawings_used)").eq("user_id", user.id).maybeSingle(),
+    ]);
 
+    const hasUnlimitedAccess = !!userFlags?.is_unlimited || !!userFlags?.is_alpha_tester;
     const co = Array.isArray(membership?.companies)
       ? membership?.companies[0]
       : membership?.companies;
 
-    if (co && co.plan === null) {
+    if (!hasUnlimitedAccess && co && co.plan === null) {
       await admin
         .from("companies")
         .update({ trial_drawings_used: (co.trial_drawings_used ?? 0) + 1 })

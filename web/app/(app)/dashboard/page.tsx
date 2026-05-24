@@ -72,7 +72,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     { count: thisMonthAnalysisCount },
   ] = await Promise.all([
     supabase.from("companies").select("name, plan"),
-    admin.from("users").select("bonus_analyses, is_unlimited").eq("id", user.id).maybeSingle(),
+    admin.from("users").select("bonus_analyses, is_unlimited, is_alpha_tester").eq("id", user.id).maybeSingle(),
     supabase
       .from("quotes")
       .select("id, project_name, client_name, total_amount, status, created_at")
@@ -116,7 +116,9 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const trial = await getCompanyTrial(user.id);
   const bonusAnalyses = userProfile?.bonus_analyses ?? 0;
   const isUnlimited = userProfile?.is_unlimited ?? false;
-  const monthLimit = isUnlimited
+  const isAlphaTester = userProfile?.is_alpha_tester ?? false;
+  const hasUnlimitedAccess = isUnlimited || isAlphaTester;
+  const monthLimit = hasUnlimitedAccess
     ? null
     : planType === null
       ? null // トライアル中は月次概念なし（TrialBanner で別表示）
@@ -170,13 +172,14 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     <div className="px-4 py-6 sm:px-6">
       <div className="mx-auto w-full max-w-6xl space-y-5 sm:space-y-6">
 
-        {/* Trial banner (plan=null) OR Plan status widget (paid/grandfathered) */}
-        {planType === null && trial ? (
+        {/* Trial banner: 制限ありユーザー(trial中)のみ表示。dev/alpha は PlanStatusBar */}
+        {planType === null && trial && !hasUnlimitedAccess ? (
           <TrialBanner company={trial} />
         ) : (
           <PlanStatusBar
             planType={planType ?? ""}
             isUnlimited={isUnlimited}
+            isAlphaTester={isAlphaTester}
             baseLimit={monthLimit}
             usedThisMonth={thisMonthAnalysisCount ?? 0}
             bonus={bonusAnalyses}

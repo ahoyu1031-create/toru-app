@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/supabase/server";
+import { createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
 import { getCompanyTrial } from "@/lib/get-company-trial";
 import { TRIAL_DRAWING_LIMIT, TRIAL_DURATION_DAYS } from "@/lib/plan";
@@ -21,12 +21,21 @@ export default async function NewDrawingPage({ searchParams }: Props) {
   const isFirstTime = onboarding === "1";
   const trial = await getCompanyTrial(user.id);
 
+  // dev / alpha は TrialBanner 非表示
+  const admin = createAdminClient();
+  const { data: userFlags } = await admin
+    .from("users")
+    .select("is_unlimited, is_alpha_tester")
+    .eq("id", user.id)
+    .maybeSingle();
+  const hasUnlimitedAccess = !!userFlags?.is_unlimited || !!userFlags?.is_alpha_tester;
+
   return (
     <div className="px-6 py-8">
       <div className="mx-auto w-full max-w-4xl">
 
-        {/* トライアル状態を常に表示（新規/既存どちらも） */}
-        {trial && trial.plan === null && (
+        {/* トライアル状態を表示（plan=null かつ 無制限権限なし時のみ） */}
+        {trial && trial.plan === null && !hasUnlimitedAccess && (
           <div className="mb-4">
             <TrialBanner company={trial} />
           </div>

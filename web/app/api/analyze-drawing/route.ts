@@ -124,11 +124,14 @@ export async function POST(req: NextRequest) {
 
   const { data: userProfile } = await admin
     .from("users")
-    .select("bonus_analyses, is_unlimited")
+    .select("bonus_analyses, is_unlimited, is_alpha_tester")
     .eq("id", user.id)
     .maybeSingle();
 
-  if (!userProfile?.is_unlimited) {
+  // developer or alpha_tester は全制限スキップ
+  const hasUnlimitedAccess = !!userProfile?.is_unlimited || !!userProfile?.is_alpha_tester;
+
+  if (!hasUnlimitedAccess) {
     const planType = await getUserPlan(user.id);
 
     // トライアル状態（plan=null）: ライフタイム枠 + 期間チェック

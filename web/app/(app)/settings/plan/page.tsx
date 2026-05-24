@@ -31,7 +31,7 @@ export default async function PlanPage() {
 
   const { data: profile } = await admin
     .from("users")
-    .select("bonus_analyses, is_unlimited")
+    .select("bonus_analyses, is_unlimited, is_alpha_tester")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -39,8 +39,10 @@ export default async function PlanPage() {
   const trial = await getCompanyTrial(user.id);
   const trialStatus = trial ? getTrialStatus(trial) : null;
   const isUnlimited = profile?.is_unlimited ?? false;
+  const isAlphaTester = profile?.is_alpha_tester ?? false;
+  const hasUnlimitedAccess = isUnlimited || isAlphaTester;
   const bonus = profile?.bonus_analyses ?? 0;
-  const limit = isUnlimited ? null : getMonthlyLimit(planType, bonus);
+  const limit = hasUnlimitedAccess ? null : getMonthlyLimit(planType, bonus);
 
   // 使用回数（チームは合算）
   let usedThisMonth = 0;
@@ -85,15 +87,31 @@ export default async function PlanPage() {
               <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>現在のプラン</p>
               <div className="mt-1 flex items-center gap-2 flex-wrap">
                 <h2 className="text-2xl font-bold" style={{ color: "var(--color-text)" }}>
-                  {isUnlimited ? "developer" : planType ?? "無料体験中"}
+                  {isUnlimited
+                    ? "developer"
+                    : isAlphaTester
+                      ? "アルファテスター"
+                      : planType ?? "無料体験中"}
                 </h2>
                 <span
                   className="rounded-full px-2.5 py-0.5 text-xs font-bold"
-                  style={planType === null
-                    ? { background: "rgba(34,197,94,0.12)", color: "#16A34A" }
-                    : { background: "rgba(37,99,235,0.12)", color: "var(--color-primary)" }}
+                  style={
+                    isUnlimited
+                      ? { background: "rgba(139,92,246,0.12)", color: "#7C3AED" }
+                      : isAlphaTester
+                        ? { background: "rgba(245,158,11,0.12)", color: "#B45309" }
+                        : planType === null
+                          ? { background: "rgba(34,197,94,0.12)", color: "#16A34A" }
+                          : { background: "rgba(37,99,235,0.12)", color: "var(--color-primary)" }
+                  }
                 >
-                  {isUnlimited ? "無制限" : planType === null ? "無料体験" : PLAN_PRICES[planType]}
+                  {isUnlimited
+                    ? "無制限"
+                    : isAlphaTester
+                      ? "無制限"
+                      : planType === null
+                        ? "無料体験"
+                        : PLAN_PRICES[planType]}
                 </span>
               </div>
             </div>
@@ -133,8 +151,8 @@ export default async function PlanPage() {
             </div>
           )}
 
-          {/* 利用状況バー */}
-          {!isUnlimited && (
+          {/* 利用状況バー (dev/alphaは無制限なので非表示) */}
+          {!hasUnlimitedAccess && (
             <div className="mt-5">
               <div className="mb-1.5 flex items-center justify-between">
                 <span className="text-xs font-semibold" style={{ color: "var(--color-text-muted)" }}>
@@ -195,8 +213,8 @@ export default async function PlanPage() {
           {/* 横並び4カラム（PC）/ 2カラム（タブレット）/ 1カラム（モバイル） */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {PLAN_ORDER.map((plan) => {
-              // dev (is_unlimited=true) は team_unlimited 相当として扱う
-              const isCurrent = isUnlimited
+              // dev / alpha tester は team_unlimited 相当として「現在のプラン」表示
+              const isCurrent = hasUnlimitedAccess
                 ? plan === "team_unlimited"
                 : planType === plan;
               const isRecommended = plan === "team_10"; // 主力プラン強調
@@ -220,9 +238,19 @@ export default async function PlanPage() {
                   {isCurrent && (
                     <span
                       className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full px-2.5 py-0.5 text-[10px] font-bold whitespace-nowrap"
-                      style={{ background: "var(--color-primary)", color: "#fff" }}
+                      style={
+                        isUnlimited
+                          ? { background: "#7C3AED", color: "#fff" }
+                          : isAlphaTester
+                            ? { background: "#B45309", color: "#fff" }
+                            : { background: "var(--color-primary)", color: "#fff" }
+                      }
                     >
-                      {isUnlimited ? "developer" : "現在のプラン"}
+                      {isUnlimited
+                        ? "developer"
+                        : isAlphaTester
+                          ? "アルファテスター"
+                          : "現在のプラン"}
                     </span>
                   )}
                   {!isCurrent && isRecommended && (
