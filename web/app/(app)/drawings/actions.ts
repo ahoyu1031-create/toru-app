@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export type Mode = "all" | "materials" | "construction_notes" | "coordination" | "communication";
@@ -96,6 +96,31 @@ export async function saveDrawingAnalysis(params: {
   if (error) {
     console.error("[saveDrawingAnalysis] DB error:", error);
     return { error: error.message };
+  }
+
+  // トライアル中ユーザーは消費カウンタを +1（race condition 防止のため admin で直接）
+  // 有料プラン / is_unlimited はノーオペ。
+  try {
+    const admin = createAdminClient();
+    const { data: membership } = await admin
+      .from("company_member")
+      .select("company_id, companies(plan, trial_drawings_used)")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    const co = Array.isArray(membership?.companies)
+      ? membership?.companies[0]
+      : membership?.companies;
+
+    if (co && co.plan === null) {
+      await admin
+        .from("companies")
+        .update({ trial_drawings_used: (co.trial_drawings_used ?? 0) + 1 })
+        .eq("id", membership!.company_id);
+    }
+  } catch (e) {
+    console.error("[saveDrawingAnalysis] trial increment failed:", e);
+    // 失敗してもユーザー体験は維持（後でcronで補正可能）
   }
 
   revalidatePath("/drawings");

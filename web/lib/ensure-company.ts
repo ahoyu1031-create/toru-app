@@ -47,7 +47,9 @@ export const ensureCompany = cache(async (): Promise<{ companyId: string } | nul
     .from("companies")
     .insert({
       name: baseName,
-      plan: "team_unlimited",
+      plan: null, // 未契約 = 無料トライアル中
+      trial_started_at: new Date().toISOString(),
+      trial_drawings_used: 0,
       created_by: user.id,
     })
     .select("id")
@@ -65,6 +67,17 @@ export const ensureCompany = cache(async (): Promise<{ companyId: string } | nul
   });
 
   if (memberError) {
+    // UNIQUE(user_id) 違反 = 並列リクエストで既に別会社が紐付いた
+    // 作成した会社は孤児化するので削除し、既存所属を返す
+    await admin.from("companies").delete().eq("id", company.id);
+    if (memberError.code === "23505") {
+      const { data: existingMember } = await admin
+        .from("company_member")
+        .select("company_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (existingMember) return { companyId: existingMember.company_id };
+    }
     console.error("ensureCompany: failed to create membership", memberError);
     return null;
   }

@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
-import { isTeamPlan, getMonthlyLimit } from "@/lib/plan";
+import { isTeamPlan, getMonthlyLimit, getTrialStatus, TRIAL_DRAWING_LIMIT, TRIAL_DURATION_DAYS } from "@/lib/plan";
 import { getUserPlan } from "@/lib/get-plan";
 
 export const runtime = "nodejs";
@@ -130,65 +130,103 @@ export async function POST(req: NextRequest) {
 
   if (!userProfile?.is_unlimited) {
     const planType = await getUserPlan(user.id);
-    const bonus = userProfile?.bonus_analyses ?? 0;
-    const limit = getMonthlyLimit(planType, bonus);
 
-    let usedCount = 0;
-
-    if (isTeamPlan(planType)) {
-      // チームプール: 同じcompanyの全メンバーの解析回数を合算
-      const { data: membership } = await admin
+    // トライアル状態（plan=null）: ライフタイム枠 + 期間チェック
+    if (planType === null) {
+      const { data: trialMembership } = await admin
         .from("company_member")
-        .select("company_id")
+        .select("companies(plan, trial_started_at, trial_drawings_used)")
         .eq("user_id", user.id)
         .maybeSingle();
 
-      if (membership?.company_id) {
-        const { data: members } = await admin
+      const trialCompany = Array.isArray(trialMembership?.companies)
+        ? trialMembership?.companies[0]
+        : trialMembership?.companies;
+
+      if (!trialCompany) {
+        return NextResponse.json(
+          { error: "会社情報が見つかりません。再ログインしてください" },
+          { status: 500 }
+        );
+      }
+
+      const trialStatus = getTrialStatus(trialCompany);
+      if (!trialStatus.active) {
+        return NextResponse.json(
+          {
+            error: trialStatus.reason === "limit_reached"
+              ? `無料体験の解析回数（${TRIAL_DRAWING_LIMIT}回）を使い切りました。プランを選択してください。`
+              : `無料体験期間（${TRIAL_DURATION_DAYS}日間）が終了しました。プランを選択してください。`,
+            trialEnded: true,
+            reason: trialStatus.reason,
+            upgradeUrl: "/settings/plan",
+          },
+          { status: 402 }
+        );
+      }
+      // トライアル枠内 → 解析実行を許可。消費カウンタは saveDrawingAnalysis で +1。
+    } else {
+      // 有料プラン: 既存の月次上限チェック
+      const bonus = userProfile?.bonus_analyses ?? 0;
+      const limit = getMonthlyLimit(planType, bonus);
+
+      let usedCount = 0;
+
+      if (isTeamPlan(planType)) {
+        // チームプール: 同じcompanyの全メンバーの解析回数を合算
+        const { data: membership } = await admin
           .from("company_member")
-          .select("user_id")
-          .eq("company_id", membership.company_id);
+          .select("company_id")
+          .eq("user_id", user.id)
+          .maybeSingle();
 
-        const memberIds = (members ?? []).map((m: { user_id: string }) => m.user_id);
+        if (membership?.company_id) {
+          const { data: members } = await admin
+            .from("company_member")
+            .select("user_id")
+            .eq("company_id", membership.company_id);
 
-        const { count: teamCount } = await admin
-          .from("drawing_analyses")
-          .select("*", { count: "exact", head: true })
-          .in("user_id", memberIds)
-          .gte("created_at", monthStartISO)
-          .is("deleted_at", null);
+          const memberIds = (members ?? []).map((m: { user_id: string }) => m.user_id);
 
-        usedCount = teamCount ?? 0;
+          const { count: teamCount } = await admin
+            .from("drawing_analyses")
+            .select("*", { count: "exact", head: true })
+            .in("user_id", memberIds)
+            .gte("created_at", monthStartISO)
+            .is("deleted_at", null);
+
+          usedCount = teamCount ?? 0;
+        } else {
+          const { count: soloCount } = await admin
+            .from("drawing_analyses")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", user.id)
+            .gte("created_at", monthStartISO)
+            .is("deleted_at", null);
+          usedCount = soloCount ?? 0;
+        }
       } else {
-        const { count: soloCount } = await admin
+        const { count: indCount } = await admin
           .from("drawing_analyses")
           .select("*", { count: "exact", head: true })
           .eq("user_id", user.id)
           .gte("created_at", monthStartISO)
           .is("deleted_at", null);
-        usedCount = soloCount ?? 0;
+        usedCount = indCount ?? 0;
       }
-    } else {
-      const { count: indCount } = await admin
-        .from("drawing_analyses")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id)
-        .gte("created_at", monthStartISO)
-        .is("deleted_at", null);
-      usedCount = indCount ?? 0;
-    }
 
-    if (limit !== null && usedCount >= limit) {
-      return NextResponse.json(
-        {
-          error: `今月の解析上限（${limit}回）に達しました。プランをアップグレードしてください。`,
-          limitReached: true,
-          used: usedCount,
-          limit,
-          planType,
-        },
-        { status: 429 }
-      );
+      if (limit !== null && usedCount >= limit) {
+        return NextResponse.json(
+          {
+            error: `今月の解析上限（${limit}回）に達しました。プランをアップグレードしてください。`,
+            limitReached: true,
+            used: usedCount,
+            limit,
+            planType,
+          },
+          { status: 429 }
+        );
+      }
     }
   }
 

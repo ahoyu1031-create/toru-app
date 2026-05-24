@@ -3,6 +3,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { getUserPlan } from "@/lib/get-plan";
+import { canCreateGroup } from "@/lib/plan";
 
 function generateGroupCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -17,6 +19,12 @@ export async function createGroup(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "未ログイン" };
+
+  // D案: グループ作成は team プラン以上のみ。個人/トライアルは参加のみ可。
+  const plan = await getUserPlan(user.id);
+  if (!canCreateGroup(plan)) {
+    return { error: "グループの作成はチームプラン以上で可能です。プランをアップグレードしてください。" };
+  }
 
   const { data: membership } = await supabase
     .from("company_member")

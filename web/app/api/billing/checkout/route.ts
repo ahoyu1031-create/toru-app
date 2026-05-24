@@ -50,9 +50,29 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `会社作成失敗: ${cErr?.message ?? "unknown"}` }, { status: 500 });
     }
     companyId = newCompany.id;
-    await admin.from("company_member").insert({
+    const { error: mErr } = await admin.from("company_member").insert({
       company_id: companyId, user_id: user.id, role: "owner",
     });
+    if (mErr) {
+      // 並列リクエストで他会社に紐付いた → 作成した孤児会社を削除し既存所属を採用
+      await admin.from("companies").delete().eq("id", companyId);
+      if (mErr.code === "23505") {
+        const { data: existing } = await admin
+          .from("company_member")
+          .select("company_id, companies(stripe_customer_id)")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (existing) {
+          companyId = existing.company_id;
+          const co = Array.isArray(existing.companies) ? existing.companies[0] : existing.companies;
+          stripeCustomerId = co?.stripe_customer_id ?? null;
+        } else {
+          return NextResponse.json({ error: "会社情報の整合性エラー。再ログインしてください" }, { status: 500 });
+        }
+      } else {
+        return NextResponse.json({ error: `会社所属の作成に失敗: ${mErr.message}` }, { status: 500 });
+      }
+    }
   }
 
   // Stripe Customer がまだなら作成

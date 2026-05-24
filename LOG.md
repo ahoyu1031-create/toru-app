@@ -4,6 +4,104 @@
 
 ---
 
+## 2026-05-23
+
+### P0-① 重複所属クリーンアップ 実行 + 隠れバグ修正
+
+**スキーマ発見**:
+- `company_member` には `id`, `created_at` が**存在しない**
+- 実カラム: `company_id`, `user_id`, `role`, `joined_at`
+- 主キーは複合 `(company_id, user_id)` 想定、`ctid` 経由が安全
+
+**実施した修正**:
+- `web/lib/get-plan.ts`: `created_at`（実在しない列）参照を `joined_at` に変更 → UNIQUE制約後は `.maybeSingle()` で簡素化
+- `web/lib/ensure-company.ts`: 23505（UNIQUE違反）ハンドリング追加 + 孤児会社削除
+- `web/app/api/billing/checkout/route.ts`: 同上のガード追加
+- ビルド ✅
+
+**Supabase 実行（ユーザー）**:
+- STEP A dry-run → KEEP=team_unlimited（cus_UYcp1IlbR7m5NU）/ DELETE=4行 確認OK
+- STEP B migration → DELETE 4行 + `UNIQUE(user_id)` 制約付与 完了
+- STEP C 検証 → ⏳ ユーザー実行待ち
+
+### Claude Code ステータスバー — 完全復旧
+
+- 3.7.0→3.8.1 再インストール後、`statusLine.command` を `"cs"` に再設定
+- `core.py:519` の `LAST_STDIN_FALLBACK_MAX_AGE_S` を再パッチ（600→3600）
+- `cs doctor` 全✅、5h/7d/$/cache 全表示確認
+- メモリ `feedback_statusbar_check.md` 追加（次回以降の自動診断ルール）
+
+### 🚨 重大バグ発見: 無料配布
+
+`ensure-company.ts:50` で新規ユーザー全員に `plan: "team_unlimited"` を無料配布。Stripe決済が意味を失っている。
+
+### 無料トライアル設計（ユーザー判断確定）
+
+- 無料枠: **10回 / 7日間（先に尽きた方で終了）**
+- 機能ロック: **図面解析のみ**（グループは D案: 個人プランでも参加OK、作成はteamのみ）
+- 初期プラン状態: `companies.plan = NULL`（未契約）
+- 既存25社: **検証後リセット予定**（実ユーザー不在のため）
+- UI: 「10回中あと2回」バナー + 終了モーダル → プラン選択誘導
+
+### 進め方プロトコル（明文化・以降この順を厳守）
+
+1. **言語化** — 何を・なぜ・影響範囲・エッジケース
+2. **確認** — ユーザー判断ポイント明示 → OK取る
+3. **実装** — コード書く、隣接ファイルとの相関性チェック
+4. **検証** — `npx tsc --noEmit` → `eslint` → `next build` → `code-review` → 必要なら `verify`
+5. **記録** — LOG.md + memory に「なぜ」残す
+
+### 待機中タスク
+
+- ⏳ ユーザー: 検証SQL ①② 実行 → ✅ **5社のみ判明**（25は古いログ）。北陸電工=dev / 仮さん=テスト / 残り3社が要判断
+- ⏳ ユーザー: STEP C 検証SQL 実行
+- ⏳ ユーザー: リセットSQL 実行可否判断（5社のうちどれを残すか）
+- ⏳ Claude: 無料トライアル実装（D案）の drafts 仕上げ
+
+### 無料トライアル実装 進捗（下準備）
+
+**完了**:
+- (A) DB migration SQL（companies に `trial_started_at`, `trial_drawings_used`, `trial_ended_reason` 追加 + 既存5社を grandfathered=999 で埋め）→ **ユーザー実行済み**
+- (B) `web/lib/ensure-company.ts`: 新規会社作成時 `plan: null` + trial 初期化に変更
+- (C) `web/app/api/analyze-drawing/route.ts`: トライアル枠チェック分岐追加（402返却・残数/期間切れで `trialEnded: true`）
+- (C') `web/app/(app)/drawings/actions.ts` (`saveDrawingAnalysis`): トライアル消費カウンタ +1 ロジック
+- (F) `web/app/(app)/groups/actions.ts` (`createGroup`): D案ガード追加（team プラン以上のみ作成可）
+- (G) `web/lib/plan.ts`: `TRIAL_DRAWING_LIMIT=10`, `TRIAL_DURATION_DAYS=7`, `isTrialActive()`, `getTrialStatus()`, `getPlanCapabilities()` 追加。`free` プラン定義削除。`null` プラン対応に全面リファクタ
+- ビルド ✅ 全パス通過
+
+**既存5社の処遇（ユーザー判断確定）**:
+- 北陸電工（dev / ahoyu1031）: 変更なし、`team_unlimited` + `is_unlimited=true` 維持
+- 仮さん（テスト / aoki1031movie）: 変更なし
+- Aoki AI（aoki.ai）: 変更なし（自己管理）
+- スタジオアルファ（studioalpha.c.s）: 🎁 トライアル状態にリセット（10回付与、データ保持）
+- ke（友達 / skaken1003）: 🎁 同上
+
+**機能マトリックス確定（lib/plan.ts に反映）**:
+- 図面解析: 全プラン✅（トライアル中は10回まで、有料は月次）
+- グループ作成: team プランのみ ❌（D案）
+- グループ参加: 全プラン+トライアル ✅（D案）
+- 見積作成: 全プラン+トライアル ✅（機能ロック=図面解析のみ方針）
+- 単価マスター: 全プラン+トライアル ✅
+
+### UI 実装 完了（同セッション内追加）
+
+**新規ファイル**:
+- `web/lib/get-company-trial.ts`: `getCompanyTrial(userId)` - React cache 付き、所属会社の trial_* 情報取得
+- `web/components/trial-banner.tsx`: `<TrialBanner>` - active時(青/警告amber)・ended時(赤+CTA)の3状態を1コンポーネントで処理
+
+**変更**:
+- `web/lib/get-plan.ts`: 戻り値 `Promise<string>` → `Promise<string | null>` に変更。null=トライアル、文字列=有料プラン
+- `web/app/(app)/dashboard/page.tsx`: `planType === null && trial` で TrialBanner、それ以外で PlanStatusBar の分岐表示。`PLAN_LIMITS` から `free` 削除
+- `web/app/(app)/settings/plan/page.tsx`: `planType === null` 分岐で「無料体験」表示 + 残数バー追加。`PLAN_FEATURES` `PLAN_ORDER` から `free` 削除
+- ビルド ✅ 全ルート通過
+
+**未着手**:
+- (E) `<TrialEndedModal>` (一旦バナーの ended 状態で代用、後で必要なら client modal 追加)
+- 動作確認（次セッション or 仮さんで実機テスト時）: 新規サインアップ → トライアル → 10回消費 → 終了表示
+- コミット & プッシュ → 本番デプロイ（次回ユーザーOK後）
+
+---
+
 ## 2026-05-21
 
 ### Stripe 決済テスト動作確認 → `users.plan_type` → `companies.plan` 読み元統一
@@ -49,6 +147,49 @@
 - `settings/plan/page.tsx:107` と `plan-status-bar.tsx:65` が `{!isUnlimited && ...}` で使用量バーを隠す設計
 - `ahoyu1031@gmail.com` は `users.is_unlimited = true`（developer）のため意図通り非表示
 - テスト時は一時的に false に落とすか、UI 側で developer でも使用量を見せるか要判断
+
+---
+
+## 2026-05-22
+
+### P0 タスク方針確定（実装着手前の言語化フェーズ）
+
+**背景**:
+- カリさん（aoki1031movie@gmail.com）が `company_member` に5行重複所属していて UI が「フリー」表示になる問題発覚
+- これは MVP 商品化に向けて根幹的バグ（複数会社所属 = 課金カウントズレ・チーム枠圧迫）
+
+**ユーザー判断（実装着手前の合意事項）**:
+- P0-① **1ユーザー1会社制約** + 重複クリーンアップ → **最優先で着手**
+- P0-② **アカウント完全削除機能**（個人情報保護法・GDPR 対応） → P0-① 完了後に着手
+- 重複整理の優先順位: **最新の会社所属を残す**（カリさんなら `cus_UYcp1IlbR7m5NU` / team_unlimited）
+- P1（開発環境のみのデータリセットボタン）は MVP に含めない
+
+**進め方**:
+1. `company_member` のスキーマ確認 SQL をユーザー実行 → 「最新」判定キー特定
+2. 重複ユーザー一覧 SQL で影響範囲確定
+3. クリーンアップ migration SQL 作成 → Supabase Dashboard で実行（バックアップ後）
+4. `ALTER TABLE company_member ADD CONSTRAINT ... UNIQUE (user_id);`
+5. `getUserPlan` を `.maybeSingle()` に戻して簡素化
+6. グループ参加・チーム招待で「既に他会社所属」エラー処理追加
+7. 「会社を変える」UI（`/settings/company` に追加）
+8. ビルド・コミット・プッシュ
+
+**P0-② 設計**:
+- `/settings` 内に「危険ゾーン」セクション
+- 削除確認モーダル（メール再入力で本人確認）
+- 削除対象: users, company_member, drawings（Storage含む）, quotes, unit_price_master, feedback, groups, Stripe Customer
+- チーム会社 owner で他にメンバー居る場合は削除不可（先に owner 譲渡）
+- API: `DELETE /api/account` → Stripe 先処理 → DB 削除 → Supabase Auth ユーザー削除
+
+### Claude Code ステータスバー消失問題 修正
+
+**原因**:
+- `claude-statusbar` の `core.py:519` で `LAST_STDIN_FALLBACK_MAX_AGE_S = 600`（10分）
+- Claude が長時間応答中や `--continue` 直後で `last_stdin.json` が10分超古いとキャッシュ復元諦めて "unknown" 表示
+
+**対処**:
+- `core.py` の定数を `3600`（1時間）に書き換え
+- 注意: `pip install -U claude-statusbar` で消える → 必要なら再パッチ
 
 ---
 

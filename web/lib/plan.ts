@@ -1,5 +1,14 @@
+/**
+ * 無料トライアル仕様:
+ *  - 新規サインアップ時に companies.plan = null で開始
+ *  - 図面解析を TRIAL_DRAWING_LIMIT 回 OR TRIAL_DURATION_DAYS 日のいずれか早い方まで使える
+ *  - 使い切り / 期限切れ → 図面解析ロック → /settings/plan へ誘導
+ *  - グループは「参加」のみ可（D案: 業界実態に合わせ個人プランでも参加OK）
+ */
+export const TRIAL_DRAWING_LIMIT = 10;
+export const TRIAL_DURATION_DAYS = 7;
+
 export const PLAN_MONTHLY_LIMITS: Record<string, number | null> = {
-  free: 15,
   individual: 30,
   team_5: 100,
   team_10: 300,
@@ -7,7 +16,6 @@ export const PLAN_MONTHLY_LIMITS: Record<string, number | null> = {
 };
 
 export const PLAN_DISPLAY_NAMES: Record<string, string> = {
-  free: "free",
   individual: "individual",
   team_5: "team (5名)",
   team_10: "team (10名)",
@@ -15,7 +23,6 @@ export const PLAN_DISPLAY_NAMES: Record<string, string> = {
 };
 
 export const PLAN_PRICES: Record<string, string> = {
-  free: "無料",
   individual: "¥1,480/月",
   team_5: "¥9,800/月",
   team_10: "¥16,800/月",
@@ -43,25 +50,108 @@ export function getPlanFromStripePriceId(priceId: string): PaidPlan | null {
   return null;
 }
 
-export function isTeamPlan(plan: string): boolean {
-  return ["team_5", "team_10", "team_unlimited"].includes(plan);
+export function isTeamPlan(plan: string | null): boolean {
+  return plan === "team_5" || plan === "team_10" || plan === "team_unlimited";
 }
 
-export function canUseUnitPrices(plan: string): boolean {
-  return plan !== "free";
+export function isPaidPlan(plan: string | null): plan is PaidPlan {
+  return plan !== null && (PAID_PLANS as readonly string[]).includes(plan);
 }
 
-export function canCreateGroup(plan: string): boolean {
-  return isTeamPlan(plan);
+/**
+ * トライアル状態判定。
+ * companies テーブルの該当行を渡す。plan=null かつ枠/期限の残りがあれば true。
+ */
+export function isTrialActive(company: {
+  plan: string | null;
+  trial_started_at: string | null;
+  trial_drawings_used: number | null;
+}): boolean {
+  if (company.plan !== null) return false;
+  if (!company.trial_started_at) return false;
+  const used = company.trial_drawings_used ?? 0;
+  if (used >= TRIAL_DRAWING_LIMIT) return false;
+  const startedMs = new Date(company.trial_started_at).getTime();
+  const elapsedDays = (Date.now() - startedMs) / (1000 * 60 * 60 * 24);
+  if (elapsedDays >= TRIAL_DURATION_DAYS) return false;
+  return true;
 }
 
-export function canJoinGroup(plan: string): boolean {
-  return plan !== "free";
+/**
+ * トライアル残量サマリ（UIバナー表示用）。
+ */
+export function getTrialStatus(company: {
+  plan: string | null;
+  trial_started_at: string | null;
+  trial_drawings_used: number | null;
+}): {
+  active: boolean;
+  drawingsRemaining: number;
+  daysRemaining: number;
+  reason?: "limit_reached" | "expired" | "paid";
+} {
+  if (company.plan !== null) {
+    return { active: false, drawingsRemaining: 0, daysRemaining: 0, reason: "paid" };
+  }
+  const used = company.trial_drawings_used ?? 0;
+  const drawingsRemaining = Math.max(0, TRIAL_DRAWING_LIMIT - used);
+  const startedMs = company.trial_started_at ? new Date(company.trial_started_at).getTime() : Date.now();
+  const elapsedDays = (Date.now() - startedMs) / (1000 * 60 * 60 * 24);
+  const daysRemaining = Math.max(0, Math.ceil(TRIAL_DURATION_DAYS - elapsedDays));
+  const active = drawingsRemaining > 0 && daysRemaining > 0;
+  const reason = !active
+    ? drawingsRemaining === 0 ? "limit_reached" : "expired"
+    : undefined;
+  return { active, drawingsRemaining, daysRemaining, reason };
 }
 
-export function getMonthlyLimit(plan: string, bonus = 0): number | null {
-  const base = PLAN_MONTHLY_LIMITS[plan] ?? 15;
-  if (base === null) return null;
+/**
+ * 機能アクセス制御の唯一の真実。UI/API どちらからもここを参照する。
+ */
+export type PlanCapabilities = {
+  canAnalyzeDrawings: boolean;  // トライアル中も true（API側で枠チェック）
+  canCreateGroups: boolean;     // team プランのみ
+  canJoinGroups: boolean;       // 全プラン+トライアルOK（D案）
+  canCreateQuotes: boolean;
+  canUseUnitPrices: boolean;
+  maxGroupMembers: number;      // Infinity は team_unlimited
+};
+
+export function getPlanCapabilities(plan: string | null): PlanCapabilities {
+  const isTeam = isTeamPlan(plan);
+  return {
+    canAnalyzeDrawings: true, // 実際の使用可否は API 側で trial 枠 + 月次上限判定
+    canCreateGroups: isTeam,  // D案: 作成は team プランのみ
+    canJoinGroups: true,       // D案: 全プラン+トライアル参加OK
+    canCreateQuotes: true,     // 機能ロックは図面解析のみの方針
+    canUseUnitPrices: true,    // 同上
+    maxGroupMembers:
+      plan === "team_5" ? 5 :
+      plan === "team_10" ? 10 :
+      plan === "team_unlimited" ? Infinity : 0,
+  };
+}
+
+/** 旧シグネチャ互換（呼び出し元が string で渡してくる箇所のため残す） */
+export function canCreateGroup(plan: string | null): boolean {
+  return getPlanCapabilities(plan).canCreateGroups;
+}
+export function canJoinGroup(plan: string | null): boolean {
+  return getPlanCapabilities(plan).canJoinGroups;
+}
+export function canUseUnitPrices(plan: string | null): boolean {
+  return getPlanCapabilities(plan).canUseUnitPrices;
+}
+
+/**
+ * 有料プランの月次解析上限。
+ * トライアル（plan=null）は月次ではなくライフタイム枠 (trial_drawings_used) で別管理するので null を返す。
+ * → 呼び出し側は plan===null の場合に getTrialStatus() を使うこと。
+ */
+export function getMonthlyLimit(plan: string | null, bonus = 0): number | null {
+  if (plan === null) return null;
+  const base = PLAN_MONTHLY_LIMITS[plan];
+  if (base === null || base === undefined) return base ?? null;
   return base + bonus;
 }
 

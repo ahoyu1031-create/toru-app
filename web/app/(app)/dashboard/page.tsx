@@ -3,11 +3,13 @@ import Link from "next/link";
 import { createClient, createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
 import { getUserPlan } from "@/lib/get-plan";
+import { getCompanyTrial } from "@/lib/get-company-trial";
 import { TrendingUp, TrendingDown, ArrowRight, ScanLine, Clock } from "lucide-react";
 import { PlanStatusBar } from "./plan-status-bar";
+import { TrialBanner } from "@/components/trial-banner";
 
 const PLAN_LIMITS: Record<string, number | null> = {
-  free: 15, individual: 30, team_5: 100, team_10: 300, team_unlimited: null,
+  individual: 30, team_5: 100, team_10: 300, team_unlimited: null,
 };
 
 /* ─── helpers ─────────────────────────────── */
@@ -111,9 +113,14 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
   const company = companies?.[0] ?? null;
   const planType = await getUserPlan(user.id);
+  const trial = await getCompanyTrial(user.id);
   const bonusAnalyses = userProfile?.bonus_analyses ?? 0;
   const isUnlimited = userProfile?.is_unlimited ?? false;
-  const monthLimit = isUnlimited ? null : (PLAN_LIMITS[planType] ?? 15);
+  const monthLimit = isUnlimited
+    ? null
+    : planType === null
+      ? null // トライアル中は月次概念なし（TrialBanner で別表示）
+      : (PLAN_LIMITS[planType] ?? null);
 
   // allQuotes（6ヶ月分）から今月・先月を派生
   const thisMonthQuotes = (allQuotes ?? []).filter((q) => q.created_at >= thisMonthStart);
@@ -163,15 +170,19 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     <div className="px-4 py-6 sm:px-6">
       <div className="mx-auto w-full max-w-6xl space-y-5 sm:space-y-6">
 
-        {/* Plan status widget */}
-        <PlanStatusBar
-          planType={planType}
-          isUnlimited={isUnlimited}
-          baseLimit={monthLimit}
-          usedThisMonth={thisMonthAnalysisCount ?? 0}
-          bonus={bonusAnalyses}
-          companyName={company?.name ?? null}
-        />
+        {/* Trial banner (plan=null) OR Plan status widget (paid/grandfathered) */}
+        {planType === null && trial ? (
+          <TrialBanner company={trial} />
+        ) : (
+          <PlanStatusBar
+            planType={planType ?? ""}
+            isUnlimited={isUnlimited}
+            baseLimit={monthLimit}
+            usedThisMonth={thisMonthAnalysisCount ?? 0}
+            bonus={bonusAnalyses}
+            companyName={company?.name ?? null}
+          />
+        )}
 
         {/* はじめに checklist — hide once all done */}
         {!allDone && (

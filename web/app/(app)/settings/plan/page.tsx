@@ -1,22 +1,22 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { createAdminClient, getCurrentUser } from "@/lib/supabase/server";
-import { PLAN_PRICES, isTeamPlan, getMonthlyLimit, PAID_PLANS, type PaidPlan } from "@/lib/plan";
+import { PLAN_PRICES, isTeamPlan, getMonthlyLimit, PAID_PLANS, type PaidPlan, getTrialStatus, TRIAL_DRAWING_LIMIT } from "@/lib/plan";
 import { getUserPlan } from "@/lib/get-plan";
-import { Zap, Check, Lock } from "lucide-react";
+import { getCompanyTrial } from "@/lib/get-company-trial";
+import { Zap, Check, Lock, Gift } from "lucide-react";
 import { UpgradeButton } from "./upgrade-button";
 import { ManageButton } from "./manage-button";
 import { PlanResultToast } from "./plan-result-toast";
 
 const PLAN_FEATURES: Record<string, { analyses: string; unitPrices: boolean; joinGroup: boolean; createGroup: boolean }> = {
-  free:           { analyses: "15回/月",   unitPrices: false, joinGroup: false, createGroup: false },
   individual:     { analyses: "30回/月",   unitPrices: true,  joinGroup: true,  createGroup: false },
   team_5:         { analyses: "100回/月",  unitPrices: true,  joinGroup: true,  createGroup: true  },
   team_10:        { analyses: "300回/月",  unitPrices: true,  joinGroup: true,  createGroup: true  },
   team_unlimited: { analyses: "無制限",    unitPrices: true,  joinGroup: true,  createGroup: true  },
 };
 
-const PLAN_ORDER = ["free", "individual", "team_5", "team_10", "team_unlimited"] as const;
+const PLAN_ORDER = ["individual", "team_5", "team_10", "team_unlimited"] as const;
 
 export default async function PlanPage() {
   const user = await getCurrentUser();
@@ -34,6 +34,8 @@ export default async function PlanPage() {
     .maybeSingle();
 
   const planType = await getUserPlan(user.id);
+  const trial = await getCompanyTrial(user.id);
+  const trialStatus = trial ? getTrialStatus(trial) : null;
   const isUnlimited = profile?.is_unlimited ?? false;
   const bonus = profile?.bonus_analyses ?? 0;
   const limit = isUnlimited ? null : getMonthlyLimit(planType, bonus);
@@ -81,15 +83,15 @@ export default async function PlanPage() {
               <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>現在のプラン</p>
               <div className="mt-1 flex items-center gap-2 flex-wrap">
                 <h2 className="text-2xl font-bold" style={{ color: "var(--color-text)" }}>
-                  {isUnlimited ? "developer" : planType}
+                  {isUnlimited ? "developer" : planType ?? "無料体験中"}
                 </h2>
                 <span
                   className="rounded-full px-2.5 py-0.5 text-xs font-bold"
-                  style={planType === "free"
-                    ? { background: "rgba(100,116,139,0.12)", color: "#64748B" }
+                  style={planType === null
+                    ? { background: "rgba(34,197,94,0.12)", color: "#16A34A" }
                     : { background: "rgba(37,99,235,0.12)", color: "var(--color-primary)" }}
                 >
-                  {isUnlimited ? "無制限" : planType === "free" ? "無料" : PLAN_PRICES[planType]}
+                  {isUnlimited ? "無制限" : planType === null ? "無料体験" : PLAN_PRICES[planType]}
                 </span>
               </div>
             </div>
@@ -97,9 +99,28 @@ export default async function PlanPage() {
           </div>
 
           {/* 課金中のみ「請求情報・解約」ボタンを表示 */}
-          {(PAID_PLANS as readonly string[]).includes(planType) && !isUnlimited && (
+          {planType !== null && (PAID_PLANS as readonly string[]).includes(planType) && !isUnlimited && (
             <div className="mt-4 flex justify-end">
               <ManageButton />
+            </div>
+          )}
+
+          {/* トライアル中の残量表示 */}
+          {planType === null && trialStatus && (
+            <div className="mt-5 rounded-xl border border-green-200 bg-green-50 p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Gift size={16} className="text-green-700" />
+                <span className="text-sm font-semibold text-green-900">無料体験中</span>
+              </div>
+              {trialStatus.active ? (
+                <p className="text-sm text-green-800">
+                  図面解析: 残り <span className="font-bold">{trialStatus.drawingsRemaining}</span> 回（全{TRIAL_DRAWING_LIMIT}回）/ あと <span className="font-bold">{trialStatus.daysRemaining}</span> 日
+                </p>
+              ) : (
+                <p className="text-sm text-red-700">
+                  体験期間が終了しました。下のプランから選択してください。
+                </p>
+              )}
             </div>
           )}
 
