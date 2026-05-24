@@ -32,6 +32,33 @@ export const PLAN_PRICES: Record<string, string> = {
 export const PAID_PLANS = ["individual", "team_5", "team_10", "team_unlimited"] as const;
 export type PaidPlan = typeof PAID_PLANS[number];
 
+/**
+ * プランの「上下関係」を定義。ティア値が大きい = 上位プラン。
+ * アップグレード判定（即時切替 OK） / ダウングレード判定（期末切替で公平性確保）に使う。
+ */
+export const PLAN_TIER: Record<string, number> = {
+  individual: 1,
+  team_5: 2,
+  team_10: 3,
+  team_unlimited: 4,
+};
+
+/**
+ * 新プランへの変更が「アップグレード」か「ダウングレード」か「同等(=変更不要)」かを判定。
+ * トライアル(null) からは全て「アップグレード」扱い（初回 Checkout 用）。
+ */
+export type PlanChangeDirection = "upgrade" | "downgrade" | "same" | "initial";
+export function classifyPlanChange(
+  currentPlan: string | null,
+  newPlan: string
+): PlanChangeDirection {
+  if (currentPlan === null) return "initial";
+  if (currentPlan === newPlan) return "same";
+  const current = PLAN_TIER[currentPlan] ?? 0;
+  const next = PLAN_TIER[newPlan] ?? 0;
+  return next > current ? "upgrade" : "downgrade";
+}
+
 export function getStripePriceId(plan: PaidPlan): string | null {
   const map: Record<PaidPlan, string | undefined> = {
     individual:     process.env.STRIPE_PRICE_INDIVIDUAL,

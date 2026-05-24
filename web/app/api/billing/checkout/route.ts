@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { requireStripe } from "@/lib/stripe";
-import { getStripePriceId, PAID_PLANS, type PaidPlan } from "@/lib/plan";
+import { getStripePriceId, PAID_PLANS, type PaidPlan, getPlanFromStripePriceId, classifyPlanChange } from "@/lib/plan";
 
 export async function POST(req: Request) {
   const user = await getCurrentUser();
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
     limit: 100,
   });
 
-  // ケースA: 既に1つアクティブ → そのサブスクの price を差し替え（プロレーション自動）
+  // ケースA: 既に1つアクティブ → アップグレード or ダウングレード で動作分岐
   if (existingSubs.data.length === 1) {
     const sub = existingSubs.data[0];
     const item = sub.items.data[0];
@@ -107,16 +107,68 @@ export async function POST(req: Request) {
       });
     }
 
-    await stripe.subscriptions.update(sub.id, {
-      items: [{ id: item.id, price: priceId }],
-      // 比例配分の請求は一切作らない（ユーザー混乱回避）。今月は追加料金ゼロ、次回請求から新料金。
-      proration_behavior: "none",
-      metadata: { company_id: companyId, plan },
+    const currentPlanFromStripe = getPlanFromStripePriceId(item.price.id);
+    const direction = classifyPlanChange(currentPlanFromStripe, plan);
+
+    if (direction === "upgrade") {
+      // アップグレード: 即時切替、追加料金なし（ユーザー嬉しい）
+      await stripe.subscriptions.update(sub.id, {
+        items: [{ id: item.id, price: priceId }],
+        proration_behavior: "none",
+        metadata: { company_id: companyId, plan },
+      });
+      // Webhook customer.subscription.updated が companies.plan を更新
+      return NextResponse.json({
+        url: `${origin}/settings/plan?success=1&updated=1&direction=upgrade`,
+        updated: true,
+        direction: "upgrade",
+      });
+    }
+
+    // ダウングレード: 次回請求日まで現プラン維持 → 期末に新プランへ自動切替
+    // Stripe Subscription Schedules で実現（ユーザーは支払った期間まで現プラン権利保持）
+
+    // 既にスケジュール有り（前回ダウングレード予約）なら releaseしてやり直し
+    if (sub.schedule) {
+      const existingScheduleId = typeof sub.schedule === "string" ? sub.schedule : sub.schedule.id;
+      await stripe.subscriptionSchedules.release(existingScheduleId);
+    }
+
+    const schedule = await stripe.subscriptionSchedules.create({
+      from_subscription: sub.id,
     });
-    // Webhook customer.subscription.updated が companies.plan を更新
+
+    // Stripe API では current_period_* が item 単位に移行済み
+    const itemWithPeriod = item as typeof item & {
+      current_period_start: number;
+      current_period_end: number;
+    };
+    const periodStart = itemWithPeriod.current_period_start;
+    const periodEnd = itemWithPeriod.current_period_end;
+
+    await stripe.subscriptionSchedules.update(schedule.id, {
+      end_behavior: "release",
+      phases: [
+        {
+          // 現在のフェーズ: 期末まで現プラン維持
+          items: [{ price: item.price.id, quantity: 1 }],
+          start_date: periodStart,
+          end_date: periodEnd,
+        },
+        {
+          // 期末以降: 新プラン(ダウングレード後)へ自動切替
+          items: [{ price: priceId, quantity: 1 }],
+          metadata: { company_id: companyId, plan },
+        },
+      ],
+      metadata: { company_id: companyId, downgrade_to: plan },
+    });
+
     return NextResponse.json({
-      url: `${origin}/settings/plan?success=1&updated=1`,
-      updated: true,
+      url: `${origin}/settings/plan?success=1&scheduled=1&direction=downgrade`,
+      scheduled: true,
+      direction: "downgrade",
+      effective_at: periodEnd,
     });
   }
 

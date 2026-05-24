@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { useToast } from "@/components/toast-context";
-import { PLAN_PRICES } from "@/lib/plan";
+import { PLAN_PRICES, classifyPlanChange } from "@/lib/plan";
 
 type Props = {
   currentPlan: string | null; // null = トライアル状態 = 既存サブスクなし
@@ -82,24 +82,52 @@ export function PlanChangeModal({ currentPlan, newPlan, onClose }: Props) {
           </div>
         </div>
 
-        <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 mb-5">
-          <div className="flex gap-2">
-            <AlertCircle size={16} className="shrink-0 mt-0.5 text-blue-600" />
-            <div className="text-xs text-blue-900 space-y-1">
-              {currentPlan === null ? (
-                <>
-                  <p className="font-semibold">初回プラン契約です</p>
-                  <p>次の画面（Stripeの安全な決済ページ）でカード情報を入力してください。</p>
-                </>
-              ) : (
-                <>
-                  <p className="font-semibold">今月は追加料金なし</p>
-                  <p>すぐに新プランの機能が使えるようになり、料金は<strong>次回請求日から{PLAN_PRICES[newPlan]}</strong>に変わります。今月の差額は請求されません。</p>
-                </>
-              )}
+        {/* 動作説明: initial / upgrade / downgrade で表示分岐 */}
+        {(() => {
+          const direction = classifyPlanChange(currentPlan, newPlan);
+
+          if (direction === "initial") {
+            return (
+              <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 mb-5">
+                <div className="flex gap-2">
+                  <AlertCircle size={16} className="shrink-0 mt-0.5 text-blue-600" />
+                  <div className="text-xs text-blue-900 space-y-1">
+                    <p className="font-semibold">初回プラン契約</p>
+                    <p>次の画面（Stripe の安全な決済ページ）でカード情報を入力してください。</p>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          if (direction === "upgrade") {
+            return (
+              <div className="rounded-xl border border-green-200 bg-green-50 p-3 mb-5">
+                <div className="flex gap-2">
+                  <ArrowUpRight size={16} className="shrink-0 mt-0.5 text-green-700" />
+                  <div className="text-xs text-green-900 space-y-1">
+                    <p className="font-semibold">アップグレード — 今すぐ有効</p>
+                    <p>新プランの機能が <strong>すぐ使えるようになります</strong>。今月は<strong>追加料金なし</strong>、次回請求日から {PLAN_PRICES[newPlan]} に変わります。</p>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          // downgrade
+          return (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 mb-5">
+              <div className="flex gap-2">
+                <ArrowDownRight size={16} className="shrink-0 mt-0.5 text-amber-700" />
+                <div className="text-xs text-amber-900 space-y-1">
+                  <p className="font-semibold">ダウングレード — 次回請求日から有効</p>
+                  <p>支払い済みの期間は<strong>現プラン（{currentPlan ? PLAN_PRICES[currentPlan] : ""}）のまま</strong>ご利用いただけます。<strong>次回請求日から自動的に {PLAN_PRICES[newPlan]} に切り替わります</strong>。</p>
+                  <p className="text-amber-800">※ 今すぐの切替を希望される場合は、一度解約してから新規ご契約ください。</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          );
+        })()}
 
         <div className="flex gap-2 justify-end">
           <button
