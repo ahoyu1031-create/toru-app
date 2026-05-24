@@ -192,64 +192,86 @@ export default async function PlanPage() {
             </Link>
           )}
 
-          <div className="space-y-3">
+          {/* 横並び4カラム（PC）/ 2カラム（タブレット）/ 1カラム（モバイル） */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {PLAN_ORDER.map((plan) => {
-              const isCurrent = !isUnlimited && planType === plan;
+              // dev (is_unlimited=true) は team_unlimited 相当として扱う
+              const isCurrent = isUnlimited
+                ? plan === "team_unlimited"
+                : planType === plan;
+              const isRecommended = plan === "team_10"; // 主力プラン強調
               const features = PLAN_FEATURES[plan];
-              const isUpgrade = PLAN_ORDER.indexOf(plan) > PLAN_ORDER.indexOf(planType as typeof PLAN_ORDER[number]);
+              const isUpgrade = !isUnlimited && planType !== null
+                && PLAN_ORDER.indexOf(plan) > PLAN_ORDER.indexOf(planType as typeof PLAN_ORDER[number]);
 
               return (
                 <div
                   key={plan}
-                  className="rounded-2xl p-4 sm:p-5"
+                  className="relative flex flex-col rounded-2xl p-5 transition"
                   style={{
-                    background: isCurrent ? "rgba(37,99,235,0.05)" : "var(--color-surface)",
-                    border: `1px solid ${isCurrent ? "var(--color-primary)" : "var(--color-border)"}`,
+                    background: isCurrent ? "rgba(37,99,235,0.04)" : "var(--color-surface)",
+                    border: `${isRecommended || isCurrent ? "2px" : "1px"} solid ${
+                      isCurrent ? "var(--color-primary)" :
+                      isRecommended ? "rgba(37,99,235,0.4)" : "var(--color-border)"
+                    }`,
                   }}
                 >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-bold" style={{ color: "var(--color-text)" }}>{plan}</span>
-                          {isCurrent && (
-                            <span className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: "var(--color-primary)", color: "#fff" }}>
-                              現在のプラン
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm font-semibold mt-0.5" style={{ color: "var(--color-primary)" }}>
-                          {PLAN_PRICES[plan]}
-                        </p>
-                      </div>
-                    </div>
+                  {/* 上部バッジ */}
+                  {isCurrent && (
+                    <span
+                      className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full px-2.5 py-0.5 text-[10px] font-bold whitespace-nowrap"
+                      style={{ background: "var(--color-primary)", color: "#fff" }}
+                    >
+                      {isUnlimited ? "developer" : "現在のプラン"}
+                    </span>
+                  )}
+                  {!isCurrent && isRecommended && (
+                    <span
+                      className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full px-2.5 py-0.5 text-[10px] font-bold whitespace-nowrap"
+                      style={{ background: "rgba(37,99,235,0.12)", color: "var(--color-primary)" }}
+                    >
+                      おすすめ
+                    </span>
+                  )}
 
-                    {/* 機能リスト */}
-                    <div className="flex flex-wrap gap-x-4 gap-y-1">
-                      <FeatureTag label={features.analyses} enabled />
-                      <FeatureTag label="単価マスタ" enabled={features.unitPrices} />
-                      <FeatureTag label="グループ参加" enabled={features.joinGroup} />
-                      <FeatureTag label="グループ作成" enabled={features.createGroup} />
-                    </div>
-
-                    {/* アクション: 現プラン=disabled, Live=変更ボタン, Test=非表示(上部バナーへ誘導) */}
-                    {isCurrent ? (
-                      <button
-                        type="button"
-                        disabled
-                        className="shrink-0 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl px-4 text-xs font-semibold cursor-not-allowed opacity-60"
-                        style={{ background: "var(--color-bg)", color: "var(--color-text-muted)", border: "1px solid var(--color-border)" }}
-                      >
-                        現在のプラン
-                      </button>
-                    ) : IS_LIVE_BILLING && (PAID_PLANS as readonly string[]).includes(plan) ? (
-                      <UpgradeButton
-                        plan={plan as PaidPlan}
-                        currentPlan={planType}
-                        variant={isUpgrade ? "primary" : "secondary"}
-                      />
-                    ) : null}
+                  {/* プラン名 + 価格 */}
+                  <div className="mb-4">
+                    <h4 className="text-sm font-bold" style={{ color: "var(--color-text)" }}>
+                      {plan}
+                    </h4>
+                    <p className="mt-1 text-xl font-bold tabular-nums" style={{ color: "var(--color-primary)" }}>
+                      {PLAN_PRICES[plan]}
+                    </p>
                   </div>
+
+                  {/* 機能リスト（縦並びで視認性向上） */}
+                  <ul className="mb-5 flex-1 space-y-2 text-xs">
+                    <FeatureRow label={features.analyses} enabled />
+                    <FeatureRow label="単価マスタ" enabled={features.unitPrices} />
+                    <FeatureRow label="グループ参加" enabled={features.joinGroup} />
+                    <FeatureRow label="グループ作成" enabled={features.createGroup} />
+                  </ul>
+
+                  {/* アクション */}
+                  {isCurrent ? (
+                    <button
+                      type="button"
+                      disabled
+                      className="w-full inline-flex h-9 items-center justify-center rounded-xl px-4 text-xs font-semibold cursor-not-allowed opacity-60"
+                      style={{ background: "var(--color-bg)", color: "var(--color-text-muted)", border: "1px solid var(--color-border)" }}
+                    >
+                      現在のプラン
+                    </button>
+                  ) : IS_LIVE_BILLING && (PAID_PLANS as readonly string[]).includes(plan) ? (
+                    <UpgradeButton
+                      plan={plan as PaidPlan}
+                      currentPlan={planType}
+                      variant={isRecommended || isUpgrade ? "primary" : "secondary"}
+                    />
+                  ) : (
+                    /* Test mode: ボタンスペースを埋めるためのスペーサ（高さ揃え） */
+                    <div className="h-9" />
+                  )}
                 </div>
               );
             })}
@@ -312,5 +334,19 @@ function FeatureTag({ label, enabled }: { label: string; enabled: boolean }) {
         : <Lock size={11} style={{ color: "var(--color-text-subtle)", flexShrink: 0 }} />}
       {label}
     </span>
+  );
+}
+
+function FeatureRow({ label, enabled }: { label: string; enabled: boolean }) {
+  return (
+    <li
+      className="flex items-center gap-1.5"
+      style={{ color: enabled ? "var(--color-text)" : "var(--color-text-subtle)" }}
+    >
+      {enabled
+        ? <Check size={14} style={{ color: "#059669", flexShrink: 0 }} />
+        : <Lock size={12} style={{ color: "var(--color-text-subtle)", flexShrink: 0 }} />}
+      <span className={enabled ? "" : "line-through"}>{label}</span>
+    </li>
   );
 }
