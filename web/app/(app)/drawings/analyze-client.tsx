@@ -227,11 +227,46 @@ export function DrawingAnalyzeClient() {
         })}
       </div>
 
-      {/* Error */}
-      {error && !analysis.betaComplete && (
+      {/* Error (トライアル終了・ベータ完了以外) */}
+      {error && !analysis.betaComplete && !analysis.trialEnded && (
         <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-[color:var(--color-danger)]">
           {error}
         </div>
+      )}
+
+      {/* トライアル終了モーダル */}
+      {analysis.trialEnded && typeof document !== "undefined" && createPortal(
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+          <div style={{ background: "var(--color-surface)", borderRadius: 20, padding: 32, maxWidth: 460, width: "100%", textAlign: "center", boxShadow: "0 24px 64px rgba(0,0,0,0.2)" }}>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>🎁</div>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: "var(--color-text)", marginBottom: 8 }}>
+              無料体験が終了しました
+            </h2>
+            <p style={{ fontSize: 14, color: "var(--color-text-muted)", marginBottom: 24 }}>
+              {analysis.trialReason === "limit_reached"
+                ? "無料体験の解析回数を使い切りました。"
+                : "無料体験期間が終了しました。"}
+              {" "}引き続きTORUをご利用いただくには、アルファテスター枠（無料）または有料プランをご選択ください。
+            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
+              <Link
+                href="/alpha"
+                className="inline-flex h-11 items-center justify-center rounded-xl px-6 text-sm font-semibold text-white"
+                style={{ background: "var(--color-primary)" }}
+              >
+                アルファ枠（無料）に申込
+              </Link>
+              <Link
+                href="/settings/plan"
+                className="inline-flex h-11 items-center justify-center rounded-xl px-6 text-sm font-semibold"
+                style={{ background: "var(--color-bg)", color: "var(--color-text)", border: "1px solid var(--color-border)" }}
+              >
+                プランを見る
+              </Link>
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
 
       {/* ベータ完了モーダル */}

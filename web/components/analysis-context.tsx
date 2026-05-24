@@ -35,6 +35,8 @@ interface AnalysisState {
   hasNotification: boolean;
   betaComplete: boolean;
   betaBonusUsed: boolean;
+  trialEnded: boolean;
+  trialReason: "limit_reached" | "expired" | null;
 }
 
 interface AnalysisCtx {
@@ -55,6 +57,8 @@ const defaultState: AnalysisState = {
   hasNotification: false,
   betaComplete: false,
   betaBonusUsed: false,
+  trialEnded: false,
+  trialReason: null,
 };
 
 const AnalysisContext = createContext<AnalysisCtx>({
@@ -86,9 +90,19 @@ async function fetchMode(storagePath: string, m: NonAllMode, trade: string): Pro
   });
   const json = await res.json();
   if (!res.ok) {
-    const err = new Error(json.error ?? "解析に失敗しました");
-    if (json.betaComplete) (err as Error & { betaComplete: boolean; bonusUsed?: boolean }).betaComplete = true;
-  if (json.bonusUsed) (err as Error & { betaComplete: boolean; bonusUsed?: boolean }).bonusUsed = true;
+    const err = new Error(json.error ?? "解析に失敗しました") as Error & {
+      betaComplete?: boolean;
+      bonusUsed?: boolean;
+      trialEnded?: boolean;
+      trialReason?: "limit_reached" | "expired";
+    };
+    if (json.betaComplete) err.betaComplete = true;
+    if (json.bonusUsed) err.bonusUsed = true;
+    // 402 (Payment Required): 無料トライアル枠を使い切った/期限切れ
+    if (res.status === 402 && json.trialEnded) {
+      err.trialEnded = true;
+      err.trialReason = json.reason;
+    }
     throw err;
   }
   return json as Result;
@@ -161,9 +175,16 @@ export function AnalysisProvider({ children }: { children: React.ReactNode }) {
         error: partialWarning,
       }));
     } catch (e) {
-      const err2 = e as Error & { betaComplete?: boolean; bonusUsed?: boolean };
+      const err2 = e as Error & {
+        betaComplete?: boolean;
+        bonusUsed?: boolean;
+        trialEnded?: boolean;
+        trialReason?: "limit_reached" | "expired";
+      };
       const betaComplete = e instanceof Error && !!err2.betaComplete;
       const betaBonusUsed = e instanceof Error && !!err2.bonusUsed;
+      const trialEnded = e instanceof Error && !!err2.trialEnded;
+      const trialReason = e instanceof Error ? (err2.trialReason ?? null) : null;
       setState((s) => ({
         ...s,
         status: "error",
@@ -171,6 +192,8 @@ export function AnalysisProvider({ children }: { children: React.ReactNode }) {
         hasNotification: true,
         betaComplete,
         betaBonusUsed,
+        trialEnded,
+        trialReason,
       }));
     }
   }, []);

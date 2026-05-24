@@ -1,9 +1,12 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/supabase/server";
 import { ensureCompany } from "@/lib/ensure-company";
+import { getCompanyTrial } from "@/lib/get-company-trial";
+import { TRIAL_DRAWING_LIMIT, TRIAL_DURATION_DAYS } from "@/lib/plan";
+import { TrialBanner } from "@/components/trial-banner";
 import { DrawingAnalyzeClient } from "../analyze-client";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, TriangleAlert, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Sparkles, TriangleAlert, ShieldCheck, Gift } from "lucide-react";
 
 interface Props {
   searchParams: Promise<{ onboarding?: string }>;
@@ -16,25 +19,33 @@ export default async function NewDrawingPage({ searchParams }: Props) {
 
   const { onboarding } = await searchParams;
   const isFirstTime = onboarding === "1";
+  const trial = await getCompanyTrial(user.id);
 
   return (
     <div className="px-6 py-8">
       <div className="mx-auto w-full max-w-4xl">
 
-        {/* Welcome banner for new users */}
+        {/* トライアル状態を常に表示（新規/既存どちらも） */}
+        {trial && trial.plan === null && (
+          <div className="mb-4">
+            <TrialBanner company={trial} />
+          </div>
+        )}
+
+        {/* Welcome banner for new users (trial 詳細を含む) */}
         {isFirstTime && (
           <div
             className="mb-6 flex items-start gap-3 rounded-2xl px-5 py-4"
             style={{ background: "rgba(37,99,235,0.06)", border: "1px solid rgba(37,99,235,0.2)" }}
           >
-            <Sparkles size={18} style={{ color: "var(--color-primary)", flexShrink: 0, marginTop: 2 }} />
+            <Gift size={18} style={{ color: "var(--color-primary)", flexShrink: 0, marginTop: 2 }} />
             <div>
               <p className="text-sm font-semibold" style={{ color: "var(--color-primary)" }}>
-                設定完了！さっそく最初の解析をしてみましょう
+                設定完了！🎁 無料体験 {TRIAL_DRAWING_LIMIT}回 / {TRIAL_DURATION_DAYS}日 が始まりました
               </p>
               <p className="mt-0.5 text-xs" style={{ color: "var(--color-text-muted)" }}>
                 図面PDFをアップロードすると、AIが材料・数量・施工注意点を自動で抽出します。
-                結果はそのまま見積書に変換できます。
+                結果はそのまま見積書に変換できます。さっそく最初の解析をしてみましょう。
               </p>
             </div>
           </div>
