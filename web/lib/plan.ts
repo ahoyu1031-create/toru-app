@@ -5,8 +5,8 @@
  *  - 使い切り / 期限切れ → 図面解析ロック → /settings/plan へ誘導
  *  - グループは「参加」のみ可（D案: 業界実態に合わせ個人プランでも参加OK）
  */
-export const TRIAL_DRAWING_LIMIT = 10;
-export const TRIAL_DURATION_DAYS = 7;
+export const TRIAL_DRAWING_LIMIT = 20;
+export const TRIAL_DURATION_DAYS = 14;
 
 export const PLAN_MONTHLY_LIMITS: Record<string, number | null> = {
   individual: 30,
