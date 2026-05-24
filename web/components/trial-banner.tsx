@@ -5,6 +5,7 @@ import {
   TRIAL_DRAWING_LIMIT,
   TRIAL_DURATION_DAYS,
 } from "@/lib/plan";
+import { IS_LIVE_BILLING } from "@/lib/billing-mode";
 
 type Props = {
   company: {
@@ -68,25 +69,46 @@ export function TrialBanner({ company }: Props) {
     );
   }
 
-  // ended: プラン選択誘導
+  // ended: 課金UIモードで分岐
   const reasonText =
     status.reason === "limit_reached"
       ? `無料体験の解析回数（${TRIAL_DRAWING_LIMIT}回）を使い切りました`
       : `無料体験期間（${TRIAL_DURATION_DAYS}日間）が終了しました`;
 
+  // Live mode: プラン選択へ誘導
+  if (IS_LIVE_BILLING) {
+    return (
+      <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-red-900">
+          <AlertCircle size={18} className="text-red-600" />
+          <span className="text-sm font-medium">
+            {reasonText} — 引き続きご利用にはプラン選択が必要です
+          </span>
+        </div>
+        <Link
+          href="/settings/plan"
+          className="rounded-md bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-3 py-1.5 whitespace-nowrap"
+        >
+          プランを選ぶ
+        </Link>
+      </div>
+    );
+  }
+
+  // Test mode (MVP期間): アルファテスター枠誘導
   return (
     <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex items-center justify-between gap-3">
       <div className="flex items-center gap-2 text-red-900">
         <AlertCircle size={18} className="text-red-600" />
         <span className="text-sm font-medium">
-          {reasonText} — 引き続きご利用にはプラン選択が必要です
+          {reasonText} — アルファテスター枠（無料）で続けてご利用いただけます
         </span>
       </div>
       <Link
-        href="/settings/plan"
+        href="/alpha"
         className="rounded-md bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-3 py-1.5 whitespace-nowrap"
       >
-        プランを選ぶ
+        アルファ枠で続ける →
       </Link>
     </div>
   );

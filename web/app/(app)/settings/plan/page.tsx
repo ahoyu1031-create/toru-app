@@ -1,10 +1,12 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import Link from "next/link";
 import { createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { PLAN_PRICES, isTeamPlan, getMonthlyLimit, PAID_PLANS, type PaidPlan, getTrialStatus, TRIAL_DRAWING_LIMIT } from "@/lib/plan";
+import { IS_LIVE_BILLING } from "@/lib/billing-mode";
 import { getUserPlan } from "@/lib/get-plan";
 import { getCompanyTrial } from "@/lib/get-company-trial";
-import { Zap, Check, Lock, Gift } from "lucide-react";
+import { Zap, Check, Lock, Gift, Sparkles } from "lucide-react";
 import { UpgradeButton } from "./upgrade-button";
 import { ManageButton } from "./manage-button";
 import { PlanResultToast } from "./plan-result-toast";
@@ -116,9 +118,16 @@ export default async function PlanPage() {
                 <p className="text-sm text-green-800">
                   図面解析: 残り <span className="font-bold">{trialStatus.drawingsRemaining}</span> 回（全{TRIAL_DRAWING_LIMIT}回）/ あと <span className="font-bold">{trialStatus.daysRemaining}</span> 日
                 </p>
-              ) : (
+              ) : IS_LIVE_BILLING ? (
                 <p className="text-sm text-red-700">
                   体験期間が終了しました。下のプランから選択してください。
+                </p>
+              ) : (
+                <p className="text-sm text-red-700">
+                  体験期間が終了しました。
+                  <Link href="/alpha" className="font-semibold underline ml-1">
+                    アルファテスター枠（無料）に申込
+                  </Link>
                 </p>
               )}
             </div>
@@ -161,6 +170,28 @@ export default async function PlanPage() {
         {/* プラン比較 */}
         <section>
           <h3 className="mb-4 text-base font-semibold" style={{ color: "var(--color-text)" }}>プラン比較</h3>
+
+          {/* Test mode: 上部にアルファ枠案内バナー */}
+          {!IS_LIVE_BILLING && (
+            <Link
+              href="/alpha"
+              className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 transition hover:bg-amber-100 cursor-pointer"
+            >
+              <div className="flex items-start gap-2">
+                <Sparkles size={18} className="shrink-0 mt-0.5 text-amber-700" />
+                <div>
+                  <p className="text-sm font-semibold text-amber-900">現在 MVP 期間中 — プラン購入は準備中です</p>
+                  <p className="text-xs text-amber-800 mt-0.5">
+                    今すぐ全機能を無料で使いたい方は<strong>アルファテスター枠</strong>にお申込みください（先着10名・Live切替後永久半額特典あり）
+                  </p>
+                </div>
+              </div>
+              <span className="text-sm font-semibold text-amber-900 whitespace-nowrap">
+                申込ページへ →
+              </span>
+            </Link>
+          )}
+
           <div className="space-y-3">
             {PLAN_ORDER.map((plan) => {
               const isCurrent = !isUnlimited && planType === plan;
@@ -201,7 +232,7 @@ export default async function PlanPage() {
                       <FeatureTag label="グループ作成" enabled={features.createGroup} />
                     </div>
 
-                    {/* アクション: 現プラン=disabledボタン, それ以外=変更ボタン */}
+                    {/* アクション: 現プラン=disabled, Live=変更ボタン, Test=非表示(上部バナーへ誘導) */}
                     {isCurrent ? (
                       <button
                         type="button"
@@ -211,13 +242,13 @@ export default async function PlanPage() {
                       >
                         現在のプラン
                       </button>
-                    ) : (PAID_PLANS as readonly string[]).includes(plan) && (
+                    ) : IS_LIVE_BILLING && (PAID_PLANS as readonly string[]).includes(plan) ? (
                       <UpgradeButton
                         plan={plan as PaidPlan}
                         currentPlan={planType}
                         variant={isUpgrade ? "primary" : "secondary"}
                       />
-                    )}
+                    ) : null}
                   </div>
                 </div>
               );
