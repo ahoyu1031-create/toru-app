@@ -122,7 +122,6 @@ export function PlanChangeModal({ currentPlan, newPlan, onClose }: Props) {
                 <div className="text-xs text-amber-900 space-y-1">
                   <p className="font-semibold">ダウングレード — 次回請求日から有効</p>
                   <p>支払い済みの期間は<strong>現プラン（{currentPlan ? PLAN_PRICES[currentPlan] : ""}）のまま</strong>ご利用いただけます。<strong>次回請求日から自動的に {PLAN_PRICES[newPlan]} に切り替わります</strong>。</p>
-                  <p className="text-amber-800">※ 今すぐの切替を希望される場合は、一度解約してから新規ご契約ください。</p>
                 </div>
               </div>
             </div>
