@@ -14,7 +14,13 @@ export function PlanResultToast() {
     if (shown.current) return;
     if (params.get("success") === "1") {
       shown.current = true;
-      success("プランを変更しました。反映まで少し時間がかかる場合があります。");
+      if (params.get("nochange") === "1") {
+        info("既に同じプランをご利用中です。");
+      } else if (params.get("updated") === "1") {
+        success("プランを変更しました。差額は次回請求で精算されます。");
+      } else {
+        success("プランを変更しました。反映まで少し時間がかかる場合があります。");
+      }
       router.replace("/settings/plan");
     } else if (params.get("canceled") === "1") {
       shown.current = true;

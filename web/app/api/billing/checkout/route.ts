@@ -87,6 +87,46 @@ export async function POST(req: Request) {
 
   const origin = req.headers.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+  // 既存アクティブサブスクリプションを確認（多重契約防止）
+  const existingSubs = await stripe.subscriptions.list({
+    customer: stripeCustomerId,
+    status: "active",
+    limit: 100,
+  });
+
+  // ケースA: 既に1つアクティブ → そのサブスクの price を差し替え（プロレーション自動）
+  if (existingSubs.data.length === 1) {
+    const sub = existingSubs.data[0];
+    const item = sub.items.data[0];
+
+    // 既に同じ price なら何もしない
+    if (item.price.id === priceId) {
+      return NextResponse.json({
+        url: `${origin}/settings/plan?success=1&nochange=1`,
+        noChange: true,
+      });
+    }
+
+    await stripe.subscriptions.update(sub.id, {
+      items: [{ id: item.id, price: priceId }],
+      proration_behavior: "create_prorations",
+      metadata: { company_id: companyId, plan },
+    });
+    // Webhook customer.subscription.updated が companies.plan を更新
+    return NextResponse.json({
+      url: `${origin}/settings/plan?success=1&updated=1`,
+      updated: true,
+    });
+  }
+
+  // ケースB: 複数アクティブ（過去のバグ状態）→ 全部キャンセルして新規作成
+  if (existingSubs.data.length > 1) {
+    for (const sub of existingSubs.data) {
+      await stripe.subscriptions.cancel(sub.id);
+    }
+  }
+
+  // ケースC: アクティブなし → 従来通り Checkout で新規作成
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     customer: stripeCustomerId,
