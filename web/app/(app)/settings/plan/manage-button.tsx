@@ -28,7 +28,7 @@ export function ManageButton() {
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="inline-flex h-9 items-center gap-1.5 rounded-xl px-4 text-xs font-semibold transition hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+      className="inline-flex h-9 items-center gap-1.5 rounded-xl px-4 text-xs font-semibold transition hover:opacity-90 disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed"
       style={{ background: "var(--color-surface)", color: "var(--color-text)", border: "1px solid var(--color-border)" }}
     >
       {loading ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={13} />}

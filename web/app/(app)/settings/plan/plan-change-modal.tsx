@@ -107,7 +107,7 @@ export function PlanChangeModal({ currentPlan, newPlan, onClose }: Props) {
                   <ArrowUpRight size={16} className="shrink-0 mt-0.5 text-green-700" />
                   <div className="text-xs text-green-900 space-y-1">
                     <p className="font-semibold">アップグレード — 今すぐ有効</p>
-                    <p>新プランの機能が<strong>すぐ使えるようになります</strong>。残り日数分の<strong>差額が今すぐ請求</strong>されます。次回請求日からは {PLAN_PRICES[newPlan]}/月。</p>
+                    <p>次の画面（Stripeの安全な確認ページ）で<strong>差額金額を確認のうえ確定</strong>してください。確定すると新プランがすぐ使えるようになり、次回請求日から {PLAN_PRICES[newPlan]}/月。</p>
                   </div>
                 </div>
               </div>
@@ -133,7 +133,7 @@ export function PlanChangeModal({ currentPlan, newPlan, onClose }: Props) {
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="rounded-xl px-4 py-2 text-sm font-semibold transition hover:opacity-80 disabled:opacity-50"
+            className="rounded-xl px-4 py-2 text-sm font-semibold transition hover:opacity-80 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
             style={{ background: "var(--color-bg)", color: "var(--color-text)", border: "1px solid var(--color-border)" }}
           >
             キャンセル
@@ -142,7 +142,7 @@ export function PlanChangeModal({ currentPlan, newPlan, onClose }: Props) {
             type="button"
             onClick={handleConfirm}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold transition hover:opacity-90 disabled:opacity-60"
+            className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold transition hover:opacity-90 disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed"
             style={{ background: "var(--color-primary)", color: "#fff" }}
           >
             {loading && <Loader2 size={14} className="animate-spin" />}

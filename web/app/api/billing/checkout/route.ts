@@ -111,17 +111,30 @@ export async function POST(req: Request) {
     const direction = classifyPlanChange(currentPlanFromStripe, plan);
 
     if (direction === "upgrade") {
-      // アップグレード: 即時切替 + 差額を今すぐ請求（権利と義務を一致させる公平な動作）
-      await stripe.subscriptions.update(sub.id, {
-        items: [{ id: item.id, price: priceId }],
-        proration_behavior: "always_invoice",
-        metadata: { company_id: companyId, plan },
+      // アップグレード: Stripe Portal の確認ページに遷移
+      // → ユーザーは現プラン/新プラン/差額プレビューを見て確定する（金額透明性 + Stripe保証）
+      // Stripe側で確定すると subscriptions.update 相当が走り、Webhook が plan 更新
+      const portalSession = await stripe.billingPortal.sessions.create({
+        customer: stripeCustomerId,
+        return_url: `${origin}/settings/plan?success=1&updated=1&direction=upgrade`,
+        flow_data: {
+          type: "subscription_update_confirm",
+          subscription_update_confirm: {
+            subscription: sub.id,
+            items: [{ id: item.id, price: priceId }],
+          },
+          after_completion: {
+            type: "redirect",
+            redirect: {
+              return_url: `${origin}/settings/plan?success=1&updated=1&direction=upgrade`,
+            },
+          },
+        },
       });
-      // Webhook customer.subscription.updated が companies.plan を更新
       return NextResponse.json({
-        url: `${origin}/settings/plan?success=1&updated=1&direction=upgrade`,
-        updated: true,
+        url: portalSession.url,
         direction: "upgrade",
+        external: true,
       });
     }
 

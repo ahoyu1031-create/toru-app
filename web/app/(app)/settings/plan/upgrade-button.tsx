@@ -22,7 +22,7 @@ export function UpgradeButton({ plan, currentPlan, label = "プラン変更", va
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="shrink-0 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl px-4 text-xs font-semibold transition hover:opacity-90"
+        className="shrink-0 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl px-4 text-xs font-semibold transition hover:opacity-90 cursor-pointer"
         style={styleByVariant}
       >
         {label}
