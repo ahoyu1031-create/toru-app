@@ -158,6 +158,38 @@ export default async function PlanPage() {
           )}
         </section>
 
+        {/* 請求情報・解約 (有料プラン契約者のみ表示) */}
+        {planType !== null && (PAID_PLANS as readonly string[]).includes(planType) && !isUnlimited && (
+          <section
+            className="rounded-2xl p-6"
+            style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}
+          >
+            <div className="flex items-start justify-between gap-4 mb-3">
+              <div>
+                <h2 className="text-base font-semibold" style={{ color: "var(--color-text)" }}>請求情報・解約</h2>
+                <p className="mt-1 text-xs" style={{ color: "var(--color-text-muted)" }}>
+                  クレジットカードの変更、請求書のダウンロード、プランの解約は Stripe の安全な画面でご対応いただけます
+                </p>
+              </div>
+            </div>
+            <ul className="mb-4 space-y-1.5 text-sm" style={{ color: "var(--color-text-muted)" }}>
+              <li className="flex items-start gap-2">
+                <Check size={14} className="mt-0.5 shrink-0" style={{ color: "var(--color-primary)" }} />
+                <span>支払い方法の変更（カード追加・削除）</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check size={14} className="mt-0.5 shrink-0" style={{ color: "var(--color-primary)" }} />
+                <span>過去の請求書ダウンロード（PDF）</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check size={14} className="mt-0.5 shrink-0" style={{ color: "var(--color-primary)" }} />
+                <span>サブスクリプションの解約（次回更新日まで利用可）</span>
+              </li>
+            </ul>
+            <ManageButton />
+          </section>
+        )}
+
         {/* プラン比較 */}
         <section>
           <h3 className="mb-4 text-base font-semibold" style={{ color: "var(--color-text)" }}>プラン比較</h3>

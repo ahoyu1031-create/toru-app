@@ -58,14 +58,15 @@ type PanelView =
 interface RightPanelProps {
   userId: string;
   displayName: string;
-  plan: string;
+  plan: string | null;
 }
 
 export function RightPanel({ userId, displayName, plan }: RightPanelProps) {
   const [tab, setTab] = useState<"groups" | "dm">("groups");
   const [view, setView] = useState<PanelView>({ tag: "group_list" });
 
-  const isCorporate = plan !== "individual";
+  // null=トライアル中も「個人扱い」(DM/グループは参加のみ可能)
+  const isCorporate = plan !== null && plan !== "individual";
 
   // タブ切替時にビューをリセット
   function switchTab(t: "groups" | "dm") {

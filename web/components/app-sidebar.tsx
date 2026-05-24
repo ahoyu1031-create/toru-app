@@ -98,7 +98,7 @@ export function AppSidebar({
 }: {
   expanded: boolean;
   onToggle: () => void;
-  plan: string;
+  plan: string | null;
   pendingJoinCount?: number;
 }) {
   const pathname = usePathname();

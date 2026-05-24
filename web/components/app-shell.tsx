@@ -17,7 +17,7 @@ interface AppShellProps {
   children: React.ReactNode;
   displayName: string;
   email: string;
-  plan: string;
+  plan: string | null;
   userId: string;
   pendingJoinCount?: number;
   myGroups?: { id: string; name: string }[];

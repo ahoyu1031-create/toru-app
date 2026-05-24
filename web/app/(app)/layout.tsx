@@ -19,7 +19,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const displayName = profile?.display_name ?? user.email?.split("@")[0] ?? "ゲスト";
   const email = user.email ?? "";
-  const plan = companies?.[0]?.plan ?? "individual";
+  // null = 無料トライアル中（companies.plan が NULL）。AppShell 側で表示分岐
+  const plan = companies?.[0]?.plan ?? null;
 
   const allGroupIds = (memberships ?? []).map((m: any) => m.group_id as string);
   const ownedGroupIds = (memberships ?? [])
