@@ -14,12 +14,10 @@ export function PlanResultToast() {
     if (shown.current) return;
     if (params.get("success") === "1") {
       shown.current = true;
-      if (params.get("nochange") === "1") {
-        info("既に同じプランをご利用中です。");
-      } else if (params.get("scheduled") === "1") {
+      if (params.get("scheduled") === "1") {
         success("ダウングレードを予約しました。次回請求日から新プランに切り替わります。");
       } else if (params.get("updated") === "1") {
-        success("プランをアップグレードしました。今すぐ新機能が使えます。次回請求から新料金です。");
+        success("プランをアップグレードしました。差額分の請求と新機能の利用が即時開始されます。");
       } else {
         success("プランを変更しました。反映まで少し時間がかかる場合があります。");
       }

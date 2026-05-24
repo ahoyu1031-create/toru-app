@@ -99,22 +99,22 @@ export async function POST(req: Request) {
     const sub = existingSubs.data[0];
     const item = sub.items.data[0];
 
-    // 既に同じ price なら何もしない
+    // 既に同じ price なら 400 で防御（UI 側でもボタンは disabled だが念のため）
     if (item.price.id === priceId) {
-      return NextResponse.json({
-        url: `${origin}/settings/plan?success=1&nochange=1`,
-        noChange: true,
-      });
+      return NextResponse.json(
+        { error: "既に同じプランをご利用中です" },
+        { status: 400 }
+      );
     }
 
     const currentPlanFromStripe = getPlanFromStripePriceId(item.price.id);
     const direction = classifyPlanChange(currentPlanFromStripe, plan);
 
     if (direction === "upgrade") {
-      // アップグレード: 即時切替、追加料金なし（ユーザー嬉しい）
+      // アップグレード: 即時切替 + 差額を今すぐ請求（権利と義務を一致させる公平な動作）
       await stripe.subscriptions.update(sub.id, {
         items: [{ id: item.id, price: priceId }],
-        proration_behavior: "none",
+        proration_behavior: "always_invoice",
         metadata: { company_id: companyId, plan },
       });
       // Webhook customer.subscription.updated が companies.plan を更新

@@ -107,7 +107,7 @@ export function PlanChangeModal({ currentPlan, newPlan, onClose }: Props) {
                   <ArrowUpRight size={16} className="shrink-0 mt-0.5 text-green-700" />
                   <div className="text-xs text-green-900 space-y-1">
                     <p className="font-semibold">アップグレード — 今すぐ有効</p>
-                    <p>新プランの機能が <strong>すぐ使えるようになります</strong>。今月は<strong>追加料金なし</strong>、次回請求日から {PLAN_PRICES[newPlan]} に変わります。</p>
+                    <p>新プランの機能が<strong>すぐ使えるようになります</strong>。残り日数分の<strong>差額が今すぐ請求</strong>されます。次回請求日からは {PLAN_PRICES[newPlan]}/月。</p>
                   </div>
                 </div>
               </div>

@@ -201,8 +201,17 @@ export default async function PlanPage() {
                       <FeatureTag label="グループ作成" enabled={features.createGroup} />
                     </div>
 
-                    {/* アクション: 有料プラン かつ 現在のプランでない場合のみ表示 */}
-                    {!isCurrent && (PAID_PLANS as readonly string[]).includes(plan) && (
+                    {/* アクション: 現プラン=disabledボタン, それ以外=変更ボタン */}
+                    {isCurrent ? (
+                      <button
+                        type="button"
+                        disabled
+                        className="shrink-0 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl px-4 text-xs font-semibold cursor-not-allowed opacity-60"
+                        style={{ background: "var(--color-bg)", color: "var(--color-text-muted)", border: "1px solid var(--color-border)" }}
+                      >
+                        現在のプラン
+                      </button>
+                    ) : (PAID_PLANS as readonly string[]).includes(plan) && (
                       <UpgradeButton
                         plan={plan as PaidPlan}
                         currentPlan={planType}
