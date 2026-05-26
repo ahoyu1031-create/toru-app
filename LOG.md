@@ -39,11 +39,20 @@
    - Opus 4.7 フル活用方針
    - 既存 `web/CLAUDE.md` は @include で継承
 
-**次やる候補**:
-- #16 Webhook で companies.stripe_customer_id / stripe_subscription_id 保存（コード実装）
-- #22 GDPR対応 アカウント削除機能（コード実装）
-- X 戦略完走（固ツイ + 公開記念ポスト + アルファ告知）
-- 来月計画ミーティング
+**深夜セッションでの追加実施**:
+
+4. **#16 Webhook 修正完了** — `web/app/api/billing/webhook/route.ts` で stripe_customer_id / stripe_subscription_id を保存。マイグレーション SQL `supabase/migrations/20260526000001_add_stripe_subscription_id.sql` を Supabase SQL Editor で実行済み（カラム追加確認 ✅）
+
+5. **#22 GDPR 対応は「やらない」決定** — MVP フェーズでは過剰防御。削除依頼来たら手動 SQL で対応する運用に。利用規約への1行追記も今夜は見送り。判断軸を `memory/project_toru_mvp_priority.md` に保存。
+
+6. **6年ロードマップ + 来月計画ミーティング骨格** — 独立判定ライン: 月80万円 / 期限: 30歳まで / 戦略: 副業×複数プロダクト。来月の大目標仮: PMF探索（アルファ20名 + 強FB5件）。詳細は明朝以降のセッションで確定。
+
+7. **朝1時間メニュー整備** — `docs/morning-menu.md` 作成（A/B/C/D の選択肢付き）。`docs/x-strategy-drafts.md` 作成（bio・固ツイ・公開記念ポスト案を先回り下書き）。明日朝の即時着手用。
+
+**翌セッション (2026-05-27 朝1時間想定)**:
+- 「メニュー〇〇でいきたい」と Claude に伝えれば即着手
+- 候補: A(X実投稿) / B(来月計画詳細化) / C(決済テスト) / D(小タスク詰め合わせ)
+- 推奨: B（脳冴えてる朝なら）or A（手を動かしたい朝）
 
 ---
 
