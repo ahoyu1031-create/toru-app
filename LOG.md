@@ -4,6 +4,49 @@
 
 ---
 
+## 2026-05-26
+
+### 🚀 Claude を「事業パートナー」に格上げ + Supabase直接アクセス手段確立
+
+**背景**: ユーザーが「TORU を副業ではなく **AI ビジネスの柱（メイン候補）** として位置付ける」と方針宣言。これに伴い Claude の役割を「実装代行」から「戦略コンサル+実装者」に格上げ。同時に「pending タスクを残さず即実行」「Opus 4.7 をフル活用」の方針も確定。
+
+**実施**:
+
+1. **Supabase Admin SDK 経由の直接 DB アクセス基盤を構築**
+   - `npm install @supabase/supabase-js dotenv` 実行（web/ 配下）
+   - `scripts/db/client.mjs` 新規作成 — Admin クライアント（service_role キー / RLS バイパス）
+   - `scripts/db/ping.mjs` 接続テスト → ✅ 成功
+   - これまでユーザーが Supabase SQL Editor で手動実行していた検証系SQLを **Claude が完全自動化** 可能に
+
+2. **P0-① STEP C: クリーンアップ検証 完全実行**（タスク #18）
+   - `scripts/db/verify-cleanup.mjs` 作成・実行
+   - 結果:
+     - (1) ✅ company_member 重複なし（5名ユニーク）
+     - (2) ✅ 孤児会社なし（5社全てメンバー存在）
+     - (3) ✅ 全員1社のみ所属
+     - (4) ✅ developer=ahoyu1031のみ / alpha=aoki1031movieのみ（意図通り）
+   - 所属マッピング確定:
+     - ahoyu1031@gmail.com → 北陸電工 (team_unlimited)
+     - skaken1003@icloud.com → ke (trial)
+     - aoki.ai@gmail.com → aoki company (team_unlimited)
+     - studioalpha.c.s@gmail.com → 合同会社スタジオアルファ (trial)
+     - aoki1031movie@gmail.com → 仮さん（個人）(trial)
+
+3. **`TORU/CLAUDE.md` 新規作成** — ルートレベルの方針定義
+   - 「事業パートナー」スタンス4点（戦略視点 / 判断軸提示 / 資源配分 / 能動消化）
+   - DB 直接アクセス手段の運用ルール（SELECT自由 / UPDATE目的明確時 / DELETE確認必須）
+   - 検証系タスクの即実行ルール
+   - Opus 4.7 フル活用方針
+   - 既存 `web/CLAUDE.md` は @include で継承
+
+**次やる候補**:
+- #16 Webhook で companies.stripe_customer_id / stripe_subscription_id 保存（コード実装）
+- #22 GDPR対応 アカウント削除機能（コード実装）
+- X 戦略完走（固ツイ + 公開記念ポスト + アルファ告知）
+- 来月計画ミーティング
+
+---
+
 ## 2026-05-25
 
 ### アルファテスタープログラム運用整備
