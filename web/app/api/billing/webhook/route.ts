@@ -25,6 +25,12 @@ export async function POST(req: Request) {
 
   const admin = createAdminClient();
 
+  type CompanyUpdate = {
+    plan?: string | null;
+    stripe_customer_id?: string;
+    stripe_subscription_id?: string | null;
+  };
+
   try {
     switch (event.type) {
       case "checkout.session.completed": {
@@ -32,7 +38,10 @@ export async function POST(req: Request) {
         const companyId = session.metadata?.company_id;
         const plan = session.metadata?.plan;
         if (companyId && plan) {
-          await admin.from("companies").update({ plan }).eq("id", companyId);
+          const updates: CompanyUpdate = { plan };
+          if (typeof session.customer === "string") updates.stripe_customer_id = session.customer;
+          if (typeof session.subscription === "string") updates.stripe_subscription_id = session.subscription;
+          await admin.from("companies").update(updates).eq("id", companyId);
         }
         break;
       }
@@ -43,7 +52,9 @@ export async function POST(req: Request) {
         const priceId = sub.items.data[0]?.price.id;
         const plan = priceId ? getPlanFromStripePriceId(priceId) : null;
         if (companyId && plan) {
-          await admin.from("companies").update({ plan }).eq("id", companyId);
+          const updates: CompanyUpdate = { plan, stripe_subscription_id: sub.id };
+          if (typeof sub.customer === "string") updates.stripe_customer_id = sub.customer;
+          await admin.from("companies").update(updates).eq("id", companyId);
         }
         break;
       }
@@ -51,8 +62,11 @@ export async function POST(req: Request) {
         const sub = event.data.object as Stripe.Subscription;
         const companyId = sub.metadata?.company_id;
         if (companyId) {
-          // 解約 → free 相当に戻す。companies.plan は CHECK 制約に 'free' がないので NULL に
-          await admin.from("companies").update({ plan: null }).eq("id", companyId);
+          // 解約 → plan を NULL に。subscription_id もクリア（customer_id は将来の再契約のため残す）
+          await admin.from("companies").update({
+            plan: null,
+            stripe_subscription_id: null,
+          }).eq("id", companyId);
         }
         break;
       }
