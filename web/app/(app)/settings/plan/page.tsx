@@ -189,7 +189,7 @@ export default async function PlanPage() {
         <section>
           <h3 className="mb-4 text-base font-semibold" style={{ color: "var(--color-text)" }}>プラン比較</h3>
 
-          {/* Test mode: 上部にアルファ枠案内バナー */}
+          {/* MVP期間中: アルファテスター枠の選択肢も提示（有料プラン購入と並列） */}
           {!IS_LIVE_BILLING && (
             <Link
               href="/alpha"
@@ -198,9 +198,9 @@ export default async function PlanPage() {
               <div className="flex items-start gap-2">
                 <Sparkles size={18} className="shrink-0 mt-0.5 text-amber-700" />
                 <div>
-                  <p className="text-sm font-semibold text-amber-900">現在 MVP 期間中 — プラン購入は準備中です</p>
+                  <p className="text-sm font-semibold text-amber-900">💡 もう一つの選択肢：アルファテスター枠（無料）</p>
                   <p className="text-xs text-amber-800 mt-0.5">
-                    今すぐ全機能を無料で使いたい方は<strong>アルファテスター枠</strong>にお申込みください（先着10名・Live切替後永久半額特典あり）
+                    先着10名限定。全機能無料で使え、Live切替後も永久半額特典あり。フィードバックにご協力いただける方向け
                   </p>
                 </div>
               </div>
@@ -290,14 +290,13 @@ export default async function PlanPage() {
                     >
                       現在のプラン
                     </button>
-                  ) : IS_LIVE_BILLING && (PAID_PLANS as readonly string[]).includes(plan) ? (
+                  ) : (PAID_PLANS as readonly string[]).includes(plan) ? (
                     <UpgradeButton
                       plan={plan as PaidPlan}
                       currentPlan={planType}
                       variant={isRecommended || isUpgrade ? "primary" : "secondary"}
                     />
                   ) : (
-                    /* Test mode: ボタンスペースを埋めるためのスペーサ（高さ揃え） */
                     <div className="h-9" />
                   )}
                 </div>
