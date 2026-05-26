@@ -120,8 +120,8 @@ export function PlanChangeModal({ currentPlan, newPlan, onClose }: Props) {
               <div className="flex gap-2">
                 <ArrowDownRight size={16} className="shrink-0 mt-0.5 text-amber-700" />
                 <div className="text-xs text-amber-900 space-y-1">
-                  <p className="font-semibold">ダウングレード — 次回請求日から有効</p>
-                  <p>支払い済みの期間は<strong>現プラン（{currentPlan ? PLAN_PRICES[currentPlan] : ""}）のまま</strong>ご利用いただけます。<strong>次回請求日から自動的に {PLAN_PRICES[newPlan]} に切り替わります</strong>。</p>
+                  <p className="font-semibold">ダウングレード</p>
+                  <p>次の画面（Stripeの安全な確認ページ）で<strong>変更内容と差額（クレジット）を確認のうえ確定</strong>してください。確定後、次回請求から {PLAN_PRICES[newPlan]} に切り替わり、残り期間分は次回請求で自動的に差し引かれます。</p>
                 </div>
               </div>
             </div>

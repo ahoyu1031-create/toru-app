@@ -94,12 +94,16 @@ export async function POST(req: Request) {
     limit: 100,
   });
 
-  // ケースA: 既に1つアクティブ → アップグレード or ダウングレード で動作分岐
+  // ケースA: 既に1つアクティブ → アップグレード/ダウングレードとも Stripe Portal 経由で統一
+  // Why: ユーザー視点で「プラン変更時は必ず Stripe の確認画面で金額確認 → 確定」の体験に統一。
+  //   ・差額・クレジット計算は Stripe が表示（透明性 + 法的安心感）
+  //   ・カード情報変更が同じ流れで可能
+  //   ・コード分岐削減（旧: Schedule API でダウングレード即時予約 → 画面遷移なし）
   if (existingSubs.data.length === 1) {
     const sub = existingSubs.data[0];
     const item = sub.items.data[0];
 
-    // 既に同じ price なら 400 で防御（UI 側でもボタンは disabled だが念のため）
+    // 既に同じ price なら 400 で防御
     if (item.price.id === priceId) {
       return NextResponse.json(
         { error: "既に同じプランをご利用中です" },
@@ -110,78 +114,37 @@ export async function POST(req: Request) {
     const currentPlanFromStripe = getPlanFromStripePriceId(item.price.id);
     const direction = classifyPlanChange(currentPlanFromStripe, plan);
 
-    if (direction === "upgrade") {
-      // アップグレード: Stripe Portal の確認ページに遷移
-      // → ユーザーは現プラン/新プラン/差額プレビューを見て確定する（金額透明性 + Stripe保証）
-      // Stripe側で確定すると subscriptions.update 相当が走り、Webhook が plan 更新
-      const portalSession = await stripe.billingPortal.sessions.create({
-        customer: stripeCustomerId,
-        return_url: `${origin}/settings/plan?success=1&updated=1&direction=upgrade`,
-        flow_data: {
-          type: "subscription_update_confirm",
-          subscription_update_confirm: {
-            subscription: sub.id,
-            items: [{ id: item.id, price: priceId }],
-          },
-          after_completion: {
-            type: "redirect",
-            redirect: {
-              return_url: `${origin}/settings/plan?success=1&updated=1&direction=upgrade`,
-            },
-          },
-        },
-      });
-      return NextResponse.json({
-        url: portalSession.url,
-        direction: "upgrade",
-        external: true,
-      });
-    }
-
-    // ダウングレード: 次回請求日まで現プラン維持 → 期末に新プランへ自動切替
-    // Stripe Subscription Schedules で実現（ユーザーは支払った期間まで現プラン権利保持）
-
-    // 既にスケジュール有り（前回ダウングレード予約）なら releaseしてやり直し
+    // 旧ダウングレード予約スケジュールが残っていれば release（再予約のため）
     if (sub.schedule) {
       const existingScheduleId = typeof sub.schedule === "string" ? sub.schedule : sub.schedule.id;
-      await stripe.subscriptionSchedules.release(existingScheduleId);
+      try {
+        await stripe.subscriptionSchedules.release(existingScheduleId);
+      } catch {
+        // 既に released 等は無視
+      }
     }
 
-    const schedule = await stripe.subscriptionSchedules.create({
-      from_subscription: sub.id,
-    });
-
-    // Stripe API では current_period_* が item 単位に移行済み
-    const itemWithPeriod = item as typeof item & {
-      current_period_start: number;
-      current_period_end: number;
-    };
-    const periodStart = itemWithPeriod.current_period_start;
-    const periodEnd = itemWithPeriod.current_period_end;
-
-    await stripe.subscriptionSchedules.update(schedule.id, {
-      end_behavior: "release",
-      phases: [
-        {
-          // 現在のフェーズ: 期末まで現プラン維持
-          items: [{ price: item.price.id, quantity: 1 }],
-          start_date: periodStart,
-          end_date: periodEnd,
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: stripeCustomerId,
+      return_url: `${origin}/settings/plan?success=1&updated=1&direction=${direction}`,
+      flow_data: {
+        type: "subscription_update_confirm",
+        subscription_update_confirm: {
+          subscription: sub.id,
+          items: [{ id: item.id, price: priceId }],
         },
-        {
-          // 期末以降: 新プラン(ダウングレード後)へ自動切替
-          items: [{ price: priceId, quantity: 1 }],
-          metadata: { company_id: companyId, plan },
+        after_completion: {
+          type: "redirect",
+          redirect: {
+            return_url: `${origin}/settings/plan?success=1&updated=1&direction=${direction}`,
+          },
         },
-      ],
-      metadata: { company_id: companyId, downgrade_to: plan },
+      },
     });
-
     return NextResponse.json({
-      url: `${origin}/settings/plan?success=1&scheduled=1&direction=downgrade`,
-      scheduled: true,
-      direction: "downgrade",
-      effective_at: periodEnd,
+      url: portalSession.url,
+      direction,
+      external: true,
     });
   }
 
