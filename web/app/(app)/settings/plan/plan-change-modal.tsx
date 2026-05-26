@@ -107,7 +107,7 @@ export function PlanChangeModal({ currentPlan, newPlan, onClose }: Props) {
                   <ArrowUpRight size={16} className="shrink-0 mt-0.5 text-green-700" />
                   <div className="text-xs text-green-900 space-y-1">
                     <p className="font-semibold">アップグレード — 今すぐ有効</p>
-                    <p>次の画面（Stripeの安全な確認ページ）で<strong>差額金額を確認のうえ確定</strong>してください。確定すると新プランがすぐ使えるようになり、次回請求日から {PLAN_PRICES[newPlan]}/月。</p>
+                    <p>次の画面（Stripeの安全な確認ページ）で<strong>差額金額を確認のうえ確定</strong>してください。確定すると新プランがすぐ使えるようになり、次回請求日から {PLAN_PRICES[newPlan]}。</p>
                   </div>
                 </div>
               </div>
