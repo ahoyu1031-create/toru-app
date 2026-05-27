@@ -230,7 +230,7 @@ export default async function PlanPage() {
                     background: isCurrent ? "rgba(37,99,235,0.04)" : "var(--color-surface)",
                     border: `${isRecommended || isCurrent ? "2px" : "1px"} solid ${
                       isCurrent ? "var(--color-primary)" :
-                      isRecommended ? "rgba(37,99,235,0.4)" : "var(--color-border)"
+                      isRecommended ? "#F59E0B" : "var(--color-border)"
                     }`,
                   }}
                 >
@@ -256,9 +256,9 @@ export default async function PlanPage() {
                   {!isCurrent && isRecommended && (
                     <span
                       className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full px-2.5 py-0.5 text-[10px] font-bold whitespace-nowrap"
-                      style={{ background: "rgba(37,99,235,0.12)", color: "var(--color-primary)" }}
+                      style={{ background: "#F59E0B", color: "#fff" }}
                     >
-                      おすすめ
+                      ⭐ 人気
                     </span>
                   )}
 
@@ -294,7 +294,7 @@ export default async function PlanPage() {
                     <UpgradeButton
                       plan={plan as PaidPlan}
                       currentPlan={planType}
-                      variant={isRecommended || isUpgrade ? "primary" : "secondary"}
+                      variant={isUpgrade ? "primary" : "secondary"}
                     />
                   ) : (
                     <div className="h-9" />
