@@ -1,325 +1,568 @@
 import Link from "next/link";
 import { ALPHA_FORM_URL } from "@/lib/billing-mode";
-import { TRIAL_DRAWING_LIMIT, TRIAL_DURATION_DAYS } from "@/lib/plan";
 
 export const metadata = {
-  title: "TORU アルファテスター募集 | 建設業向け図面解析",
+  title: "TORU — 図面を投げたら、見積書が出てくる。",
   description:
-    "建設業界向けAI図面解析アプリ TORU のアルファテスター（無料）を募集中。全機能解放、Live切替後永久半額特典あり。",
+    "建設現場の図面PDFをAIで解析し、材料拾い出しから見積書作成まで自動化。ベータ期間中は全機能無料、アルファテスター（先着10名）はLive切替後永久半額。",
 };
 
 const RAW_DATE = new Date().toISOString().slice(0, 10).replace(/-/g, ".");
 
+/* =========================================================
+   /alpha — Blueprint LP (Beta公開版・正規メインLP)
+   ========================================================= */
 export default function AlphaPage() {
   return (
     <div className="bp-page min-h-screen bp-grid relative overflow-hidden">
-      {/* 紙の四隅フェード（質感） */}
       <div className="pointer-events-none absolute inset-0 bp-paper-fade" />
 
-      {/* ============ Title Block ヘッダー（製図用紙の題箋風） ============ */}
-      <header className="relative border-b-2" style={{ borderColor: "#0B3D91" }}>
-        <div
-          className="mx-auto flex max-w-6xl items-stretch justify-between"
-          style={{ minHeight: "64px" }}
-        >
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-5 sm:px-8 border-r-2"
-            style={{ borderColor: "#0B3D91" }}
-          >
-            <span
-              className="font-mono font-bold text-2xl tracking-widest"
-              style={{ color: "#0B3D91" }}
-            >
-              TORU
-            </span>
-          </Link>
-
-          <div className="hidden sm:flex flex-1 items-center px-6 font-mono text-[11px] tracking-wider" style={{ color: "#0B3D91" }}>
-            <span className="opacity-60 mr-3">DRAWING NO.</span>
-            <span className="font-bold">TR-ALPHA-001</span>
-            <span className="mx-6 opacity-30">|</span>
-            <span className="opacity-60 mr-3">REV.</span>
-            <span className="font-bold">0.1</span>
-            <span className="mx-6 opacity-30">|</span>
-            <span className="opacity-60 mr-3">DATE</span>
-            <span className="font-bold">{RAW_DATE}</span>
-          </div>
-
-          <Link
-            href="/login"
-            className="flex items-center px-5 sm:px-8 border-l-2 font-mono text-xs tracking-widest hover:bg-[rgba(11,61,145,0.06)] transition"
-            style={{ borderColor: "#0B3D91", color: "#0B3D91" }}
-          >
-            LOGIN →
-          </Link>
-        </div>
-      </header>
-
-      {/* ============ メイン領域（紙の本体） ============ */}
-      <main className="relative mx-auto max-w-6xl px-5 sm:px-8 py-12 sm:py-20">
-        {/* === ヒーロー === */}
-        <section className="bp-rise relative">
-          {/* セクション番号 + 寸法線 */}
-          <div className="flex items-center gap-3 mb-6">
-            <span className="bp-num">SEC 01</span>
-            <div className="flex-1 max-w-[140px] bp-extend">
-              <div className="bp-dim" />
-            </div>
-            <span className="font-mono text-[10px] tracking-widest opacity-60" style={{ color: "#0B3D91" }}>
-              RECRUITMENT NOTICE
-            </span>
-          </div>
-
-          {/* ALPHA スタンプ（右上） */}
-          <div className="hidden md:block absolute -right-4 top-0 z-10">
-            <div className="bp-stamp">ALPHA</div>
-          </div>
-
-          {/* 大見出し */}
-          <h1
-            className="font-bold leading-[1.15] tracking-tight"
-            style={{
-              color: "#0B3D91",
-              fontSize: "clamp(2.25rem, 5.5vw, 3.75rem)",
-            }}
-          >
-            建設現場の図面を、<br />
-            <span style={{ color: "#FF6B35" }}>AI</span> に <span className="font-mono">→</span> 任せる。
-          </h1>
-
-          <p
-            className="mt-6 max-w-2xl text-base sm:text-lg leading-relaxed font-light"
-            style={{ color: "#0B3D91" }}
-          >
-            TORU は建設現場の図面PDFをAIで瞬時に解析する SaaS です。
-            現在 MVP 開発中。<strong className="font-bold">無料で全機能</strong>を使っていただき、
-            率直なご意見をお寄せください。
-          </p>
-
-          {/* メタ情報（製図的） */}
-          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] tracking-wider" style={{ color: "#0B3D91" }}>
-            <span><span className="opacity-50">FEE:</span> <span className="font-bold bp-mark">FREE</span></span>
-            <span><span className="opacity-50">DURATION:</span> <span className="font-bold">UNLIMITED</span></span>
-            <span><span className="opacity-50">SLOTS:</span> <span className="font-bold">10 / FIRST-COME</span></span>
-            <span><span className="opacity-50">APPROVAL:</span> <span className="font-bold">~2 BIZ DAYS</span></span>
-          </div>
-
-          {/* CTA */}
-          <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <a
-              href={ALPHA_FORM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bp-cta inline-flex items-center gap-3 px-8 py-4 text-sm cursor-pointer"
-            >
-              <span>申込フォームへ</span>
-              <span className="font-mono">→</span>
-            </a>
-            <p className="font-mono text-[11px] tracking-wider opacity-70" style={{ color: "#0B3D91" }}>
-              ⊕ 約2分で申込完了 / 1〜2営業日以内に承認連絡
-            </p>
-          </div>
-        </section>
-
-        {/* === 特典セクション === */}
-        <section className="mt-24 sm:mt-32">
-          <div className="flex items-center gap-3 mb-10">
-            <span className="bp-num">SEC 02</span>
-            <div className="flex-1 max-w-[160px]">
-              <div className="bp-dim" />
-            </div>
-            <span className="font-mono text-[10px] tracking-widest opacity-60" style={{ color: "#0B3D91" }}>
-              ALPHA TESTER BENEFITS
-            </span>
-          </div>
-
-          <h2
-            className="text-2xl sm:text-3xl font-bold mb-10"
-            style={{ color: "#0B3D91" }}
-          >
-            アルファテスターの<br className="sm:hidden" />4つの特典
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            <Spec
-              num="[01]"
-              title="全機能 無料・無制限"
-              meta="UNLIMITED USAGE"
-              desc={`通常は ${TRIAL_DRAWING_LIMIT}回 / ${TRIAL_DURATION_DAYS}日 の無料トライアルですが、アルファ枠は期間・回数の制限なし。図面解析・見積書作成・グループ作成すべて使い放題。`}
-            />
-            <Spec
-              num="[02]"
-              title="Live 切替後 永久半額"
-              meta="FOREVER 50% OFF • FIRST 10 ONLY"
-              desc="正式リリース後に有料プランへ移行する際、全プラン永久半額でご利用いただけます。早く始めた方が長く得する設計。"
-            />
-            <Spec
-              num="[03]"
-              title="開発者と直接やり取り"
-              meta="DIRECT FEEDBACK CHANNEL"
-              desc="使ってみての不満・要望・新機能提案を直接お送りいただけます。優先的に検討・実装します。"
-            />
-            <Spec
-              num="[04]"
-              title="1〜2営業日で承認"
-              meta="QUICK APPROVAL"
-              desc="フォーム送信後、内容を確認のうえ最短当日〜2営業日以内に承認メールをお送りします。承認後すぐ無制限利用開始。"
-            />
-          </div>
-        </section>
-
-        {/* === お願いセクション（注釈ボックス風） === */}
-        <section className="mt-24 sm:mt-32">
-          <div className="flex items-center gap-3 mb-10">
-            <span className="bp-num">SEC 03</span>
-            <div className="flex-1 max-w-[160px]">
-              <div className="bp-dim" />
-            </div>
-            <span className="font-mono text-[10px] tracking-widest opacity-60" style={{ color: "#0B3D91" }}>
-              REQUIREMENTS / NOTES
-            </span>
-          </div>
-
-          <div
-            className="relative bg-white/60 backdrop-blur-sm p-7 sm:p-9"
-            style={{ border: "2px solid #0B3D91" }}
-          >
-            <div
-              className="absolute -top-3 left-6 px-3 font-mono text-[10px] tracking-widest"
-              style={{ background: "#F4F1E8", color: "#FF6B35" }}
-            >
-              ⚠ NOTES
-            </div>
-
-            <h3 className="text-lg font-bold mb-5" style={{ color: "#0B3D91" }}>
-              テスター参加にあたって、お願いしたいこと
-            </h3>
-
-            <ul className="space-y-4">
-              <Note num="N.1">最低 1 回は実際に図面解析または見積書作成を試してみてください。</Note>
-              <Note num="N.2">
-                使いにくい点・分かりづらい点・要望があればフィードバックください（メール / X DM / アプリ内フォーム、どれでも歓迎）。
-              </Note>
-              <Note num="N.3">
-                建設業以外の方も歓迎します — 業界外視点のフィードバックも貴重です。
-              </Note>
-            </ul>
-          </div>
-        </section>
-
-        {/* === 最下部 CTA === */}
-        <section className="mt-24 sm:mt-32 text-center">
-          <div className="flex items-center gap-3 mb-10">
-            <span className="bp-num">END</span>
-            <div className="flex-1">
-              <div className="bp-dim" />
-            </div>
-          </div>
-
-          <p className="font-mono text-[11px] tracking-widest mb-5 opacity-70" style={{ color: "#0B3D91" }}>
-            APPLY NOW — JOIN THE EARLY 10
-          </p>
-          <h2 className="text-2xl sm:text-4xl font-bold mb-8 leading-tight" style={{ color: "#0B3D91" }}>
-            一緒に、TORU を育ててください。
-          </h2>
-
-          <a
-            href={ALPHA_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bp-cta inline-flex items-center gap-3 px-10 py-5 text-base cursor-pointer"
-          >
-            <span>申込フォームへ</span>
-            <span className="font-mono">→</span>
-          </a>
-          <p className="mt-4 font-mono text-[11px] tracking-wider opacity-70" style={{ color: "#0B3D91" }}>
-            既に申込済みの方は 1〜2 営業日お待ちください
-          </p>
-        </section>
+      <Header />
+      <main className="relative mx-auto max-w-6xl px-5 sm:px-8">
+        <Hero />
+        <Section num="SEC 01" meta="PROBLEMS / 課題提起" anchor="problems">
+          <Problems />
+        </Section>
+        <Section num="SEC 02" meta="FLOW / 解決フロー" anchor="flow">
+          <Flow />
+        </Section>
+        <Section num="SEC 03" meta="FEATURES / 機能仕様" anchor="features">
+          <Features />
+        </Section>
+        <Section num="SEC 04" meta="PRICING / 料金プラン" anchor="pricing">
+          <Pricing />
+        </Section>
+        <Section num="SEC 05" meta="ALPHA / アルファテスター枠" anchor="alpha">
+          <AlphaBlock />
+        </Section>
+        <Section num="SEC 06" meta="FAQ / よくある質問" anchor="faq">
+          <FAQ />
+        </Section>
+        <FinalCta />
       </main>
-
-      {/* ============ フッター（題箋風 Title Block 下部） ============ */}
-      <footer className="relative border-t-2 mt-16 sm:mt-24" style={{ borderColor: "#0B3D91" }}>
-        <div className="mx-auto max-w-6xl px-5 sm:px-8 py-5">
-          <div className="bp-titleblock">
-            <div className="grid grid-cols-2 sm:grid-cols-4 text-[11px]">
-              <Cell label="PROJECT" value="TORU" />
-              <Cell label="SHEET" value="ALPHA-001" />
-              <Cell label="SCALE" value="1 : 1" />
-              <Cell label="REV." value="0.1" />
-            </div>
-            <div className="bp-titleblock-row px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <Link href="/" className="hover:underline" style={{ color: "#0B3D91" }}>
-                ← TORU.HOME
-              </Link>
-              <span className="opacity-60" style={{ color: "#0B3D91" }}>
-                © 2026 AOKI YU — BUILT FOR THE FIELD
-              </span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
 
-/* ============ Sub-components ============ */
+/* ============ Header (題箋風) ============ */
+function Header() {
+  return (
+    <header className="sticky top-0 z-30 border-b-2 backdrop-blur-sm bg-[rgba(244,241,232,0.85)]" style={{ borderColor: "#0B3D91" }}>
+      <div className="mx-auto flex max-w-6xl items-stretch justify-between" style={{ minHeight: "60px" }}>
+        <Link
+          href="/"
+          className="flex items-center gap-3 px-5 sm:px-7 border-r-2"
+          style={{ borderColor: "#0B3D91" }}
+        >
+          <span className="font-mono font-bold text-2xl tracking-widest" style={{ color: "#0B3D91" }}>
+            TORU
+          </span>
+        </Link>
 
-function Spec({
+        <div className="hidden md:flex flex-1 items-center px-6 font-mono text-[10px] tracking-wider" style={{ color: "#0B3D91" }}>
+          <span className="opacity-50 mr-2">DOC.</span>
+          <span className="font-bold">TR-LP-001</span>
+          <span className="mx-5 opacity-25">|</span>
+          <span className="opacity-50 mr-2">REV.</span>
+          <span className="font-bold">0.2 BETA</span>
+          <span className="mx-5 opacity-25">|</span>
+          <span className="opacity-50 mr-2">DATE</span>
+          <span className="font-bold">{RAW_DATE}</span>
+        </div>
+
+        <div className="flex items-stretch">
+          <Link
+            href="/login"
+            className="hidden sm:flex items-center px-5 border-l-2 font-mono text-xs tracking-widest hover:bg-[rgba(11,61,145,0.06)] transition"
+            style={{ borderColor: "#0B3D91", color: "#0B3D91" }}
+          >
+            LOGIN
+          </Link>
+          <Link
+            href="/signup"
+            className="flex items-center px-5 sm:px-7 border-l-2 font-mono text-xs tracking-widest font-bold hover:opacity-90 transition"
+            style={{ borderColor: "#0B3D91", background: "#0B3D91", color: "#F4F1E8" }}
+          >
+            START FREE →
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* ============ Section ラッパー ============ */
+function Section({
   num,
-  title,
   meta,
-  desc,
+  anchor,
+  children,
 }: {
   num: string;
-  title: string;
   meta: string;
-  desc: string;
+  anchor: string;
+  children: React.ReactNode;
 }) {
   return (
-    <div
-      className="relative bg-white/55 backdrop-blur-sm p-6 sm:p-7 transition hover:bg-white/75"
-      style={{ border: "1.5px solid #0B3D91" }}
-    >
-      <div className="flex items-baseline gap-3 mb-3">
-        <span className="font-mono font-bold text-lg" style={{ color: "#FF6B35" }}>
-          {num}
-        </span>
-        <span className="font-mono text-[10px] tracking-widest opacity-60" style={{ color: "#0B3D91" }}>
+    <section id={anchor} className="mt-24 sm:mt-32 scroll-mt-20">
+      <div className="flex items-center gap-3 mb-10">
+        <span className="bp-num">{num}</span>
+        <div className="flex-1 max-w-[180px]">
+          <div className="bp-dim" />
+        </div>
+        <span className="font-mono text-[10px] tracking-widest opacity-60 hidden sm:inline" style={{ color: "#0B3D91" }}>
           {meta}
         </span>
       </div>
-      <h3 className="text-lg sm:text-xl font-bold mb-3" style={{ color: "#0B3D91" }}>
-        {title}
-      </h3>
-      <p className="text-sm leading-relaxed font-light" style={{ color: "#0B3D91" }}>
-        {desc}
-      </p>
-    </div>
+      {children}
+    </section>
   );
 }
 
-function Note({ num, children }: { num: string; children: React.ReactNode }) {
+/* ============ Hero ============ */
+function Hero() {
   return (
-    <li className="flex items-start gap-3 text-sm leading-relaxed" style={{ color: "#0B3D91" }}>
-      <span className="font-mono font-bold text-[11px] tracking-wider shrink-0 mt-1" style={{ color: "#FF6B35" }}>
-        {num}
-      </span>
-      <span className="font-light">{children}</span>
-    </li>
+    <section className="bp-rise relative pt-12 sm:pt-20">
+      {/* ALPHA スタンプ */}
+      <div className="hidden md:block absolute -right-2 top-12 z-10">
+        <div className="bp-stamp">BETA</div>
+      </div>
+
+      {/* セクションヘッダ */}
+      <div className="flex items-center gap-3 mb-6">
+        <span className="bp-num">SEC 00</span>
+        <div className="flex-1 max-w-[140px] bp-extend">
+          <div className="bp-dim" />
+        </div>
+        <span className="font-mono text-[10px] tracking-widest opacity-60" style={{ color: "#0B3D91" }}>
+          PROJECT TORU
+        </span>
+      </div>
+
+      {/* 大見出し */}
+      <h1
+        className="font-bold leading-[1.12] tracking-tight"
+        style={{
+          color: "#0B3D91",
+          fontSize: "clamp(2.5rem, 6vw, 4.25rem)",
+        }}
+      >
+        図面を投げたら、<br />
+        <span style={{ color: "#FF6B35" }}>見積書</span> が出てくる。
+      </h1>
+
+      <p className="mt-6 max-w-2xl text-base sm:text-lg leading-relaxed font-light" style={{ color: "#0B3D91" }}>
+        TORU は建設現場の図面PDFを AI が解析し、材料の拾い出しから見積書作成まで自動化する SaaS です。
+        職人の手間を、AI が丸ごと引き受けます。
+      </p>
+
+      {/* メタ情報 */}
+      <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] tracking-wider" style={{ color: "#0B3D91" }}>
+        <span><span className="opacity-50">STATUS:</span> <span className="font-bold bp-mark">BETA OPEN</span></span>
+        <span><span className="opacity-50">PRICE:</span> <span className="font-bold">FREE DURING BETA</span></span>
+        <span><span className="opacity-50">CARD:</span> <span className="font-bold">NOT REQUIRED</span></span>
+        <span><span className="opacity-50">SIGNUP:</span> <span className="font-bold">~1 MIN</span></span>
+      </div>
+
+      {/* CTA */}
+      <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <Link href="/signup" className="bp-cta inline-flex items-center gap-3 px-8 py-4 text-sm cursor-pointer">
+          <span>無料ではじめる</span>
+          <span className="font-mono">→</span>
+        </Link>
+        <Link href="/login" className="bp-cta-secondary inline-flex items-center gap-3 px-8 py-4 text-sm cursor-pointer">
+          <span>ログイン</span>
+        </Link>
+      </div>
+
+      {/* ベータ告知バナー */}
+      <div
+        className="mt-10 inline-flex items-center gap-3 px-4 py-2.5 font-mono text-[11px] tracking-wider"
+        style={{ border: "1.5px dashed #FF6B35", color: "#FF6B35", background: "rgba(255,107,53,0.04)" }}
+      >
+        <span className="font-bold">⚑ NOTICE</span>
+        <span className="opacity-90" style={{ color: "#0B3D91" }}>
+          現在ベータ期間中 — 全機能 無料 / クレカ不要 / 期間中の解析回数や保存件数は段階的に拡大予定
+        </span>
+      </div>
+    </section>
+  );
+}
+
+/* ============ Problems ============ */
+function Problems() {
+  const items = [
+    { num: "P.1", title: "材料拾い出しが毎日の重荷", desc: "図面を見ながら手で数えて、Excelに入力。ベテランでも半日〜丸一日かかる作業が毎回発生する。" },
+    { num: "P.2", title: "帰宅後にExcelで見積作業", desc: "現場から帰って深夜に見積書を作る。フォーマットが担当者ごとにバラバラで、ミスが怖い。" },
+    { num: "P.3", title: "図面・見積がLINEに散乱", desc: "グループLINEで図面を共有。どれが最新かわからず、重要なやりとりが流れて消える。" },
+    { num: "P.4", title: "図面を読める職人がいない", desc: "拾い出しができるのは一部のベテランだけ。若手に引き継げず、属人化が進む一方。" },
+  ];
+  return (
+    <>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: "#0B3D91" }}>
+        職人の時間が、<br className="sm:hidden" />
+        作業じゃないところで溶けていく。
+      </h2>
+      <p className="mb-10 text-sm font-light max-w-2xl" style={{ color: "#0B3D91" }}>
+        建設現場で起きている、誰もが見て見ぬふりをしてきた4つの非効率。
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {items.map(({ num, title, desc }) => (
+          <div
+            key={num}
+            className="relative bg-white/55 p-6"
+            style={{ border: "1.5px solid #0B3D91" }}
+          >
+            <div className="flex items-baseline gap-3 mb-2">
+              <span className="font-mono font-bold text-base" style={{ color: "#FF6B35" }}>{num}</span>
+              <span className="font-mono text-[9px] tracking-widest opacity-50" style={{ color: "#0B3D91" }}>PAIN POINT</span>
+            </div>
+            <h3 className="text-base font-bold mb-2" style={{ color: "#0B3D91" }}>{title}</h3>
+            <p className="text-sm leading-relaxed font-light" style={{ color: "#0B3D91" }}>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/* ============ Flow ============ */
+function Flow() {
+  const steps = [
+    { num: "01", label: "図面PDFをアップ", sub: "DRAG & DROP", desc: "図面PDFをアプリにドロップするだけ。スマホからもアップ可能。" },
+    { num: "02", label: "AIが材料を拾い出す", sub: "AI ANALYSIS", desc: "業種を指定するだけで、AIが材料・数量・単位を自動抽出。" },
+    { num: "03", label: "見積書PDFに変換", sub: "PDF EXPORT", desc: "単価マスタと連携して金額計算、A4印刷対応のPDFに即出力。" },
+  ];
+  return (
+    <>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: "#0B3D91" }}>
+        図面 → 拾い出し → 見積書。<br />
+        <span style={{ color: "#FF6B35" }}>全部、ひとつのアプリで。</span>
+      </h2>
+      <p className="mb-10 text-sm font-light max-w-2xl" style={{ color: "#0B3D91" }}>
+        これまで数時間かかっていた作業が、数分で終わる。
+      </p>
+      <div className="relative">
+        {/* 縦の寸法線 */}
+        <div className="hidden sm:block absolute left-[28px] top-12 bottom-12 w-px" style={{ background: "#0B3D91", opacity: 0.4 }} />
+        <div className="space-y-6">
+          {steps.map(({ num, label, sub, desc }) => (
+            <div key={num} className="relative flex items-start gap-5 sm:gap-7">
+              {/* 番号ボックス */}
+              <div
+                className="relative z-10 flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center font-mono font-bold text-xl sm:text-2xl"
+                style={{ background: "#0B3D91", color: "#F4F1E8", border: "2px solid #0B3D91" }}
+              >
+                {num}
+              </div>
+              <div className="flex-1 pt-2">
+                <div className="flex items-baseline gap-3">
+                  <h3 className="text-base sm:text-lg font-bold" style={{ color: "#0B3D91" }}>{label}</h3>
+                  <span className="font-mono text-[9px] tracking-widest opacity-60" style={{ color: "#FF6B35" }}>{sub}</span>
+                </div>
+                <p className="mt-1.5 text-sm font-light" style={{ color: "#0B3D91" }}>{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ============ Features (4機能 + ミニビジュアル) ============ */
+function Features() {
+  const features = [
+    {
+      num: "[01]",
+      tag: "AI 図面解析",
+      title: "AIが図面を読んで、材料を拾い出す",
+      desc: "配管・電気・ダクト・建築など業種を指定するだけ。AIが必要な材料と数量を自動抽出。施工注意点や他業者との取り合い確認もまとめて。",
+      bullets: ["材料・数量・単位の自動抽出", "施工上の注意事項をリスト化", "他業者との緩衝箇所を特定", "業種ごとに絞り込んで解析"],
+    },
+    {
+      num: "[02]",
+      tag: "単価マスタ",
+      title: "会社の単価データを、クラウドで一元管理",
+      desc: "自社の材料単価をクラウドに登録すれば、図面解析後に自動で金額計算。CSV で一括インポートもできるので既存データをそのまま移行。",
+      bullets: ["CSV で既存データを一括インポート", "材料カテゴリで整理・検索", "解析結果と単価を自動連携", "チームで単価を共有・管理"],
+    },
+    {
+      num: "[03]",
+      tag: "見積書 PDF",
+      title: "3タップで、プロ仕様の見積書 PDF",
+      desc: "解析した材料一覧をそのまま見積書へ変換。単価マスタと連携して金額自動計算、A4印刷対応の PDF を即出力。お客様へその場で提出可能。",
+      bullets: ["ワンクリックで見積書生成", "消費税込み・別途切替対応", "A4印刷対応の PDF 出力", "会社名・担当者・工事名を設定可能"],
+    },
+    {
+      num: "[04]",
+      tag: "チーム連携",
+      title: "現場チームで、リアルタイムに共有",
+      desc: "グループを作って招待コードを送るだけ。見積書・解析結果・メッセージを一カ所に集約。LINE の散らかりとお別れ。",
+      bullets: ["招待コードで即参加", "グループチャットで一元化", "@メンションで確実に伝達", "見積・解析結果を全員で共有"],
+    },
+  ];
+
+  return (
+    <>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: "#0B3D91" }}>
+        4つの機能仕様。
+      </h2>
+      <p className="mb-10 text-sm font-light max-w-2xl" style={{ color: "#0B3D91" }}>
+        図面解析・単価管理・見積書出力・チーム連携の全工程をワンストップで。
+      </p>
+      <div className="space-y-8">
+        {features.map(({ num, tag, title, desc, bullets }) => (
+          <div key={num} className="relative bg-white/55 p-6 sm:p-8" style={{ border: "1.5px solid #0B3D91" }}>
+            <div className="grid md:grid-cols-[1fr_auto] gap-6">
+              <div>
+                <div className="flex items-baseline gap-3 mb-3">
+                  <span className="font-mono font-bold text-lg" style={{ color: "#FF6B35" }}>{num}</span>
+                  <span className="font-mono text-[10px] tracking-widest opacity-60" style={{ color: "#0B3D91" }}>{tag}</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold mb-3" style={{ color: "#0B3D91" }}>{title}</h3>
+                <p className="text-sm leading-relaxed font-light mb-5" style={{ color: "#0B3D91" }}>{desc}</p>
+                <ul className="space-y-1.5">
+                  {bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2 text-sm font-light" style={{ color: "#0B3D91" }}>
+                      <span className="font-mono text-xs mt-1 shrink-0" style={{ color: "#FF6B35" }}>✓</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/* ============ Pricing (Blueprint風 表組み + ベータ告知) ============ */
+function Pricing() {
+  const plans = [
+    { name: "individual", price: "¥1,480", limit: "30回/月", users: "1名", group: "参加のみ", popular: false },
+    { name: "team_5",     price: "¥9,800", limit: "100回/月", users: "5名まで", group: "作成・参加", popular: false },
+    { name: "team_10",    price: "¥16,800", limit: "300回/月", users: "10名まで", group: "作成・参加", popular: true },
+    { name: "unlimited",  price: "¥29,800", limit: "無制限", users: "無制限", group: "作成・参加", popular: false },
+  ];
+
+  return (
+    <>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: "#0B3D91" }}>
+        シンプルな料金プラン。
+      </h2>
+      <p className="mb-8 text-sm font-light max-w-2xl" style={{ color: "#0B3D91" }}>
+        4プラン展開。1人親方から法人まで、規模に応じて選べる設計。
+      </p>
+
+      {/* ベータ告知 */}
+      <div
+        className="mb-8 p-4 font-mono text-xs tracking-wider"
+        style={{ border: "1.5px dashed #FF6B35", color: "#FF6B35", background: "rgba(255,107,53,0.04)" }}
+      >
+        <div className="flex items-start gap-2">
+          <span className="font-bold shrink-0">▼ BETA NOTICE</span>
+          <span style={{ color: "#0B3D91" }} className="font-sans font-normal">
+            現在ベータ期間中につき、<strong className="font-bold">全機能を無料でご利用いただけます</strong>。正式リリース後に下記の料金プランへ移行予定です。料金・プラン内容は変更の可能性があります。
+          </span>
+        </div>
+      </div>
+
+      {/* 料金表（製図表組み） */}
+      <div className="overflow-x-auto" style={{ border: "2px solid #0B3D91" }}>
+        <table className="w-full font-mono text-sm" style={{ background: "rgba(255,255,255,0.45)" }}>
+          <thead>
+            <tr className="border-b-2" style={{ borderColor: "#0B3D91" }}>
+              <th className="text-left p-3 sm:p-4 font-bold text-[10px] tracking-widest" style={{ color: "#0B3D91" }}>PLAN</th>
+              <th className="text-right p-3 sm:p-4 font-bold text-[10px] tracking-widest" style={{ color: "#0B3D91" }}>MONTHLY</th>
+              <th className="text-right p-3 sm:p-4 font-bold text-[10px] tracking-widest hidden sm:table-cell" style={{ color: "#0B3D91" }}>ANALYSES</th>
+              <th className="text-right p-3 sm:p-4 font-bold text-[10px] tracking-widest hidden md:table-cell" style={{ color: "#0B3D91" }}>USERS</th>
+              <th className="text-right p-3 sm:p-4 font-bold text-[10px] tracking-widest hidden lg:table-cell" style={{ color: "#0B3D91" }}>GROUPS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {plans.map((p, i) => (
+              <tr key={p.name} className={i !== plans.length - 1 ? "border-b" : ""} style={{ borderColor: "rgba(11,61,145,0.25)" }}>
+                <td className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold" style={{ color: "#0B3D91" }}>{p.name}</span>
+                    {p.popular && <span className="bp-num !text-[8px]">★ POPULAR</span>}
+                  </div>
+                </td>
+                <td className="text-right p-3 sm:p-4 font-bold" style={{ color: "#0B3D91" }}>{p.price}<span className="opacity-50 text-[10px]"> / mo</span></td>
+                <td className="text-right p-3 sm:p-4 hidden sm:table-cell" style={{ color: "#0B3D91" }}>{p.limit}</td>
+                <td className="text-right p-3 sm:p-4 hidden md:table-cell" style={{ color: "#0B3D91" }}>{p.users}</td>
+                <td className="text-right p-3 sm:p-4 hidden lg:table-cell" style={{ color: "#0B3D91" }}>{p.group}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-4 text-xs font-mono opacity-60 tracking-wider" style={{ color: "#0B3D91" }}>
+        * ベータ期間中は全プランの機能を無料で利用可能。
+      </p>
+    </>
+  );
+}
+
+/* ============ Alpha Block (フォーム誘導は控えめに) ============ */
+function AlphaBlock() {
+  return (
+    <>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: "#0B3D91" }}>
+        アルファテスター枠（先着10名）<br />
+        <span className="text-base sm:text-lg font-light" style={{ color: "#FF6B35" }}>
+          フィードバック歓迎、Live切替後も永久半額。
+        </span>
+      </h2>
+      <p className="mb-10 text-sm font-light max-w-2xl" style={{ color: "#0B3D91" }}>
+        通常のベータ利用に加えて、改善要望や不具合報告をくださる方を優先的に募集しています。
+        承認後、Live切替後も<strong>全プラン永久半額</strong>でご利用いただけます。
+      </p>
+
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <Spec num="[A.1]" title="全機能 無制限" meta="UNLIMITED ALL FEATURES" desc="期間・回数の制限なし。図面解析・見積書作成・グループ作成すべて使い放題。" />
+        <Spec num="[A.2]" title="Live切替後 永久半額" meta="FOREVER 50% OFF — FIRST 10" desc="正式リリース後、全プラン永久半額。早く始めた方が長く得する設計。" />
+        <Spec num="[A.3]" title="開発者と直接やりとり" meta="DIRECT FEEDBACK CHANNEL" desc="不満・要望・新機能提案を直接連絡可能。優先的に検討・実装します。" />
+        <Spec num="[A.4]" title="1〜2営業日で承認" meta="QUICK APPROVAL" desc="フォーム送信後、最短当日〜2営業日以内に承認メール。承認後すぐ無制限利用開始。" />
+      </div>
+
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <a href={ALPHA_FORM_URL} target="_blank" rel="noopener noreferrer" className="bp-cta-secondary inline-flex items-center gap-3 px-7 py-3 text-sm cursor-pointer">
+          <span>アルファ枠に申込む</span>
+          <span className="font-mono">→</span>
+        </a>
+        <p className="font-mono text-[11px] tracking-wider opacity-70" style={{ color: "#0B3D91" }}>
+          ⊕ 約2分で申込完了 / 既にベータ登録済みの方も申込可
+        </p>
+      </div>
+    </>
+  );
+}
+
+/* ============ FAQ ============ */
+function FAQ() {
+  const items = [
+    { q: "どんな図面に対応していますか？", a: "給排水・電気・空調・ダクト・建築・内装など、業種を問わず PDF 形式の図面に対応しています。スキャン PDF よりデジタル作成の PDF の方が精度が高くなります。" },
+    { q: "AI の解析精度はどのくらいですか？", a: "高精度な大規模言語モデルを採用しており、多くの図面で高い精度を実現しています。ただし、図面の品質や複雑さによって精度は変わるため、重要な判断には担当者による確認をお願いしています。" },
+    { q: "ベータ期間中は本当に無料ですか？", a: "はい、ベータ期間中は全機能を無料でご利用いただけます。正式版リリースの際には事前にご案内します。" },
+    { q: "チームメンバーはどうやって追加しますか？", a: "グループを作成して招待コードを発行するだけ。メンバーはコードを入力するか、URL をクリックするだけで参加できます。" },
+    { q: "既存の単価データを移行できますか？", a: "はい、CSV ファイルで一括インポートできます。現在 Excel で管理している単価データをそのまま取り込めます。" },
+    { q: "スマートフォンでも使えますか？", a: "はい、iOS・Android のブラウザから全機能をご利用いただけます。" },
+  ];
+  return (
+    <>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-10" style={{ color: "#0B3D91" }}>
+        よくある質問
+      </h2>
+      <div className="space-y-3">
+        {items.map(({ q, a }, i) => (
+          <details
+            key={q}
+            className="group bg-white/55 p-5 cursor-pointer"
+            style={{ border: "1.5px solid #0B3D91" }}
+          >
+            <summary className="list-none flex items-start gap-3">
+              <span className="font-mono font-bold text-xs tracking-wider shrink-0 mt-0.5" style={{ color: "#FF6B35" }}>
+                Q.{String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="flex-1 text-sm font-bold" style={{ color: "#0B3D91" }}>{q}</span>
+              <span className="font-mono shrink-0 group-open:rotate-45 transition-transform" style={{ color: "#0B3D91" }}>+</span>
+            </summary>
+            <p className="mt-3 pl-12 text-sm font-light leading-relaxed" style={{ color: "#0B3D91" }}>{a}</p>
+          </details>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/* ============ Final CTA ============ */
+function FinalCta() {
+  return (
+    <section className="mt-24 sm:mt-32 mb-24 text-center">
+      <div className="flex items-center gap-3 mb-10">
+        <span className="bp-num">END</span>
+        <div className="flex-1">
+          <div className="bp-dim" />
+        </div>
+      </div>
+
+      <p className="font-mono text-[11px] tracking-widest mb-5 opacity-70" style={{ color: "#0B3D91" }}>
+        START NOW — IT'S FREE DURING BETA
+      </p>
+      <h2 className="text-2xl sm:text-4xl font-bold mb-10 leading-tight" style={{ color: "#0B3D91" }}>
+        今すぐ始めて、<br className="sm:hidden" />
+        現場の手間を減らそう。
+      </h2>
+
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <Link href="/signup" className="bp-cta inline-flex items-center gap-3 px-10 py-5 text-base cursor-pointer">
+          <span>無料ではじめる</span>
+          <span className="font-mono">→</span>
+        </Link>
+        <Link href="/login" className="bp-cta-secondary inline-flex items-center gap-3 px-10 py-5 text-base cursor-pointer">
+          <span>ログイン</span>
+        </Link>
+      </div>
+      <p className="mt-5 font-mono text-[11px] tracking-wider opacity-70" style={{ color: "#0B3D91" }}>
+        クレカ不要 / 登録1分 / ベータ期間中は全機能無料
+      </p>
+    </section>
+  );
+}
+
+/* ============ Footer ============ */
+function Footer() {
+  return (
+    <footer className="relative border-t-2 mt-8" style={{ borderColor: "#0B3D91" }}>
+      <div className="mx-auto max-w-6xl px-5 sm:px-8 py-5">
+        <div className="bp-titleblock">
+          <div className="grid grid-cols-2 sm:grid-cols-4 text-[11px]">
+            <Cell label="PROJECT" value="TORU" />
+            <Cell label="SHEET" value="LP-001" />
+            <Cell label="SCALE" value="1 : 1" />
+            <Cell label="REV." value="0.2 BETA" />
+          </div>
+          <div className="bp-titleblock-row px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div className="flex gap-4 flex-wrap" style={{ color: "#0B3D91" }}>
+              <Link href="/" className="hover:underline">HOME</Link>
+              <Link href="/signup" className="hover:underline">SIGNUP</Link>
+              <Link href="/login" className="hover:underline">LOGIN</Link>
+              <Link href="/privacy" className="hover:underline">PRIVACY</Link>
+            </div>
+            <span className="opacity-60" style={{ color: "#0B3D91" }}>
+              © 2026 TORU — BUILT FOR THE FIELD
+            </span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ============ Helpers ============ */
+function Spec({ num, title, meta, desc }: { num: string; title: string; meta: string; desc: string; }) {
+  return (
+    <div className="relative bg-white/55 p-6 transition hover:bg-white/75" style={{ border: "1.5px solid #0B3D91" }}>
+      <div className="flex items-baseline gap-3 mb-3">
+        <span className="font-mono font-bold text-base" style={{ color: "#FF6B35" }}>{num}</span>
+        <span className="font-mono text-[9px] tracking-widest opacity-60" style={{ color: "#0B3D91" }}>{meta}</span>
+      </div>
+      <h3 className="text-base font-bold mb-2" style={{ color: "#0B3D91" }}>{title}</h3>
+      <p className="text-sm leading-relaxed font-light" style={{ color: "#0B3D91" }}>{desc}</p>
+    </div>
   );
 }
 
 function Cell({ label, value }: { label: string; value: string }) {
   return (
     <div className="border-r last:border-r-0 px-4 py-2.5 font-mono" style={{ borderColor: "#0B3D91" }}>
-      <div className="text-[9px] tracking-widest opacity-60" style={{ color: "#0B3D91" }}>
-        {label}
-      </div>
-      <div className="font-bold mt-0.5" style={{ color: "#0B3D91" }}>
-        {value}
-      </div>
+      <div className="text-[9px] tracking-widest opacity-60" style={{ color: "#0B3D91" }}>{label}</div>
+      <div className="font-bold mt-0.5" style={{ color: "#0B3D91" }}>{value}</div>
     </div>
   );
 }
