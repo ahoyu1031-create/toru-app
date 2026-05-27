@@ -136,6 +136,159 @@ body {
   animation: stage-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* ===================================================================
+   Blueprint LP — /alpha 専用ユーティリティ
+   コンセプト: 製図用紙（青焼き）の上に AI が動く瞬間
+   =================================================================== */
+
+.font-mono {
+  font-family: var(--font-mono), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* 製図グリッド: 24px 細格子 + 120px 太格子 を重ねた方眼風 */
+.bp-grid {
+  background-color: #F4F1E8;
+  background-image:
+    linear-gradient(rgba(11, 61, 145, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 61, 145, 0.18) 1px, transparent 1px),
+    linear-gradient(rgba(11, 61, 145, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 61, 145, 0.07) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+}
+
+/* 紙の質感をエッジに残すグラデーション */
+.bp-paper-fade {
+  background:
+    radial-gradient(ellipse at top, rgba(199, 184, 149, 0) 0%, rgba(199, 184, 149, 0.25) 100%),
+    transparent;
+}
+
+/* 図面ダブル枠線（外側細・内側太の二重） */
+.bp-frame {
+  outline: 1px solid #0B3D91;
+  outline-offset: 6px;
+  border: 2px solid #0B3D91;
+}
+
+/* 注釈オレンジ（赤の代替） */
+.bp-mark {
+  color: #FF6B35;
+}
+
+/* ALPHA スタンプ */
+@keyframes bp-stamp-in {
+  0% { opacity: 0; transform: rotate(-20deg) scale(2.2); }
+  60% { opacity: 0.95; }
+  100% { opacity: 0.88; transform: rotate(-8deg) scale(1); }
+}
+.bp-stamp {
+  font-family: var(--font-mono), monospace;
+  border: 4px double #FF6B35;
+  color: #FF6B35;
+  letter-spacing: 0.18em;
+  padding: 0.5rem 1.4rem;
+  font-weight: 700;
+  font-size: 1.6rem;
+  display: inline-block;
+  transform: rotate(-8deg);
+  opacity: 0.88;
+  text-transform: uppercase;
+  background: rgba(255, 107, 53, 0.04);
+  animation: bp-stamp-in 0.9s cubic-bezier(0.34, 1.4, 0.64, 1) 0.3s both;
+}
+
+/* 寸法線 (CSS のみで矢印付き横線) */
+.bp-dim {
+  position: relative;
+  height: 1px;
+  background: #0B3D91;
+  margin: 0 8px;
+}
+.bp-dim::before,
+.bp-dim::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+.bp-dim::before { left: -6px; border-right: 6px solid #0B3D91; }
+.bp-dim::after  { right: -6px; border-left: 6px solid #0B3D91; }
+
+/* 番号バッジ ([01] 形式) */
+.bp-num {
+  font-family: var(--font-mono), monospace;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: #FF6B35;
+  border: 1px solid currentColor;
+  padding: 2px 8px;
+  display: inline-block;
+}
+
+/* 図面タイトル枠（製図用紙右下の Title Block 風） */
+.bp-titleblock {
+  border: 1.5px solid #0B3D91;
+  background: rgba(255, 255, 255, 0.55);
+}
+.bp-titleblock-row {
+  border-top: 1px solid #0B3D91;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+}
+
+/* CTA ボタン（ブループリント版） */
+.bp-cta {
+  background: #0B3D91;
+  color: #F4F1E8;
+  font-family: var(--font-mono), monospace;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border: 2px solid #0B3D91;
+  position: relative;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.bp-cta:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 #FF6B35;
+}
+.bp-cta-secondary {
+  background: transparent;
+  color: #0B3D91;
+  border: 2px solid #0B3D91;
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  transition: background 0.15s ease;
+}
+.bp-cta-secondary:hover { background: rgba(11, 61, 145, 0.06); }
+
+/* スクロール用フェード */
+@keyframes bp-rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.bp-rise { animation: bp-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* 寸法線が左から右に伸びる */
+@keyframes bp-extend {
+  from { transform: scaleX(0); transform-origin: left; }
+  to { transform: scaleX(1); transform-origin: left; }
+}
+.bp-extend { animation: bp-extend 1s cubic-bezier(0.65, 0, 0.35, 1) 0.4s both; }
+
+/* 印刷時に背景色を維持（ブループリントの雰囲気を保つ） */
+.bp-page {
+  color: #0B3D91;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
 /* ── 印刷 / PDF出力 ── */
 @media print {
   /* アプリのクロム（サイドバー・ヘッダー）を非表示 */
