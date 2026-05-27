@@ -19,7 +19,8 @@
 
 | 作業内容 | 使うスキル |
 |---------|-----------|
-| UI/UX・画面デザイン・コンポーネント | `ui-ux-pro-max` |
+| UI/UX・画面デザイン・コンポーネント（計画・カラー/フォント選定）| `ui-ux-pro-max` |
+| UI/UX・実装（ジェネリックAI感を回避、独自性のあるプロダクション級UI）| `frontend-design` |
 | Supabase DB・RLS・マイグレーション | `supabase` または `supabase-development` |
 | Claude API・プロンプト・モデル設定 | `claude-api` |
 | パフォーマンス改善・Core Web Vitals | `performance-optimization` |
