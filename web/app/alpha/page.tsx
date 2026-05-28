@@ -8,7 +8,7 @@ import {
   SectionHeader,
   ScrollProgress,
   DimensionLine,
-} from "./blueprint-motion";
+} from "@/components/blueprint-motion";
 
 export const metadata = {
   title: "TORU — 図面を投げたら、見積書が出てくる。",
