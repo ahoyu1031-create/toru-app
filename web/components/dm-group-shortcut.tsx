@@ -42,7 +42,7 @@ export function DmGroupShortcut() {
       <div className="flex items-center gap-4">
         <div
           className="flex h-10 w-10 items-center justify-center rounded-xl"
-          style={{ background: "rgba(37,99,235,0.08)" }}
+          style={{ background: "rgba(11,61,145,0.08)" }}
         >
           <Users size={18} style={{ color: "var(--color-primary)" }} />
         </div>

@@ -1,47 +1,48 @@
 @import "tailwindcss";
 
 /* ===================================================================
-   TORU デザインシステム v0.2 — Dark Pro
+   TORU デザインシステム v0.3 — Blueprint
    ===================================================================
-   コンセプト: ダークサイドバー × ライトコンテンツ × 建設業プロ感
-   - サイドバー: ディープネイビー #0E1726
-   - コンテンツ: 青みグレー #EDF1F7
-   - ブランド: インディゴブルー #2563EB + オレンジアクセント #F97316
+   コンセプト: 製図用紙（青焼き）の世界観を LP からアプリ内まで地続きに
+   - サイドバー: ディープ ブループリントネイビー #0A2A63
+   - コンテンツ: 製図用紙ベージュ #F4F1E8
+   - ブランド: ブループリントネイビー #0B3D91 + 製図オレンジ #FF6B35
+   ※ 作業画面では方眼(bp-grid)等の装飾は使わず、色・ボタン・見出しで世界観を統一
    =================================================================== */
 
 :root {
-  /* Sidebar */
-  --sidebar-bg: #0E1726;
-  --sidebar-border: #1A2B3F;
-  --sidebar-text: #8EA3B8;
-  --sidebar-text-hover: #C8D8E8;
-  --sidebar-active-bg: rgba(37, 99, 235, 0.15);
+  /* Sidebar — Blueprint navy */
+  --sidebar-bg: #0A2A63;
+  --sidebar-border: #163A7A;
+  --sidebar-text: #9DB2D4;
+  --sidebar-text-hover: #DCE6F5;
+  --sidebar-active-bg: rgba(255, 107, 53, 0.16);
   --sidebar-active-text: #FFFFFF;
-  --sidebar-active-border: #3B82F6;
+  --sidebar-active-border: #FF6B35;
 
-  /* Brand */
-  --color-primary: #2563EB;
-  --color-primary-hover: #1D4ED8;
-  --color-primary-soft: #EFF6FF;
+  /* Brand — Blueprint navy */
+  --color-primary: #0B3D91;
+  --color-primary-hover: #082E6E;
+  --color-primary-soft: #EAF0FA;
 
-  /* Accent */
-  --color-accent: #F97316;
-  --color-accent-hover: #EA580C;
+  /* Accent — Blueprint orange */
+  --color-accent: #FF6B35;
+  --color-accent-hover: #E55520;
 
-  /* Surface */
-  --color-bg: #EDF1F7;
+  /* Surface — Blueprint paper */
+  --color-bg: #F4F1E8;
   --color-surface: #FFFFFF;
-  --color-border: #E2E8F0;
-  --color-border-strong: #CBD5E0;
+  --color-border: #E2DCCD;
+  --color-border-strong: #C9C1AD;
 
-  /* Text */
-  --color-text: #1A202C;
-  --color-text-muted: #64748B;
-  --color-text-subtle: #94A3B8;
+  /* Text — navy ink */
+  --color-text: #122A4A;
+  --color-text-muted: #5C6B82;
+  --color-text-subtle: #93A0B2;
 
   /* State */
-  --color-success: #059669;
-  --color-warning: #D97706;
+  --color-success: #0F7A52;
+  --color-warning: #C2410C;
   --color-danger: #DC2626;
 
   /* Typography */

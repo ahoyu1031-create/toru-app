@@ -27,9 +27,25 @@
 - ブラウザ確認: `/signup`（1440/モバイル）・`/login` がBlueprintで描画、コンソールエラー0。`/alpha`→`/` リダイレクト確認。
 - ⚠️ `/onboarding` は認証必須のため未ログインで視覚確認不可（ビルド通過・signup/loginと同部品なので問題なし想定。実機ログイン時に最終確認）。
 
-**未コミット**: 変更はローカルのみ。コミット＆プッシュ（=本番デプロイ）はユーザー確認後。
+**①コミット**: `9995dad` で push 済み（Vercel 自動デプロイ）。9 files, +375/-1011（/alpha 巨大ファイル削減）。
 
-**次タスク（②）**: `globals.css` の `:root` 色トークン（`--color-primary`→紺#0B3D91 / `--color-accent`→#FF6B35 / `--color-bg`→ベージュ#F4F1E8 / `--sidebar-bg`）を差し替え、ダッシュボード等アプリ内全体をBlueprint寄りに。ボタン/見出しを微調整、方眼等は入れない。
+### ②アプリ内全体を Blueprint トークンに統一（同セッションで実施）
+
+**調査**: アプリ内は `var(--color-*)` トークンを **348箇所/37ファイル**使用、ハードコード青/オレンジは少数 → トークン差し替えで大部分が連動する低リスク構造と判明。
+
+**実施**:
+1. `globals.css` `:root` を v0.3 Blueprint に差し替え:
+   - `--color-primary` #2563EB→**#0B3D91**(紺) / `--color-accent` #F97316→**#FF6B35** / `--color-bg` #EDF1F7→**#F4F1E8**(ベージュ) / `--sidebar-bg` #0E1726→**#0A2A63**(紺) / 枠線をベージュ調・テキストを navy ink に。sidebar active を amber 強調に。
+2. ハードコード残りを一括置換（dead な `hero-demo.tsx` は除外）: `#F97316`→`#FF6B35` / `#2563EB`→`#0B3D91` / rgba 同様。対象: app-sidebar, right-panel, dm-group-shortcut, file-confirm-modal, dashboard(page/plan-status-bar), groups(page/chat), quotes/page。
+3. Tailwind 青クラス2箇所を navy arbitrary に: quote-detail の issued バッジ、plan-change-modal の初回契約 info box。
+   - 注: 作業画面には方眼(bp-grid)等の重い装飾は入れず、色のみで統一（可読性優先）。
+
+**検証**:
+- `tsc --noEmit` ✅ / `npm run build` ✅ exit 0
+- ⚠️ ダッシュボード等アプリ内は認証必須で直接スクショ不可。代わりにトークンを使う公開ページ `/privacy` を確認 → ベージュ背景＋navy テキスト＋navy ロゴで破綻なく描画、コントラスト良好。トークンのカスケードが効くことを確認。
+- **ユーザー確認待ち**: ダッシュボード実画面の目視（ベージュ背景の強さ・色味の最終OK）。トークン1個なので調整は容易。
+
+**残課題候補**: trial-banner の active 状態は意味的 info としてTailwind青のまま（必要なら navy 化）。dead code `hero-demo.tsx` は削除検討可。
 
 ---
 

@@ -88,10 +88,10 @@ export function PlanChangeModal({ currentPlan, newPlan, onClose }: Props) {
 
           if (direction === "initial") {
             return (
-              <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 mb-5">
+              <div className="rounded-xl border border-[#0B3D91]/30 bg-[#0B3D91]/5 p-3 mb-5">
                 <div className="flex gap-2">
-                  <AlertCircle size={16} className="shrink-0 mt-0.5 text-blue-600" />
-                  <div className="text-xs text-blue-900 space-y-1">
+                  <AlertCircle size={16} className="shrink-0 mt-0.5 text-[#0B3D91]" />
+                  <div className="text-xs text-[#0B3D91] space-y-1">
                     <p className="font-semibold">初回プラン契約</p>
                     <p>次の画面（Stripe の安全な決済ページ）でカード情報を入力してください。</p>
                   </div>

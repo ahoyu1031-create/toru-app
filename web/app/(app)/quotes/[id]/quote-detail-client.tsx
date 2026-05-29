@@ -61,7 +61,7 @@ const STATUS_LABEL: Record<string, string> = {
 
 const STATUS_CLASS: Record<string, string> = {
   draft: "bg-gray-100 text-gray-600",
-  issued: "bg-blue-100 text-blue-700",
+  issued: "bg-[#0B3D91]/10 text-[#0B3D91]",
   accepted: "bg-green-100 text-green-700",
   rejected: "bg-red-100 text-red-600",
 };

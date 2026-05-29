@@ -274,8 +274,8 @@ function MessageBody({
               key={i}
               className="rounded px-0.5 font-semibold"
               style={{
-                background: isMe ? "rgba(255,255,255,0.25)" : isMeMentioned ? "rgba(249,115,22,0.15)" : "rgba(37,99,235,0.1)",
-                color: isMe ? "#fff" : isMeMentioned ? "#F97316" : "var(--color-primary)",
+                background: isMe ? "rgba(255,255,255,0.25)" : isMeMentioned ? "rgba(255,107,53,0.15)" : "rgba(11,61,145,0.1)",
+                color: isMe ? "#fff" : isMeMentioned ? "#FF6B35" : "var(--color-primary)",
               }}
             >
               {part}
@@ -604,7 +604,7 @@ export function GroupChat({
         {isDragOver && (
           <div
             className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded-xl"
-            style={{ background: "rgba(37,99,235,0.08)", border: "2px dashed var(--color-primary)", backdropFilter: "blur(2px)", pointerEvents: "none" }}
+            style={{ background: "rgba(11,61,145,0.08)", border: "2px dashed var(--color-primary)", backdropFilter: "blur(2px)", pointerEvents: "none" }}
           >
             <Paperclip size={32} style={{ color: "var(--color-primary)" }} />
             <p className="text-sm font-semibold" style={{ color: "var(--color-primary)" }}>

@@ -403,7 +403,7 @@ function GroupList({
                     <span
                       className="absolute -right-1 -top-1 h-3 w-3 rounded-full"
                       style={{
-                        background: "#F97316",
+                        background: "#FF6B35",
                         boxShadow: "0 0 0 2px var(--color-surface)",
                       }}
                     />
@@ -428,7 +428,7 @@ function GroupList({
                 {isNew && (
                   <span
                     className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
-                    style={{ background: "rgba(249,115,22,0.15)", color: "#F97316" }}
+                    style={{ background: "rgba(255,107,53,0.15)", color: "#FF6B35" }}
                   >
                     NEW
                   </span>

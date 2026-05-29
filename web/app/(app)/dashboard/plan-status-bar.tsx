@@ -42,7 +42,7 @@ export function PlanStatusBar({ planType, isUnlimited, isAlphaTester = false, ba
         <div className="flex items-center gap-3 min-w-0">
           <div
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-            style={{ background: "rgba(37,99,235,0.1)" }}
+            style={{ background: "rgba(11,61,145,0.1)" }}
           >
             <Zap size={16} style={{ color: "var(--color-primary)" }} />
           </div>
@@ -88,7 +88,7 @@ export function PlanStatusBar({ planType, isUnlimited, isAlphaTester = false, ba
                 {usedThisMonth} / {totalLimit}回
                 <span
                   className="ml-1.5 font-semibold"
-                  style={{ color: isLow ? "var(--color-danger)" : pctUsed >= 70 ? "#F97316" : "var(--color-text-muted)" }}
+                  style={{ color: isLow ? "var(--color-danger)" : pctUsed >= 70 ? "#FF6B35" : "var(--color-text-muted)" }}
                 >
                   ({pctUsed}%)
                 </span>
@@ -104,7 +104,7 @@ export function PlanStatusBar({ planType, isUnlimited, isAlphaTester = false, ba
                 className="h-full rounded-full transition-all"
                 style={{
                   width: `${pctUsed}%`,
-                  background: isLow ? "var(--color-danger)" : pctUsed >= 70 ? "#F97316" : "var(--color-primary)",
+                  background: isLow ? "var(--color-danger)" : pctUsed >= 70 ? "#FF6B35" : "var(--color-primary)",
                 }}
               />
             </div>
@@ -161,7 +161,7 @@ export function PlanStatusBar({ planType, isUnlimited, isAlphaTester = false, ba
           <StatCell
             label="使用率"
             value={totalLimit !== null ? `${pctUsed}%` : "—"}
-            valueColor={isLow ? "var(--color-danger)" : pctUsed >= 70 ? "#F97316" : "var(--color-text)"}
+            valueColor={isLow ? "var(--color-danger)" : pctUsed >= 70 ? "#FF6B35" : "var(--color-text)"}
           />
         </div>
       )}

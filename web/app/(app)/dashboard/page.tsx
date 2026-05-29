@@ -36,7 +36,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
   draft:    { bg: "rgba(100,116,139,0.1)", color: "#64748B" },
-  issued:   { bg: "rgba(37,99,235,0.1)",  color: "#2563EB" },
+  issued:   { bg: "rgba(11,61,145,0.1)",  color: "#0B3D91" },
   accepted: { bg: "rgba(5,150,105,0.1)",  color: "#059669" },
   rejected: { bg: "rgba(220,38,38,0.1)",  color: "#DC2626" },
 };
@@ -256,7 +256,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             value={`${issuedCount}件`}
             pctChange={null}
             hint="今月"
-            accentColor="#F97316"
+            accentColor="#FF6B35"
           />
           <StatCard
             icon="✎"

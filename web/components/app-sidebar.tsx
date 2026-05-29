@@ -229,7 +229,7 @@ export function AppSidebar({
                     {!expanded && href === "/groups" && pendingJoinCount > 0 && (
                       <span
                         className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border-2"
-                        style={{ background: "#F97316", borderColor: "var(--sidebar-bg)" }}
+                        style={{ background: "#FF6B35", borderColor: "var(--sidebar-bg)" }}
                       />
                     )}
                   </span>
@@ -240,7 +240,7 @@ export function AppSidebar({
                   {expanded && href === "/groups" && pendingJoinCount > 0 && (
                     <span
                       className="h-2 w-2 shrink-0 rounded-full"
-                      style={{ background: "#F97316" }}
+                      style={{ background: "#FF6B35" }}
                     />
                   )}
                 </Link>
@@ -351,7 +351,7 @@ export function AppSidebar({
             {hasUnread && (
               <span
                 className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full"
-                style={{ background: "#F97316", boxShadow: "0 0 0 2px var(--sidebar-bg)" }}
+                style={{ background: "#FF6B35", boxShadow: "0 0 0 2px var(--sidebar-bg)" }}
               />
             )}
           </div>

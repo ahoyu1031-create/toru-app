@@ -278,7 +278,7 @@ function GroupCard({ group, latestMsg, myDisplayName, memberCount, pendingCount 
             {pendingCount > 0 && (
               <span
                 className="flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
-                style={{ background: "rgba(249,115,22,0.12)", color: "#F97316", border: "1px solid rgba(249,115,22,0.3)" }}
+                style={{ background: "rgba(255,107,53,0.12)", color: "#FF6B35", border: "1px solid rgba(255,107,53,0.3)" }}
               >
                 <Bell size={9} />
                 申請あり {pendingCount}件
@@ -351,7 +351,7 @@ function GroupUpgradeWall() {
         >
           <div
             className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl"
-            style={{ background: "rgba(37,99,235,0.08)" }}
+            style={{ background: "rgba(11,61,145,0.08)" }}
           >
             <Lock size={28} style={{ color: "var(--color-primary)" }} />
           </div>

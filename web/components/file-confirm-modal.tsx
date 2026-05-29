@@ -60,7 +60,7 @@ export function FileConfirmModal({
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
               style={{
                 background: isImage
-                  ? "rgba(37,99,235,0.08)"
+                  ? "rgba(11,61,145,0.08)"
                   : "rgba(220,38,38,0.08)",
               }}
             >
