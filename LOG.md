@@ -4,6 +4,62 @@
 
 ---
 
+## 2026-05-29
+
+### LP一本化 + auth画面（signup/login/onboarding）を Blueprint デザインに刷新
+
+**背景**: LPはBlueprint化済みだが、`/signup` 以降のアカウント登録〜アプリ内が旧"Dark Pro"デザイン（青#2563EB/オレンジ/ダーク紺）のままで、LP→登録で世界観が分断していた。ユーザー指摘「サインアップもサービスもLPとモードが違う、LPに合わせていく」。
+
+**方針合意**:
+- LPは `/` 一本化（`/alpha` は廃止）。アルファ応募の入口は公開LPではなく**アプリ内のトライアル壁**に集約。承認は owner の DB操作（変更なし）。
+- デザイン統一は ①auth フルBlueprint → ②globals.css の色トークン差し替えでアプリ内全体を寄せる、の2段階。作業画面に方眼等の重い装飾は入れず可読性優先。
+
+**このセッションの実施（①auth まで）**:
+1. **LP一本化**: `app/alpha/page.tsx` を `redirect("/")` に置換（600行→7行）。既存 `/alpha` リンクは `/` に転送。
+2. **トライアル壁バナー直リンク化**: `components/trial-banner.tsx` の test mode ended CTA を `/alpha` → `ALPHA_FORM_URL`（新タブ・`<a target=_blank>`）。`/alpha`消去で行き止まりになる動線を修正（=一本化と1セットの必須変更）。
+3. **Blueprint フォーム部品**: `globals.css` に `.bp-label .bp-input .bp-alert(.bp-alert-ok) .bp-code` 追加（紺枠・focusでオレンジシャドウ）。
+4. **共通シェル**: `components/auth-shell.tsx` 新規。左=製図モチーフのブランドパネル（TORUロゴ・「図面を投げたら見積書が出てくる」・安心材料3点）＋右=フォーム枠。signup/login で共有。
+5. **3画面刷新**: `signup/page.tsx` `login/page.tsx`（AuthShell使用）、`onboarding/page.tsx` + `onboarding-form.tsx`（bp-grid + bp-input/label/cta）。
+
+**検証**:
+- `npx tsc --noEmit` ✅ エラー0
+- `npm run build` ✅ exit 0
+- ブラウザ確認: `/signup`（1440/モバイル）・`/login` がBlueprintで描画、コンソールエラー0。`/alpha`→`/` リダイレクト確認。
+- ⚠️ `/onboarding` は認証必須のため未ログインで視覚確認不可（ビルド通過・signup/loginと同部品なので問題なし想定。実機ログイン時に最終確認）。
+
+**未コミット**: 変更はローカルのみ。コミット＆プッシュ（=本番デプロイ）はユーザー確認後。
+
+**次タスク（②）**: `globals.css` の `:root` 色トークン（`--color-primary`→紺#0B3D91 / `--color-accent`→#FF6B35 / `--color-bg`→ベージュ#F4F1E8 / `--sidebar-bg`）を差し替え、ダッシュボード等アプリ内全体をBlueprint寄りに。ボタン/見出しを微調整、方眼等は入れない。
+
+---
+
+## 2026-05-28
+
+### LP を「Blueprint（製図・青写真）」デザインに全面刷新 → 表示検証完了
+
+**背景**: アルファテスター告知に向け、LP の世界観を「建設×製図」に寄せた差別化デザインへ刷新。朝に `/alpha`、夜にホーム `/` を同デザインで統一。
+
+**コミット（全て push 済み = 本番反映済み）**:
+- `79710a6` ホーム `/` を Blueprint デザインに全面刷新（page.tsx, 6セクション構成）
+- `395e978` `/alpha` v3 — TORU差別化軸の訴求 + プロ品質モーション追加
+- `8196bdd` `/alpha` を「TORU 正規 LP（ベータ版）」に再構築
+- `ba96deb` `/alpha` を「ブループリント（製図・青焼き）」デザインで全面リデザイン
+
+**デザイン仕様**: 方眼背景 / 濃紺 `#0B3D91` / モノスペースの技術ラベル（DOC. / REV. / SEC NN）/「見積書」アンバー強調 / `components/blueprint-motion.tsx`（ScrollProgress, Reveal, BlueprintParallaxBg 等）。
+ホーム構成: Hero(SEC00) → 課題(01) → フロー(02) → 機能(03) → 強み(04) → 料金(05) → FAQ(06) → FinalCta → Footer。
+
+**検証（このセッションで実施）**:
+- dev サーバー + Playwright で `/` を 1440 / 390(モバイル) 撮影。
+- ⚠️ fullPage 撮影では Hero 以下が空白 → `Reveal` の IntersectionObserver が programmatic 撮影で未発火だっただけ（DOM には全セクション存在、実スクロールで `opacity:0` 残存 **0個**）。実害なし。
+- スクロール後の再撮影で全セクション正常描画を確認。コンソールエラー 0。
+- 結論: **ホーム Blueprint 刷新は完成・正常動作・本番反映済み**。
+
+**残課題候補（次回判断）**:
+- `/` と `/alpha` の役割整理（両方 Blueprint 化済み。アルファ告知でどちらを配るか）
+- 実機（スマホ実端末）での最終確認
+
+---
+
 ## 2026-05-26
 
 ### 🚀 Claude を「事業パートナー」に格上げ + Supabase直接アクセス手段確立

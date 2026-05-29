@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Gift, AlertCircle } from "lucide-react";
+import { Gift, AlertCircle, ArrowUpRight } from "lucide-react";
 import {
   getTrialStatus,
   TRIAL_DRAWING_LIMIT,
   TRIAL_DURATION_DAYS,
 } from "@/lib/plan";
-import { IS_LIVE_BILLING } from "@/lib/billing-mode";
+import { IS_LIVE_BILLING, ALPHA_FORM_URL } from "@/lib/billing-mode";
 
 type Props = {
   company: {
@@ -95,21 +95,24 @@ export function TrialBanner({ company }: Props) {
     );
   }
 
-  // Test mode (MVP期間): アルファテスター枠誘導
+  // Test mode (MVP期間): アルファテスター枠の応募フォームへ直接誘導
   return (
-    <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex items-center justify-between gap-3">
+    <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div className="flex items-center gap-2 text-red-900">
-        <AlertCircle size={18} className="text-red-600" />
+        <AlertCircle size={18} className="text-red-600 shrink-0" />
         <span className="text-sm font-medium">
-          {reasonText} — アルファテスター枠（無料）で続けてご利用いただけます
+          {reasonText} — アルファテスター枠（無料・無制限）に応募すると続けてご利用いただけます
         </span>
       </div>
-      <Link
-        href="/alpha"
-        className="rounded-md bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-3 py-1.5 whitespace-nowrap"
+      <a
+        href={ALPHA_FORM_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center justify-center gap-1.5 rounded-md bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-4 py-2 whitespace-nowrap transition shrink-0"
       >
-        アルファ枠で続ける →
-      </Link>
+        アルファ枠に応募する
+        <ArrowUpRight size={16} />
+      </a>
     </div>
   );
 }

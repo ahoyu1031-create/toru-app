@@ -268,6 +268,50 @@ body {
 }
 .bp-cta-secondary:hover { background: rgba(11, 61, 145, 0.06); }
 
+/* Blueprint フォーム部品（auth / onboarding 画面で共有） */
+.bp-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0B3D91;
+  margin-bottom: 0.4rem;
+}
+.bp-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1.5px solid #0B3D91;
+  color: #0B3D91;
+  padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+  border-radius: 3px;
+  transition: box-shadow 0.15s ease, background 0.15s ease;
+}
+.bp-input::placeholder { color: rgba(11, 61, 145, 0.38); }
+.bp-input:focus {
+  outline: none;
+  background: #fff;
+  box-shadow: 3px 3px 0 #FF6B35;
+}
+/* 製図ラベル風の英字コード（DOC. / REV. 等） */
+.bp-code {
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.08em;
+}
+/* Blueprint 通知ボックス（error=オレンジ / success=紺） */
+.bp-alert {
+  border: 1.5px solid #FF6B35;
+  background: rgba(255, 107, 53, 0.06);
+  color: #C2410C;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.85rem;
+  border-radius: 3px;
+}
+.bp-alert-ok {
+  border-color: #0B3D91;
+  background: rgba(11, 61, 145, 0.05);
+  color: #0B3D91;
+}
+
 /* スクロール用フェード */
 @keyframes bp-rise {
   from { opacity: 0; transform: translateY(20px); }

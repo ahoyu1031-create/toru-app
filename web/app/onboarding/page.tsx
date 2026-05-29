@@ -18,42 +18,37 @@ export default async function OnboardingPage() {
   const defaultDisplayName = profile?.display_name ?? user.email?.split("@")[0] ?? "";
 
   return (
-    <div
-      className="flex min-h-dvh flex-col items-center justify-center px-4 py-12"
-      style={{ background: "var(--color-bg)" }}
-    >
-      <div className="w-full max-w-lg">
+    <div className="bp-page bp-grid relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-4 py-12">
+      <div className="pointer-events-none absolute inset-0 bp-paper-fade" />
+      <div className="relative w-full max-w-lg">
 
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center text-center">
-          <div
-            className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl text-lg font-bold text-white"
-            style={{ background: "var(--color-primary)" }}
-          >
-            T
+          <div className="bp-code mb-1 text-sm font-bold" style={{ color: "#FF6B35" }}>
+            SETUP / 初期設定
           </div>
-          <h1 className="text-2xl font-bold" style={{ color: "var(--color-text)" }}>
-            TORUへようこそ！
+          <h1 className="text-2xl font-bold" style={{ color: "#0B3D91" }}>
+            TORUへようこそ
           </h1>
-          <p className="mt-1.5 text-sm" style={{ color: "var(--color-text-muted)" }}>
+          <p className="mt-1.5 text-sm" style={{ color: "rgba(11,61,145,0.7)" }}>
             まず会社情報を設定しましょう。見積書PDFに使用されます。
           </p>
         </div>
 
         {/* Steps */}
-        <div className="mb-6 flex items-center justify-center gap-1 text-xs overflow-x-auto">
+        <div className="mb-6 flex items-center justify-center gap-1.5 overflow-x-auto text-xs">
           {[
-            { label: "会社情報を入力", active: true },
-            { label: "図面を解析", active: false },
-            { label: "見積書を作成", active: false },
+            { label: "01 会社情報", active: true },
+            { label: "02 図面を解析", active: false },
+            { label: "03 見積書を作成", active: false },
           ].map((step, i) => (
-            <span key={step.label} className="flex items-center gap-1 shrink-0">
-              {i > 0 && <span style={{ color: "var(--color-border)" }}>→</span>}
+            <span key={step.label} className="flex shrink-0 items-center gap-1.5">
+              {i > 0 && <span style={{ color: "rgba(11,61,145,0.4)" }}>—</span>}
               <span
-                className="rounded-full px-2.5 py-0.5 font-semibold"
+                className="bp-code px-2.5 py-1 font-bold"
                 style={step.active
-                  ? { background: "var(--color-primary)", color: "#fff" }
-                  : { background: "var(--color-surface)", border: "1px solid var(--color-border)", color: "var(--color-text-muted)" }
+                  ? { background: "#0B3D91", color: "#F4F1E8" }
+                  : { border: "1px solid rgba(11,61,145,0.4)", color: "rgba(11,61,145,0.6)" }
                 }
               >
                 {step.label}
@@ -63,14 +58,11 @@ export default async function OnboardingPage() {
         </div>
 
         {/* Form card */}
-        <div
-          className="rounded-2xl p-8 shadow-sm"
-          style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}
-        >
+        <div className="border-2 bg-[rgba(255,255,255,0.6)] p-7 sm:p-9" style={{ borderColor: "#0B3D91" }}>
           <OnboardingForm defaultDisplayName={defaultDisplayName} action={completeOnboarding} />
         </div>
 
-        <p className="mt-4 text-center text-xs" style={{ color: "var(--color-text-subtle)" }}>
+        <p className="mt-4 text-center text-xs" style={{ color: "rgba(11,61,145,0.55)" }}>
           後から設定でいつでも変更できます
         </p>
 
