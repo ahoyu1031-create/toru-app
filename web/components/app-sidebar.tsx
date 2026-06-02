@@ -191,26 +191,25 @@ export function AppSidebar({
 
           return (
             <div key={href}>
-              {/* 親アイテム */}
-              <div className="flex items-center">
+              {/* 親アイテム（Link + 開閉ボタンを1つのピルに統合） */}
+              <div
+                className="flex items-center rounded-lg transition-all duration-150"
+                style={
+                  isParentActive
+                    ? {
+                        background: "var(--sidebar-active-bg)",
+                        borderLeft: "3px solid var(--sidebar-active-border)",
+                      }
+                    : { borderLeft: "3px solid transparent" }
+                }
+              >
                 <Link
                   href={href}
                   title={!expanded ? label : undefined}
-                  style={
-                    isParentActive
-                      ? {
-                          background: "var(--sidebar-active-bg)",
-                          color: "var(--sidebar-active-text)",
-                          borderLeft: "3px solid var(--sidebar-active-border)",
-                        }
-                      : {
-                          color: "var(--sidebar-text)",
-                          borderLeft: "3px solid transparent",
-                        }
-                  }
-                  className={`flex flex-1 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150 ${
+                  style={{ color: isParentActive ? "var(--sidebar-active-text)" : "var(--sidebar-text)" }}
+                  className={`flex flex-1 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium outline-none transition-colors duration-150 ${
                     isParentActive ? "" : "hover:bg-white/5"
-                  } ${hasChildren && expanded ? "rounded-r-none" : ""}`}
+                  }`}
                   onMouseEnter={(e) => {
                     if (!isParentActive)
                       (e.currentTarget as HTMLElement).style.color = "var(--sidebar-text-hover)";
@@ -245,16 +244,14 @@ export function AppSidebar({
                   )}
                 </Link>
 
-                {/* 開閉ボタン（サイドバー展開時のみ） */}
+                {/* 開閉ボタン（サイドバー展開時のみ）— ピル内に同居、独立した箱にしない */}
                 {hasChildren && expanded && (
                   <button
                     type="button"
                     onClick={() => toggleSection(href)}
-                    className="flex h-full items-center px-2 rounded-r-lg transition-all hover:bg-white/5"
+                    className="flex h-full shrink-0 items-center px-2.5 outline-none"
                     style={{
                       color: isParentActive ? "var(--sidebar-active-text)" : "var(--sidebar-text)",
-                      background: isParentActive ? "var(--sidebar-active-bg)" : "transparent",
-                      borderLeft: isParentActive ? "none" : "none",
                     }}
                     aria-label={isOpen ? "折り畳む" : "展開する"}
                   >
@@ -263,7 +260,7 @@ export function AppSidebar({
                       style={{
                         transform: isOpen ? "rotate(0deg)" : "rotate(-90deg)",
                         transition: "transform 180ms ease",
-                        opacity: 0.7,
+                        opacity: isParentActive ? 0.85 : 0.5,
                       }}
                     />
                   </button>
