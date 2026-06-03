@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
@@ -15,6 +15,7 @@ import {
   MessageSquare,
   ChevronDown,
   MessageCircleHeart,
+  Loader2,
   type LucideIcon,
 } from "lucide-react";
 import { useRightPanel } from "./right-panel-context";
@@ -88,6 +89,14 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
 ];
+
+/* ナビゲーション中だけスピナー表示（クリック→遷移完了までの「操作の反応」を即可視化）。
+   useLinkStatus は <Link> の子孫でのみ機能する。 */
+function NavSpinner() {
+  const { pending } = useLinkStatus();
+  if (!pending) return null;
+  return <Loader2 size={13} className="shrink-0 animate-spin" style={{ opacity: 0.65 }} />;
+}
 
 /* ─── Sidebar ─── */
 export function AppSidebar({
@@ -242,6 +251,8 @@ export function AppSidebar({
                       style={{ background: "#FF6B35" }}
                     />
                   )}
+                  {/* ナビ中スピナー（クリック即フィードバック） */}
+                  {expanded && <NavSpinner />}
                 </Link>
 
                 {/* 開閉ボタン（サイドバー展開時のみ）— ピル内に同居、独立した箱にしない */}
