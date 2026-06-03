@@ -4,6 +4,35 @@
 
 ---
 
+## 2026-06-03
+
+### X コールドDM 開始 + 「DM君」テンプレ集を新規作成
+
+**背景**: 固定ツイ公開（紹介動画は120fps→Xに弾かれ→ffmpegで60fps化、168MB→30MBに変換して解決）。今日から X で社長・経営者クラスに DM を開始する方針。
+
+**作成**: `docs/dm-templates.md`（DM君）— コピペ用コールドDMテンプレ集
+- A. 社長・経営者向け（今日のメイン。ROI/人件費/受注スピードで語る。2ステップ＋簡潔ワンショット）
+- B. 実務者向け（積算/一人親方・2ステップ）/ C. AI×建設発信者向け / D. ワンショット（痛み投稿者向け）
+- 鉄則: 事前にいいね/リプで認知→冒頭1行を個別化→URLは2通目→1日2〜3通→「教えてください」トーン→記録つける
+- トラッキング表・禁止事項つき
+
+**メッセージ統一**: 価値訴求は「**半日〜1日 → 10分**」で固定ツイ/LP/DM 全部揃えた（旧docsの「1日→30秒」は抽出単体の話）。
+
+**関連既存docs**: bio/固ツイ案=`x-strategy-drafts.md`、アルファ承認=`alpha-tester-runbook.md`。
+
+### プラン画面: ベータ中は決済UIを無効化 + developer の team_unlimited 表示を解消
+
+**背景**: 個人営業を本格化するにあたり、(1) ベータ期間中はユーザーが実際にプラン変更（課金）できないようにしたい。ただし裏のStripeシステムは丸ごと維持し、正式公開時に即解放できる状態に。(2) developer アカウント（is_unlimited）が比較表で「team_unlimited が現在のプラン」と表示されるのが実態と違うので、プランなし扱いに。
+
+**実施**（`web/app/(app)/settings/plan/page.tsx` の表示ロジックのみ。Stripeバックエンドは不触）:
+- ① 比較表の `isCurrent` を `!hasUnlimitedAccess && planType === plan` に変更 → developer/alpha はどのカードも「現在のプラン」にしない（team_unlimited ピン留め＆developerバッジ廃止）。上部「現在のプラン: developer（無制限）」はそのまま（正確なので維持）。
+- ② プラン変更ボタンを `IS_LIVE_BILLING` でゲート。ベータ（test）中は無効化した「ベータ期間中」ボタンを表示、`UpgradeButton`（→PlanChangeModal→Stripe Checkout）は live 時のみ描画。**`NEXT_PUBLIC_BILLING_MODE=live` を立てれば即解放**。
+- ③ フッター文言もベータ中は「プラン変更は停止しています（正式公開時に解放）」に。
+- 検証: tsc/build エラー0。
+- 補足: developer の DB プラン（北陸電工=team_unlimited）は未変更。is_unlimited=true が無制限アクセスを付与しており plan 値は表示・機能に影響しないため。必要なら別途 null 化可能。
+
+---
+
 ## 2026-05-29
 
 ### LP一本化 + auth画面（signup/login/onboarding）を Blueprint デザインに刷新

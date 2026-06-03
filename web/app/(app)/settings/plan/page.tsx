@@ -213,10 +213,8 @@ export default async function PlanPage() {
           {/* 横並び4カラム（PC）/ 2カラム（タブレット）/ 1カラム（モバイル） */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {PLAN_ORDER.map((plan) => {
-              // dev / alpha tester は team_unlimited 相当として「現在のプラン」表示
-              const isCurrent = hasUnlimitedAccess
-                ? plan === "team_unlimited"
-                : planType === plan;
+              // developer / alpha は有料プラン非加入扱い → どのカードも「現在のプラン」にしない（プランなし表示）
+              const isCurrent = !hasUnlimitedAccess && planType === plan;
               const isRecommended = plan === "team_10"; // 主力プラン強調
               const features = PLAN_FEATURES[plan];
               const isUpgrade = !isUnlimited && planType !== null
@@ -290,14 +288,25 @@ export default async function PlanPage() {
                     >
                       現在のプラン
                     </button>
-                  ) : (PAID_PLANS as readonly string[]).includes(plan) ? (
+                  ) : !(PAID_PLANS as readonly string[]).includes(plan) ? (
+                    <div className="h-9" />
+                  ) : IS_LIVE_BILLING ? (
                     <UpgradeButton
                       plan={plan as PaidPlan}
                       currentPlan={planType}
                       variant={isUpgrade ? "primary" : "secondary"}
                     />
                   ) : (
-                    <div className="h-9" />
+                    // ベータ期間中は決済UIを無効化（裏の Stripe システムは維持。NEXT_PUBLIC_BILLING_MODE=live で即解放）
+                    <button
+                      type="button"
+                      disabled
+                      title="ベータ期間中はプラン変更を停止しています"
+                      className="w-full inline-flex h-9 items-center justify-center rounded-xl px-4 text-xs font-semibold cursor-not-allowed opacity-60"
+                      style={{ background: "var(--color-bg)", color: "var(--color-text-muted)", border: "1px dashed var(--color-border-strong)" }}
+                    >
+                      ベータ期間中
+                    </button>
                   )}
                 </div>
               );
@@ -305,7 +314,9 @@ export default async function PlanPage() {
           </div>
 
           <p className="mt-4 text-xs text-center" style={{ color: "var(--color-text-muted)" }}>
-            決済は Stripe で安全に処理されます。いつでも解約・プラン変更可能です。
+            {IS_LIVE_BILLING
+              ? "決済は Stripe で安全に処理されます。いつでも解約・プラン変更可能です。"
+              : "現在ベータ期間中のため、プラン変更は停止しています（正式公開時に解放）。"}
           </p>
         </section>
 
