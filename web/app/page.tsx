@@ -434,7 +434,6 @@ function Footer() {
             <div className="flex gap-4 flex-wrap" style={{ color: "#0B3D91" }}>
               <Link href="/signup" className="hover:underline">SIGNUP</Link>
               <Link href="/login" className="hover:underline">LOGIN</Link>
-              <Link href="/alpha" className="hover:underline">ALPHA</Link>
               <Link href="/privacy" className="hover:underline">PRIVACY</Link>
             </div>
             <span className="opacity-60" style={{ color: "#0B3D91" }}>© 2026 TORU — BUILT FOR THE FIELD</span>

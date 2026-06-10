@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useAnalysis } from "@/components/analysis-context";
 import type { NonAllMode } from "@/components/analysis-context";
+import { ALPHA_FORM_URL } from "@/lib/billing-mode";
 import Link from "next/link";
 
 const TRADES = [
@@ -249,13 +250,15 @@ export function DrawingAnalyzeClient() {
               {" "}引き続きTORUをご利用いただくには、アルファテスター枠（無料）または有料プランをご選択ください。
             </p>
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-              <Link
-                href="/alpha"
+              <a
+                href={ALPHA_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex h-11 items-center justify-center rounded-xl px-6 text-sm font-semibold text-white"
                 style={{ background: "var(--color-primary)" }}
               >
                 アルファ枠（無料）に申込
-              </Link>
+              </a>
               <Link
                 href="/settings/plan"
                 className="inline-flex h-11 items-center justify-center rounded-xl px-6 text-sm font-semibold"

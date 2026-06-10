@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { createAdminClient, getCurrentUser } from "@/lib/supabase/server";
 import { PLAN_PRICES, isTeamPlan, getMonthlyLimit, PAID_PLANS, type PaidPlan, getTrialStatus, TRIAL_DRAWING_LIMIT } from "@/lib/plan";
-import { IS_LIVE_BILLING } from "@/lib/billing-mode";
+import { IS_LIVE_BILLING, ALPHA_FORM_URL } from "@/lib/billing-mode";
 import { getUserPlan } from "@/lib/get-plan";
 import { getCompanyTrial } from "@/lib/get-company-trial";
 import { Zap, Check, Lock, Gift, Sparkles } from "lucide-react";
@@ -143,9 +143,14 @@ export default async function PlanPage() {
               ) : (
                 <p className="text-sm text-red-700">
                   体験期間が終了しました。
-                  <Link href="/alpha" className="font-semibold underline ml-1">
+                  <a
+                    href={ALPHA_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold underline ml-1"
+                  >
                     アルファテスター枠（無料）に申込
-                  </Link>
+                  </a>
                 </p>
               )}
             </div>
@@ -191,8 +196,10 @@ export default async function PlanPage() {
 
           {/* MVP期間中: アルファテスター枠の選択肢も提示（有料プラン購入と並列） */}
           {!IS_LIVE_BILLING && (
-            <Link
-              href="/alpha"
+            <a
+              href={ALPHA_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 transition hover:bg-amber-100 cursor-pointer"
             >
               <div className="flex items-start gap-2">
@@ -207,7 +214,7 @@ export default async function PlanPage() {
               <span className="text-sm font-semibold text-amber-900 whitespace-nowrap">
                 申込ページへ →
               </span>
-            </Link>
+            </a>
           )}
 
           {/* 横並び4カラム（PC）/ 2カラム（タブレット）/ 1カラム（モバイル） */}
