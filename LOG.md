@@ -4,6 +4,27 @@
 
 ---
 
+## 2026-06-11
+
+### Content Factory v0.1 構築（別リポジトリ `E:\AI project\content-factory`）
+
+**背景**: Fable 5期限(6/22)までに「ネタ→動画/記事/サムネ」の量産ワークフローを構築する方針（ハヤカワ五味氏のワークフロー分析が起点。詳細は `TORU/docs/content-factory-plan.md`）。
+
+**実施**:
+- 元ポストをPlaywrightで実物確認 → 「撮影ゼロ・完全生成」と判明（冒頭実写風パートもAI生成）。1:23動画で再生3.3万・保存249
+- X記事の実例（ノア氏・92.7万インプ）を分解 → `articles/article-playbook.md`（行動心理・文法・サムネ原則）
+- Xアルゴリズム調査（滞在時間/ブックマーク/縦型動画優遇）→ プレイブックに反映
+- **content-factory リポジトリ作成（23ファイル・2コミット）**:
+  - pipeline/00-formats.md — 全ジャンル対応のプリセット設計（生成系kaisetsu/list/news/story + 素材加工系game/tutorial、cuts.jsonでカット編集表現）
+  - 01-script（台本テンプレ）/ 02-voice（ElevenLabs tts.mjs・依存ゼロ）/ 03-avatar（HeyGen/Hedraアダプタ方針）/ 04-video（Remotion雛形・Kaisetsuコンポジション）/ 05-assemble（ffmpeg結合）/ run.mjs（不足要素を可視化するオーケストレーター）
+  - banners/ — HTML→PNG方式。**記事ヘッダー(1200x675)と動画カバー(1080x1920)の実機デモ撮影成功**（output/demo/）。縦型カバーの背景CSSバグ修正済み
+  - config/style-profile.md（文体プロファイル・未充填）/ brand.md（Blueprint色流用）/ topics/neta.md（ネタ帳初期20本）
+
+**残り（ユーザーの宿題）**: ①声サンプル3分録音 ②正面写真or2分動画 ③過去X投稿（文体学習用）④ElevenLabsキー発行。
+**次セッション**: 04-video `npm i` → remotion-best-practices スキル読込みでKaisetsu本実装 → 1本目を通しで完成。
+
+---
+
 ## 2026-06-10
 
 ### フロー一貫性監査 + /alpha 行き止まりリンク全廃 + 解析バックエンド健全性確認
