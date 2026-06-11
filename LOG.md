@@ -20,8 +20,15 @@
   - banners/ — HTML→PNG方式。**記事ヘッダー(1200x675)と動画カバー(1080x1920)の実機デモ撮影成功**（output/demo/）。縦型カバーの背景CSSバグ修正済み
   - config/style-profile.md（文体プロファイル・未充填）/ brand.md（Blueprint色流用）/ topics/neta.md（ネタ帳初期20本）
 
-**残り（ユーザーの宿題）**: ①声サンプル3分録音 ②正面写真or2分動画 ③過去X投稿（文体学習用）④ElevenLabsキー発行。
-**次セッション**: 04-video `npm i` → remotion-best-practices スキル読込みでKaisetsu本実装 → 1本目を通しで完成。
+**同日追記（夜）**:
+- `.env` 実体化（キー貼るだけ）・`assets/`（voice/face/posts、Git管理外）作成
+- **ユーザーは ElevenLabs の既存クローン保有と判明** → 録音不要、Voice IDを貼るだけに短縮
+- ジョブ1号 `output/2026-06-11-api-toha`（APIって何？）: 台本・音声テキスト・body-props.json 作成
+- Remotion `npm i` 完了 → コンポジション登録確認 → **body.mp4（42秒・無音版v0.1）実レンダリング成功**・フレーム目視OK
+- ハーネス再構築の方針合意: ワークフロー完成→スキル化→ハーネス再構築の順（CLAUDE.mdダイエット/全スキル化/フック自動化/権限最適化）
+
+**残り（ユーザーの宿題）**: ①ElevenLabs APIキー＋Voice IDを `.env` に貼る ②台本の口調レビュー ③顔素材を `assets/face/` へ ④過去X投稿を `assets/posts/` へ。
+**次セッション**: remotion-best-practices スキル読込みで Kaisetsu 本実装（図解・visual対応・音声同期）→ 声入りで1本目完成。
 
 ---
 
