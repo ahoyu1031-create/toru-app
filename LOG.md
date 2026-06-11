@@ -27,8 +27,15 @@
 - Remotion `npm i` 完了 → コンポジション登録確認 → **body.mp4（42秒・無音版v0.1）実レンダリング成功**・フレーム目視OK
 - ハーネス再構築の方針合意: ワークフロー完成→スキル化→ハーネス再構築の順（CLAUDE.mdダイエット/全スキル化/フック自動化/権限最適化）
 
-**残り（ユーザーの宿題）**: ①ElevenLabs APIキー＋Voice IDを `.env` に貼る ②台本の口調レビュー ③顔素材を `assets/face/` へ ④過去X投稿を `assets/posts/` へ。
-**次セッション**: remotion-best-practices スキル読込みで Kaisetsu 本実装（図解・visual対応・音声同期）→ 声入りで1本目完成。
+**同日追記（深夜）— 🎉 1本目完成（クローン音声入り）**:
+- ElevenLabs: Freeプランで `subscription_required` 確認 → ユーザーがStarter($5)に変更 → **TTS成功**（intro 6.6s / body 30.3s）
+- 音声実尺に合わせてセグメント再配分（8セグメント・計30.5s）→ Remotion再レンダー → ffmpeg結合
+- **`output/2026-06-11-api-toha/final.mp4`（32.6秒・AAC音声入り）完成**。撮影ゼロ・指示のみで1本通った
+- スキル2号 `x-article-writer` 稼働（動画と記事の領域分離。1スキル=1領域の原則を確立）
+- ハーネス方針: スキル層整備が今回分。CLAUDE.mdダイエット/フック/権限はワークフロー安定後
+
+**残り（ユーザーの宿題）**: ①final.mp4の音声品質レビュー ②台本の口調レビュー ③顔写真を `assets/face/` へ（冒頭リップシンク用）④過去X投稿を `assets/posts/` へ。
+**次セッション**: remotion-best-practices スキル読込みで Kaisetsu 本実装（visual図解・字幕同期・デザイン強化）→ 投稿クオリティへ。
 
 ---
 
