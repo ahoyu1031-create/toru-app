@@ -16,6 +16,13 @@
 - .env に GEMINI_API_KEY 枠追加（キャラ画像生成: 設計=Claude/生成=nanobanana。キー待ち）
 - ユーザーFB: introの実写の話し方「めちゃくちゃいい」。本編のテンポ改善は読点ルール改訂済みで次回反映
 
+**同日追記 — キャラクター確定・動画組込み完了**:
+- Geminiキー検証→画像APIは無料枠ゼロと判明→AI Studio手動ルートで生成
+- トンマナ呪文v1→v1.1（ユーザーFB「可愛すぎ・目が女性的」→切れ長の目・太眉・頭身アップ）→ **キャラ決定**
+- pose-01をマスター登録（assets/character=原本、public/char=colorkey透過版）
+- Kaisetsuに Segment.pose 対応実装（右下にスッと出てゆれるリアクション）。mix-blend-mode不発→ffmpeg colorkeyで解決。静止画検証OK
+- 残: ポーズ2〜8生成（ユーザー・AI Studio）/ BGM・SE素材 / EP4フル仕様制作
+
 - 朝にEドライブ切断事故（外付け）→ 復帰確認。TORUはGitHub済みで無事、**content-factoryはリモート無し→バックアップ要**（ユーザーがgithub.comで空のprivateリポジトリ作成→push予定）
 - HeyGen: ユーザーがアバター4種生成、お気に入り「Podcast host in black sweater」に決定
 - `.env`のAVATAR_IDが誤り（一覧に不在）→ 無料のlist APIで検証する手順を確立し、正しいIDに修正
