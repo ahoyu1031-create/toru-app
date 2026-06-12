@@ -8,6 +8,14 @@
 
 ### 🎉 HeyGen API全自動化に成功 — EP3完全版（53.7秒）/ ローカル移行計画策定
 
+**同日追記 — バックアップ完了＋BGM/SE実装**:
+- content-factory を GitHub private リポジトリへ push（朝のEドライブ事故対策完了）
+- BGM自動ミックスを assemble.mjs に実装（ループ・音量12%・末尾フェード・loudnorm。仮音源で配線テスト済→クリーン版に復元）
+- セグメント切替効果音を Kaisetsu に実装（seFile prop・2セグメント目以降に再生）
+- 音素材は assets/audio/README.md の規約どおりユーザーがDOVA/効果音ラボから配置すれば自動適用
+- .env に GEMINI_API_KEY 枠追加（キャラ画像生成: 設計=Claude/生成=nanobanana。キー待ち）
+- ユーザーFB: introの実写の話し方「めちゃくちゃいい」。本編のテンポ改善は読点ルール改訂済みで次回反映
+
 - 朝にEドライブ切断事故（外付け）→ 復帰確認。TORUはGitHub済みで無事、**content-factoryはリモート無し→バックアップ要**（ユーザーがgithub.comで空のprivateリポジトリ作成→push予定）
 - HeyGen: ユーザーがアバター4種生成、お気に入り「Podcast host in black sweater」に決定
 - `.env`のAVATAR_IDが誤り（一覧に不在）→ 無料のlist APIで検証する手順を確立し、正しいIDに修正
