@@ -22,7 +22,15 @@
 - 課題: Hedra無料枠のウォーターマーク（右下）。除去は有料プラン
 - Hedra vs HeyGen は「一貫性 vs 手軽さ」のA/B判断へ（HeyGen無料トライアルで同条件比較→勝者に課金）
 
-**残り**: ①Hedra/HeyGenのA/B（同じvoice-intro.mp3で）②過去X投稿（文体）③サムネ→投稿テスト。
+**同日追記 — シリーズ化＋EP3＋HeyGen運用＋X記事第1号**:
+- HeyGen採用を確定（Hedraは無料A/B用）。`pipeline/03-avatar/README.md` をHeyGen運用手順書に全面改訂
+  （アバター作成のコツ・consent動画・毎回5分の手動フロー・API化要件=$99/月は月50本トリガー）
+- **シリーズ「60秒でわかる」設計書**（`series/60byou-cs.md`）: EP1 API→EP2トークン→EP3コンテキスト→EP4プロンプト…の連鎖設計＋引用RP投稿戦略
+- **EP3「AIが急に忘れる理由」本編完成**（44.8s音声・新図解 overflow=机からあふれる/forget=霧散、計12部品）。introはHeyGenアバター作成後
+- **X記事第1号ドラフト**（`articles/drafts/2026-06-12-token-ryokin.md`）: トークン料金の深掘り。TORU開発のモデル振り分け実体験を心臓に。[要確認]2箇所＝実数字待ち
+- `articles/log.md`（投稿実測データの記録台帳）作成 → プレイブックを実証で育てる仕組み
+
+**残り（ユーザー）**: ①HeyGenアバター作成（2分自撮り+consent）②EP3のintro生成 ③記事の[要確認]数字 ④Premium+確認。
 
 ---
 
