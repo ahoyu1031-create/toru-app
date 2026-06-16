@@ -6,7 +6,7 @@
 
 ## 2026-06-16
 
-### SE「ding」刷新 → SE3種確定 ＋ EP4(プロンプト編)を承認待ちまで構築
+### SE「ding」刷新 → SE3種確定 ＋ EP4(プロンプト編)を本番完成（実写intro＋大型キャラ）
 
 **SE仕上げ（前回ユーザーフィードバック「dingが耳障り・キーン音」の対応）**
 - ding候補4種を合成して聴き比べ → ユーザーが **A（マリンバ2音上昇 C5→G5）** を選択
@@ -17,9 +17,12 @@
 - メタファー＝**プロンプトは職人への「指示書」**。ざっくり指示→ズレ / 具体指示→狙い通り（配管屋の現場感で差別化）
 - 新図解 `prompt` を1個だけ追加（mode vague/clear・指示書ビフォーアフター。clear版は蛇口交換の具体例で「誰に何をどう」を実演）。残りはoverflow/summary/ctaを再利用＝「新部品2個まで」ルール内。commit `50c56bd` → push
 - **SE/ポーズをセグメント別に配置**（ユーザー主目的）: 切替pop / clear時swoosh / CTAでding、ポーズは復習pose-03・定義pose-01・失敗pose-06・成功pose-07・コツpose-08・CTA pose-05（中央ブックマークを指す）
-- 課金規律遵守: TTS/HeyGenは台本承認後に1回。今回は課金ゼロで **サイレント下書きレンダー → 全6セグメント目視OK → BGM乗せ下書き `draft-preview.mp4`(35.7秒)** まで作成
-- ジョブ: `output/2026-06-16-prompt-toha/`（script.md / body-props.json / voice-{body,intro}.txt / draft-preview.mp4）
-- **承認待ち**: 台本＋下書き動画 → OKなら ElevenLabs(本編) → seconds実測調整 → 本番レンダー → HeyGen(intro) → assemble → final
+- 課金規律遵守: まず課金ゼロでサイレント下書き→全6セグメント目視→ユーザー承認(「ヘイゲン/イレブンラボOK」)後に本番制作
+- **ユーザーFB反映**: ①SE/BGMがデカい→SE 0.5→0.28・BGM 0.12→0.07に減衰 ②キャラをもっと大きく(五味さん風)→pose 400→620px(画面高32%)・右下で存在感
+- 本番制作: ElevenLabs(本編19.6s/intro8.2s・model v2)→無音検出で各セグメント尺を実測調整→Remotion本番レンダー→**HeyGen実写アバター(talking_photo)でintro生成**→assembleでintro+body+BGM結合
+- 末尾バグ修正: Root.tsxの合成尺+2秒尾が無地画面を生んでいた→0にしてCTAを最後まで保持
+- **完成: `output/2026-06-16-prompt-toha/final.mp4`（29.9秒・実写intro＋大型キャラ＋SE/BGM配置済み）**
+- 残確認: ユーザーが音量バランス(声主役でSE/BGMが従)を最終視聴チェック → OKなら投稿(投稿文はscript.md)
 
 ---
 
