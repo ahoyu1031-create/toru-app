@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-06-16
+
+### SE「ding」刷新 → SE3種確定 ＋ EP4(プロンプト編)を承認待ちまで構築
+
+**SE仕上げ（前回ユーザーフィードバック「dingが耳障り・キーン音」の対応）**
+- ding候補4種を合成して聴き比べ → ユーザーが **A（マリンバ2音上昇 C5→G5）** を選択
+- `pipeline/synth-audio.mjs` の `makeDing` を旧E6ベル（高域キーン）→ BGMと同じマリンバ音色に差し替え（lowpass=f=4000で刺さり除去）。pop/swooshは承認済みで据え置き
+- `.gitignore`: 小さい固定素材 `public/se/*.mp3` を除外解除しGit管理化（クローンで即描画可）。一時候補スクリプトは破棄。commit `1b43c43` → push
+
+**EP4「プロンプトって何？」（シリーズ#4・API→トークン→コンテキスト→プロンプトの連鎖）**
+- メタファー＝**プロンプトは職人への「指示書」**。ざっくり指示→ズレ / 具体指示→狙い通り（配管屋の現場感で差別化）
+- 新図解 `prompt` を1個だけ追加（mode vague/clear・指示書ビフォーアフター。clear版は蛇口交換の具体例で「誰に何をどう」を実演）。残りはoverflow/summary/ctaを再利用＝「新部品2個まで」ルール内。commit `50c56bd` → push
+- **SE/ポーズをセグメント別に配置**（ユーザー主目的）: 切替pop / clear時swoosh / CTAでding、ポーズは復習pose-03・定義pose-01・失敗pose-06・成功pose-07・コツpose-08・CTA pose-05（中央ブックマークを指す）
+- 課金規律遵守: TTS/HeyGenは台本承認後に1回。今回は課金ゼロで **サイレント下書きレンダー → 全6セグメント目視OK → BGM乗せ下書き `draft-preview.mp4`(35.7秒)** まで作成
+- ジョブ: `output/2026-06-16-prompt-toha/`（script.md / body-props.json / voice-{body,intro}.txt / draft-preview.mp4）
+- **承認待ち**: 台本＋下書き動画 → OKなら ElevenLabs(本編) → seconds実測調整 → 本番レンダー → HeyGen(intro) → assemble → final
+
+---
+
 ## 2026-06-15
 
 ### キャラシート8種 完成（ポーズ2〜8をGemini画像APIで一括生成）
