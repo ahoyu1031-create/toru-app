@@ -4,6 +4,36 @@
 
 ---
 
+## 2026-06-19
+
+### EP5ビジュアルv2（FB全反映）＋キャラPNG実寸化＋動画フローのワンクリック化 ＋ E:→C: 完全移設
+
+**EP5「なぜAIは嘘をつく？」v2リデザイン（2枚目FB全反映）**
+- 旧版はキャラが小さく右下/中央でバラけ・グリッド背景・色多い・SEC表示・余白過多
+- → 白背景／キャラを**下部センターに大型固定（全セグメント・ポーズのみ切替）**／説明文は中央のキャラ上に白カード／色をネイビー＋オレンジ中心に整理／**SECカウンター削除**／余白圧縮
+- fabricate: 「✕存在しない」スタンプを捏造行(型番)へ正確に添える。points: 3項目を1行固定。commit `0cf4afd`
+
+**キャラPNGの根本改善（実寸化）**
+- 原因特定: PNG(800x1280)の人物は画像高の約54%で上下に透明余白＝charHeight640でも画面1/5に見えていた
+- `pipeline/06-character/trim.py` 新設: アルファ境界で**全ポーズ共通枠クロップ＋影カット** → 789x653（人物が枠いっぱい＝charHeightが視認サイズに直結）。原本は `poses-raw/` に保存
+- intro=画面半分強（height1080）、本編=約1/3（charHeight660）に最適化
+
+**動画フローのワンクリック化（build-props）**
+- これまで手作業だった「TTS→silencedetect→手で各セグメントに秒配分」を自動化
+- `pipeline/build-props.mjs` 新設: voice-bodyの無音点へスナップしてseconds自動割当て（重み=segment.narration）。hookSecondsもvoice-intro実尺から自動
+- `run.mjs` に統合: seconds未設定なら自動で尺決め → **`node run.mjs output/<slug>` 実質一発**。commit `44920fd`（GitHub push済み）
+
+**⚠ E:外付けSSDが再度落ちた → C:内蔵NVMeへ完全移設**
+- 作業中にE:が**物理ディスクごとバスから消失**（昨日のexFAT Dirtyより重症）。配線接触が不安定との由
+- 復旧手順: ①再スキャンで復帰（Dirtyのまま）②**先にバックアップ**（読み取りは可）→ chkdsk等の修復は後回し（安全側）
+- バックアップ: 秘密情報(.env6種)→`C:\AI-project-backup\_secrets_*`、全体ミラー1,015MB/2,330ファイル**失敗0**→`C:\AI-project-backup\AI project`、両リポGitHub push（TORUに未push5commitあり→解消）。再実行用 `C:\AI-project-backup\backup.ps1` 作成
+- **移設**: `C:\AI project` を新・本番作業ツリー化（.env移管・node_modules3つ再インストール・Claudeメモリを`C--AI-project-TORU`へ移管）。C:でEP5レンダー＋build-props動作を検証OK（E:と完全一致）
+- **今後: Claude Code は `C:\AI project\TORU` で開く。E:はコールド予備＝USB依存を解消**
+
+**残**: ①TORU本体の振り返り（約3週間ノータッチ・アルファ/β状況の棚卸し）②本人実写回はHeyGen Digital Twin（2〜5分自撮り）作成→AVATAR_ID
+
+---
+
 ## 2026-06-18
 
 ### HeyGen実写の正体調査 ＋ 外付けSSD障害復旧 ＋ EP5「なぜAIは嘘をつく？」を実写なしで完成
