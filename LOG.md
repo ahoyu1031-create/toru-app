@@ -6,6 +6,16 @@
 
 ## 2026-07-02
 
+### （深夜・新セッション）X記事自動化のベース構築＋ジャンル絞り実験設計v1
+
+**ジャンル柱の出し直し（ユーザーFB「飽和ネタでなく本質」）**: 旧案（スラッシュコマンド活用/ベスプラ/やらないと損）を破棄し、選定基準3条件（①一次情報で唯一 ②陳腐化しない原理 ③空白地帯）で4本柱を再設計 → **A=実測公開（無人工場の実数＝領収書・note/Brain直結）／B=原理・構造（動画と相互送客・ストック資産）／C=AIとお金（brief視聴者と連続するマネー層）／D=現場×AI（ブルーカラー空白地帯・TORU見込み客と同層）**。正本は `articles/experiment-design.md`（ラウンド制: R1=各柱1本・変数統制で時間帯/型を固定 → R2=上位2柱×2 → 計8本でブクマ率主指標の判定。推奨順B→C→D→A＝Aは工場データが貯まるほど強い）。
+
+**量産ベース構築（コード・全て動作検証済み）**: ①`scripts/articles/new-article.mjs`＝雛形生成（drafts/<日付>-<slug>/ に article.md＋banner.html＋post.txt、柱コード必須）②`scripts/articles/report.mjs`＝log.md から柱別ブクマ率・昇格サイン・判定残数を自動集計（サンプル3行で計算検証）③`banners/render.mjs` 復旧＝C:移行で banners/node_modules が消え死んでいた → scripts/post の playwright を createRequire で流用＋chromium不在時は Edge チャネル（実レンダでPNG確認）。log.md に柱カラム追加。
+
+**配線**: x-article-writer スキルの旧E:パスをC:に修正＋experiment-design を必読1番目に・雛形/集計コマンド組込み。style-profile に「記事は一人称『僕』OK（俺NG継続・動画ナレは一人称なし）」を明文化。content-factory/CLAUDE.md にX記事セクション新設。
+
+**Phase設計**: P1=半自動（Claudeドラフト→ユーザーQA→手動投稿）→ P2=主力柱確定後に夜間無人ビルドへ記事ドラフト生成を組込み → P3=実測ログをnote/Brain商品化の素材に。前提=X Premium+（未加入なら長文ポストでR1開始可）。
+
 ### （深夜）Claude Codeクラッシュの根治＋summaryビジュアルv2（絵文字廃止・SVG化）
 
 **クラッシュ調査**: 「毎回エラーで落ちる」の真因＝**同日17:45にClaude Codeが2.1.198へ自動更新**され、その後の長文Pasted text付きメッセージ送信で3連続クラッシュ（20:04/20:17/20:37、ネイティブクラッシュ痕跡なし=JS死、WERも空）。対策＝`claude install stable`で**2.1.187へ戻し、autoUpdatesChannelをstableに固定**（settings.json）。教訓「落ちたら`.last-update-result.json`で直前の自動更新を疑う」→memory化（claude-code-stable-channel）。
