@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-07-02
+
+### Fable 5でハーネス棚卸し＋夜間自動化の真因修正（スリープ運用対応）＋モデルをFable優先へ
+
+**棚卸し（スキル/ハーネス）**：スキル実数＝ユーザースキル13（analytics / api-reference-documentation / claude-statusbar / content-factory / e2e-testing-automation / gha-security-review / performance-optimization / playwright-e2e-testing / seo-monitoring / supabase / supabase-development / ui-ux-pro-max / x-article-writer）＋有効プラグイン5（frontend-design・pr-review-toolkit・claude-md-management・playwright・company）由来のスキル3/エージェント7/コマンド2。web/CLAUDE.mdのスキル表に**実在しない4件**（claude-api / security-review / simplify / review）があり実体（エージェント/プラグイン）へ修正。ルートCLAUDE.mdの「Opus 4.7方針」→「モデル運用方針（Fable 5優先・自動フォールバック）」へ更新。content-factory/CLAUDE.md冒頭にデイリーbrief時代の正本セクション追加（旧EP情報のみで陳腐化していた）。
+
+**夜間自動化の真因発見と修正（重要）**：6/30・7/1と19時ビルド不発の真因＝**このPCはスリープ運用で再起動しない**（最終起動6/28）。19時にスリープ中だと WakeToRun / StartWhenAvailable が復旧せず（電源イベントで2日連続実証：復帰19:07/19:08なのにタスク不発）、さらに**ログオンイベントが発生しないため6/30に作ったCatchup(AtLogOn)は一度も発火していなかった**（Result=267011＝未実行）。対策3点：①`TORU-DailyBrief`＝19:00＋**30分毎リピート〜24:00**（夜どこかで起きていれば最大30分遅れで必ず走る）②`TORU-DailyBrief-Catchup`＝ログオン＋**SessionUnlock（画面ロック解除）**トリガー（スリープ復帰の実イベント。CIM/StateChange=8で登録）③ラッパーに`build.lock`のタスク間二重ビルド防止＋18時前のCatchupは無言exit（日中の解除でログを汚さない）。登録XMLで両タスクのトリガー反映を確認。**「19時にPCを点けておく」制約は撤廃**＝夜18〜24時のどこかで起きていればOK。
+
+**モデル**：ヘッドレスで`claude-fable-5`動作確認→夜間ビルドを**Fable優先・exit≠0ならopusへ自動リトライ**に変更（Fable提供終了後も自走・手動戻し不要）。settings.jsonは`claude-fable-5[1m]`（1Mコンテキスト）。
+
+**メモリ更新**：daily-brief-automation（新トリガー設計）／hosted-gallery-plan（「Supabase待ち」→稼働中・URL/構成確定）。
+
+**今夜19:00が新設計の初回実運転**（PC稼働中なら定刻、スリープなら復帰後に自動）。
+
+---
+
 ## 2026-07-01
 
 ### 7/1本番（Fable 5復活リード・手作業＋自研究）＋新noteビジュアル＋X投稿に出典追加＋同じ框組みの毎日繰り返し是正＋ホスト型Supabase土台

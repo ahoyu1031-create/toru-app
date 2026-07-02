@@ -89,11 +89,11 @@ node scripts/db/verify-cleanup.mjs
 
 ---
 
-## Anthropic Opus 4.7 フル活用方針
+## モデル運用方針（2026-07-02 更新）
 
-- 重い分析・設計・コードレビューは Opus を惜しまない
-- 検証系の自動化はトークン使ってOK（後の効率化リターンが大きい）
-- 単純コピペや雑用は Haiku でも良いが、本セッションは Opus 中心で進める
+- **Fable 5（`claude-fable-5`）の提供期間中は最優先で使う**（Mythos クラス＝Opus より上位）。重い分析・設計・市場判断・コードレビューに惜しまない
+- 夜間の無人ビルド（`content-factory/scripts/daily-brief.ps1`）も Fable 優先。**失敗時は Opus へ自動リトライ**するので、Fable 提供終了後も手動の戻し作業は不要（ログに retry 行が出続けたら `$model` を opus に戻す）
+- Fable が使えない場面は Opus 4.8 が既定。検証系の自動化はトークン使ってOK（後の効率化リターンが大きい）
 
 ---
 
