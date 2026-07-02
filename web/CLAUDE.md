@@ -22,18 +22,18 @@
 | UI/UX・画面デザイン・コンポーネント（計画・カラー/フォント選定）| `ui-ux-pro-max` |
 | UI/UX・実装（ジェネリックAI感を回避、独自性のあるプロダクション級UI）| `frontend-design`（プラグイン提供）|
 | Supabase DB・RLS・マイグレーション | `supabase` または `supabase-development` |
-| Claude API・プロンプト・モデル設定 | `claude-code-guide` エージェント（Agent ツール経由。スキル `claude-api` は存在しない）|
+| Claude API・プロンプト・モデル設定 | `claude-api`（ビルトイン。モデルID・料金・パラメータは記憶で答えず必ずこれを読む）|
 | パフォーマンス改善・Core Web Vitals | `performance-optimization` |
 | SEO対策・検索流入改善 | `seo-monitoring` |
 | GA4・計測・イベントトラッキング | `analytics` |
-| セキュリティ監査・脆弱性チェック | 専用スキル未導入。必要時は公式プラグイン `security-guidance` を有効化してから使う |
+| セキュリティ監査・脆弱性チェック | `security-review`（ビルトイン・現ブランチの変更対象）|
 | GitHub Actions のセキュリティ | `gha-security-review` |
 | E2Eテスト・自動テスト作成 | `e2e-testing-automation` または `playwright-e2e-testing` |
 | API仕様書・ドキュメント生成 | `api-reference-documentation` |
-| コード品質・リファクタリング後 | `pr-review-toolkit:code-simplifier` エージェント（スキル `simplify` は存在しない）|
-| PRレビュー | `pr-review-toolkit:code-reviewer` エージェント または `/review-pr`（スキル `review` は存在しない）|
+| コード品質・リファクタリング後 | `simplify`（ビルトイン）または `pr-review-toolkit:code-simplifier` エージェント |
+| PRレビュー | `review`（GitHub PR・ビルトイン）／作業中diffは `code-review`。多角レビューは `/review-pr` |
 
-存在しないスキル名を呼ばないこと。実在の一覧は `~/.claude/skills`（ユーザースキル）＋有効プラグイン（`~/.claude/settings.json` の enabledPlugins）で確認（2026-07-02 棚卸し済み）。
+スキルの実在はセッション冒頭のスキル一覧（system-reminder）が正。ディスク上は `~/.claude/skills`＋有効プラグイン、さらに**ビルトイン**（claude-api / simplify / review / code-review / security-review / verify / run 等）がある（2026-07-02 棚卸し・同日ビルトイン分を訂正）。
 
 ## プロジェクト基本情報
 
