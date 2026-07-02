@@ -6,6 +6,14 @@
 
 ## 2026-07-02
 
+### （夕）使用量ステータスライン復旧＋SNS完全自動投稿は調査の上で撤退
+
+**ステータスライン（cs）**：「再起動で消える」の真因は再起動ではなく、**5/23頃のpipアップデート失敗**で本体パッケージ（claude_statusbar）が消えcs.EXEスタブだけ残っていたこと（壊れた `~laude-statusbar`/`~-aude_statusbar` 残骸2つが証拠）。v3.23.0を再インストール＋残骸掃除＋doctor正常確認。site-packagesへの恒久インストールなので再起動しても消えない。
+
+**SNS完全自動投稿（調査→構築→ユーザー判断で撤退）**：API調査の結論＝X:2026年2月に無料枠廃止（従量課金・URL入り$0.20/件）／YouTube:未審査プロジェクトのAPIアップは非公開強制ロック（審査必須）／TikTok:未審査はSELF_ONLY強制（審査2-4週）→ **API経由の即日公開自動化は3PFとも非現実的**。代替のブラウザ自動化（Playwright+Edge専用プロファイル・入力して投稿ボタン手前で止まる設計・`scripts/post/post-brief.mjs`）を構築したが、**Googleがオートメーションブラウザからのログインをブロック（「安全ではありません」）**しユーザーがログイン不可 → **自動投稿はやめる判断（ユーザー）**。コードはリポジトリに残置（お蔵入り）、`.browser-profile/` は削除・gitignore済み。投稿は従来通り＝スタジオのコピー/起動ボタン＋手動貼り付けを継続。
+
+**スキル表の訂正**：昨日「存在しない」とした `claude-api`/`simplify`/`review`/`security-review` は**Claude Codeビルトインとして実在**（セッションのスキル一覧で確認）→ web/CLAUDE.md を再訂正。
+
 ### Fable 5でハーネス棚卸し＋夜間自動化の真因修正（スリープ運用対応）＋モデルをFable優先へ
 
 **棚卸し（スキル/ハーネス）**：スキル実数＝ユーザースキル13（analytics / api-reference-documentation / claude-statusbar / content-factory / e2e-testing-automation / gha-security-review / performance-optimization / playwright-e2e-testing / seo-monitoring / supabase / supabase-development / ui-ux-pro-max / x-article-writer）＋有効プラグイン5（frontend-design・pr-review-toolkit・claude-md-management・playwright・company）由来のスキル3/エージェント7/コマンド2。web/CLAUDE.mdのスキル表に**実在しない4件**（claude-api / security-review / simplify / review）があり実体（エージェント/プラグイン）へ修正。ルートCLAUDE.mdの「Opus 4.7方針」→「モデル運用方針（Fable 5優先・自動フォールバック）」へ更新。content-factory/CLAUDE.md冒頭にデイリーbrief時代の正本セクション追加（旧EP情報のみで陳腐化していた）。
