@@ -6,6 +6,10 @@
 
 ## 2026-07-11
 
+### （7/15深夜2）投稿時刻の自動化・工場配線・Brainライン修正・TikTokカバー結論
+
+①**Brain有料ラインのリセット修正**: ユーザーが「有料エリアが1章直後＝ほぼ全文有料」を発見。Playwrightで販売設定→有料エリア設定→14章「この工場ができるまで」にライン移動→ユーザー側で公開申請。**公開ページで検証済み**（無料=1〜13章／有料=14章〜。バー直前=13-1・直後=14）。原因は7/14サムネrepublish時のリセット。フォロー項目#8に「republish後は必ずライン再確認」を追加 ②**TikTokカバー=API非対応の結論**: Postizのtiktok設定にcover/timestamp無し→動画先頭フレーム（曜日入り指さし/企業名）の自動カバー活用で対応（厳密指定は手動）③**投稿時刻を種別で自動化**: post-social.mjsを既定=予約公開へ・**実演8時/企業12時/brief20時**（YouTube枠と統一・nextSlotUTC）・TikTok既定公開。裏取りゲートはbrief/企業のみ（実演は出典不要に修正）④**工場配線**: daily-brief.ps1（brief/company）・morning-demo.ps1（demo）のYouTube予約直後にpost-social追加（content-factory 10e5787）⑤**初回本番予約**: 東京エレクトロン企業ファイルを**7/16 12:00にX/TikTok公開でQUEUE**（キャンセル可）⑥X出典URL除去はユーザー了承（媒体名+数字で裏取り成立）。**Fable→Opus切替でも品質維持・Opus実行可能な水準に落とし込む方針を再確認**（4本化する場合の新ジャンル判断は今後）。
+
 ### （7/15深夜）Postiz採用・post-social.mjs実装・出典込み自動投稿を配線
 
 統合投稿サービスは**Postiz確定**（Blotatoは無料トライアル中のAPIキー有効化で警告なし課金＋Trustpilot2.0の地雷で回避）。ユーザーがX/TikTok/YouTubeをPostizに接続→APIキー受領。公開API疎通確認（`GET /integrations`でTikTok+X取得・YouTubeはAPIに出ず＝二重投稿ゼロ）。**post-social.mjs実装**（scripts/・content-factory 6a57e84）: gallery.mjsのscanJobsでYouTubeと同一の post/ytTitle/sources を抽出し、**2026-07-10確定の投稿規約（X=投稿文+出典／TikTok=タイトル+投稿文+出典）**で自動投稿。`POST /upload`で動画・`POST /posts`で作成。**裏取りゲート**（出典が空なら投稿中止）付き・TikTok初回SELF_ONLY・video_made_with_ai開示・台帳social-posts.jsonで冪等化。今日のbriefで下書き検証: TikTok=1751字（出典URL込み完全）、X=1256字（**PostizがX本文のURLを自動除去**する挙動を実測発見・媒体名/数字/免責は残る＝X-nativeの裏取り形。フルURLはYT説明欄/TikTok/動画テロップで担保）。**反省点=初回作成時に出典を丸ごと欠落させたミス（ユーザー指摘）**。Fable→Opus切替でも品質を落とさない方針を再確認。残: X-URLをスレッド化で救えるか要判断・実公開GO・夜間工場への配線。
