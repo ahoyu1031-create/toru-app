@@ -6,6 +6,10 @@
 
 ## 2026-07-11
 
+### （7/15深夜）Postiz採用・post-social.mjs実装・出典込み自動投稿を配線
+
+統合投稿サービスは**Postiz確定**（Blotatoは無料トライアル中のAPIキー有効化で警告なし課金＋Trustpilot2.0の地雷で回避）。ユーザーがX/TikTok/YouTubeをPostizに接続→APIキー受領。公開API疎通確認（`GET /integrations`でTikTok+X取得・YouTubeはAPIに出ず＝二重投稿ゼロ）。**post-social.mjs実装**（scripts/・content-factory 6a57e84）: gallery.mjsのscanJobsでYouTubeと同一の post/ytTitle/sources を抽出し、**2026-07-10確定の投稿規約（X=投稿文+出典／TikTok=タイトル+投稿文+出典）**で自動投稿。`POST /upload`で動画・`POST /posts`で作成。**裏取りゲート**（出典が空なら投稿中止）付き・TikTok初回SELF_ONLY・video_made_with_ai開示・台帳social-posts.jsonで冪等化。今日のbriefで下書き検証: TikTok=1751字（出典URL込み完全）、X=1256字（**PostizがX本文のURLを自動除去**する挙動を実測発見・媒体名/数字/免責は残る＝X-nativeの裏取り形。フルURLはYT説明欄/TikTok/動画テロップで担保）。**反省点=初回作成時に出典を丸ごと欠落させたミス（ユーザー指摘）**。Fable→Opus切替でも品質を落とさない方針を再確認。残: X-URLをスレッド化で救えるか要判断・実公開GO・夜間工場への配線。
+
 ### （7/15夜）配信戦略の確定——チャンネル増設なし・統合投稿サービスGO・バナー3案
 
 戦略対話で確定: ①**チャンネル増設はしない**（コールドスタート×inauthentic改定×ファネル分散）。数は同一chで実演2本目枠→4本/日＋X/TikTok/IG同時配信で打つ ②briefの3分割案は不採用（Tip単独は7/5廃止済み・digest編集が差別化）③**SNS自動配信は統合投稿サービス経由でGO**（X APIは26/2に無料枠廃止・TikTok審査2〜4週・Meta審査2〜4週→自前3系統は時間コスト過大。Blotato第一候補$29/月、動画は既にSupabase storageに全数あるので署名URL→mediaUrlsで配線小）④Xプレミアム不要と確認。AI運用月額計¥21,500=Brain2.2本/月で分岐 ⑤背景=**年末に子供誕生予定→「年末までに人手ゼロ運転」が実質デッドライン**（メモリ保存済み）⑥チャンネルバナー3案を banners/drafts/ に制作（ブループリント紺/赤ポスター/ミニマル白）→**青系テイストで方向確定・実装は4本化後まで保留** ⑦note高頻度更新で価値証明する方針（週刊運転日誌＋実演記事化→Brainファネル）。次アクション: ユーザー=Blotatoトライアル登録＋SNSアカウントOAuth接続＋X/TikTok bio リンク（積み残し）、Claude=post-social.mjs実装＋IG向け90秒verifyゲート。
