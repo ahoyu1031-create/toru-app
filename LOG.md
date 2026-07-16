@@ -6,6 +6,10 @@
 
 ## 2026-07-11
 
+### （7/16深夜）完全自走化の骨格——アクティブ時間5-23・StartWhenAvailable・22:45番人・IG下準備
+
+夜ビルドはcatchupで完全復旧（brief 21:20公開・SBグループ#12=7/19 12:00予約・X/TikTok鏡写し発火済み・**Fableクレジット復活で一発成功**・TikTok字数400をビルドが出典圧縮で自己修復）。恒久化の追加実装: ①アクティブ時間**5:00-23:00**へ変更（UAC承認・検証済み。朝5:45 prewakeとユーザー早朝作業をカバー）②両ビルドタスクに**StartWhenAvailable=True**（時刻を逃したら起動直後に回収）③**TORU-RebootSentinel**（毎日22:45・b65e793）: WU再起動保留を検知→在席なら強トースト／無人+auto-logon済みなら制御再起動（ビルド中lock<100分は不可・auto-logon未設定の無人はトーストのみ=サインイン画面座礁防止）④auto-logon準備: Autologon64.exeをDownloadsへ配置・TORU-LockAfterAutoLogonタスク作成（無効待機・ユーザーのAutologon実行後に有効化）⑤**Instagram対応をpost-social.mjsに実装**（cb2ee9a・POSTIZ_IG=onゲート付き=未検証設定の400でX/TikTokを巻き込まない。FBページ+IGプロ+Postiz接続はユーザー操作待ち→draft検証→ON）。**シャットダウンからの自動起動**: 機体=GALLERIA XA7C-R46T/ASRock=UEFI RTC Alarm対応→毎朝5:40電源ONをユーザーと一緒に設定予定（Deep Sleep/ErP=Disabled必須・テストは週末夜にわざとシャットダウン）。**4本目ジャンルは保留**（ユーザーと合意: 実録ハイブリッド等でリアリティ/質を上げる方向を探索・IG稼働後の数字で来週判断。Claude公式キャラ使用は商標グレーで非推奨と回答）。
+
 ### （7/16夜）「シャットダウン事件」全解明——犯人はWindows Update・投稿は無傷・恒久対策3層
 
 ユーザー帰宅時にPCが再起動済み（体感=シャットダウン）で「今日の投稿全滅」と見えたが、**API実測で今日の8:00/12:00はYouTube・X・TikTok全てPUBLISHED を確認**（公開はサーバー側=YT予約+Postizクラウドなので PC 再起動では崩れない設計が機能）。朝6:00ビルドも実行済み: Fableクレジット切れ→**Opus自動リトライ設計が機能**し6:52に#11完成・3媒体とも7/17 8:00予約済み。実被害は「今夜briefの遅延」のみ（20:54にCatchupが自己回復・ビルド中）。**原因チェーン**: ①アクティブ時間が11:00-1:00（Windows自動設定・自動化開始前の利用パターン）で朝6-11時が「再起動許可帯」だった ②未明作業後ロックせず就寝→6:52の再スリープ判定が「非ロック=在席」でPC放置 ③7:44 TrustedInstallerがOSアップグレード計画再起動 ④全タスクがInteractive型→ログオン無しでは18:00ビルド起動不可（wake timerでPCは3回起きたが空振り再スリープ: 17:50/18:02/19:02のイベントログと一致）。**対策3層**: ①アクティブ時間6:00-24:00固定+smart学習off+NoAutoRebootWithLoggedOnUsers=1（UAC昇格で適用・レジストリ検証済み）②両ラッパーの無人判定を「ロック中 or 30分無操作（GetLastInputInfo）」へ強化 ③WU再起動保留をトースト通知（ユーザーが自分のタイミングで再起動→翌日を守る）。content-factory 66167ec push済み。**Opusコード監査**: post-social.mjs全文+upload-youtube.mjs diff をレビュー→堅牢・今朝の本番で実証済み・再構築不要。#11は目視QA4フレーム全合格（実演キャラなし・実物ビジュアル・replayNote/toolNote・次回予告あり）。**残リスク**: 0:00-6:00帯のWU再起動→次ログオンまでタスク停止（Catchupで回復。保留トーストが出たら即再起動が正）。
