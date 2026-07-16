@@ -6,6 +6,10 @@
 
 ## 2026-07-11
 
+### （7/16深夜2）auto-logon再起動テスト合格——サインイン画面座礁が構造的に解消
+
+ユーザーがAutologon64でauto-logon設定→23:06:07に手動再起動（スタートメニュー発）→**イベントログ＋タスク履歴で全項目PASSを裏取り**: ①23:06:26 OS起動→パスワード入力なしでデスクトップ表示（ユーザー目視） ②TORU-LockAfterAutoLogonが23:06:54（起動28秒後）に発火・戻り値0→自動ロック（ユーザー目視で確認） ③解錠後TORU-DailyBrief-Catchupがlogon/unlockの2トリガーで23:08:36と23:09:07に発火し、両方「brief built; stock files already made or capped tonight」で正常SKIP・resleepも「locked=False→在席判定でPC維持」と正動作 ④全TORUタスクがReady・LastResult=0で座礁ゼロ。これで**再起動（WU強制・番人制御・手動問わず）→自動サインイン→自動ロック→Interactiveタスク実行可能**の連鎖が実証済み。残る最後のピースは**UEFI RTC Alarm 5:40**（完全シャットダウン/停電からの自動電源ON・週末夜にユーザーとBIOS設定＋わざとシャットダウンでテスト予定）。
+
 ### （7/16深夜）完全自走化の骨格——アクティブ時間5-23・StartWhenAvailable・22:45番人・IG下準備
 
 夜ビルドはcatchupで完全復旧（brief 21:20公開・SBグループ#12=7/19 12:00予約・X/TikTok鏡写し発火済み・**Fableクレジット復活で一発成功**・TikTok字数400をビルドが出典圧縮で自己修復）。恒久化の追加実装: ①アクティブ時間**5:00-23:00**へ変更（UAC承認・検証済み。朝5:45 prewakeとユーザー早朝作業をカバー）②両ビルドタスクに**StartWhenAvailable=True**（時刻を逃したら起動直後に回収）③**TORU-RebootSentinel**（毎日22:45・b65e793）: WU再起動保留を検知→在席なら強トースト／無人+auto-logon済みなら制御再起動（ビルド中lock<100分は不可・auto-logon未設定の無人はトーストのみ=サインイン画面座礁防止）④auto-logon準備: Autologon64.exeをDownloadsへ配置・TORU-LockAfterAutoLogonタスク作成（無効待機・ユーザーのAutologon実行後に有効化）⑤**Instagram対応をpost-social.mjsに実装**（cb2ee9a・POSTIZ_IG=onゲート付き=未検証設定の400でX/TikTokを巻き込まない。FBページ+IGプロ+Postiz接続はユーザー操作待ち→draft検証→ON）。**シャットダウンからの自動起動**: 機体=GALLERIA XA7C-R46T/ASRock=UEFI RTC Alarm対応→毎朝5:40電源ONをユーザーと一緒に設定予定（Deep Sleep/ErP=Disabled必須・テストは週末夜にわざとシャットダウン）。**4本目ジャンルは保留**（ユーザーと合意: 実録ハイブリッド等でリアリティ/質を上げる方向を探索・IG稼働後の数字で来週判断。Claude公式キャラ使用は商標グレーで非推奨と回答）。
