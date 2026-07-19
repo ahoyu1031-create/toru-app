@@ -6,6 +6,10 @@
 
 ## 2026-07-11
 
+### （7/19夜2）21:30の4媒体夜間監査タスク新設＋apple-designスキル導入（content-factory cc2bc8d）
+
+ユーザーFB「22:45は遅すぎ・その日のうちの情報なのに。21:30に4プラットフォーム全部見渡せ」→実装: ①**verify-socialにYouTube確認を追加**（Data APIでprivacyStatus=public照合）＝YT/X/TikTok/IGの4面監査へ ②**TORU-SocialAuditタスク新設**（毎日21:30・WakeToRun=True・失敗トースト・無人なら再スリープ）③22:45の番人同乗便は廃止——**調査でRebootSentinelがWakeToRun=Falseと判明**（PCが寝てると監査ごと不発＝時刻と構造の二重欠陥だった）④手動テストラン=4媒体全green・在席判定でPC維持。検知網は6:25/18:25/21:30の3回に整理（21:30がX21:00投稿の直後=当夜救済に間に合う）。**apple-designスキル導入**（emilkowalski/skills・WWDC「Designing Fluid Interfaces」をWeb向けに蒸留した282行——応答性/直接操作/中断可能性/スプリング/慣性投影/ラバーバンド/マテリアル/タイポの17章。TORU webのUI磨きとLP系で発動）。横動画「AIに教わるAI術」対話形式の構想はユーザーから提起・議論中（週1ペース推奨・収益化4000時間要件に効く）。
+
 ### （7/19夜）IG公開失敗をユーザー発見→即救済＋番人に夜間監査を追加（content-factory 006f806）
 
 ユーザー「今日のインスタ上がってなくない？」→verify-social実行で**20時briefのIGのみstate=ERROR**と確定（朝実演・昼ソフトバンクGのIGは正常＝IG API側の一時失敗。同一本文でTikTok/X成功=内容起因ではない）。**救済**: 動画再アップ→IG即時再投稿→PUBLISHED確認（instagram.com/reel/Da-fYk9E-lw）→台帳ID差し替え→ERROR投稿掃除→再監査で3媒体グリーン。**構造対策**: 監査が6:25/18:25にしか走らず夜20-21時の公開失敗を翌朝まで検知できない盲点（ユーザーの目が機械に勝った2敗目）→**RebootSentinel(毎日22:45)の冒頭にverify-social同乗**（不合格で即トースト・再起動判定と独立・パース検証済み）。これで公開失敗の検知網は6:25/18:25/22:45の1日3回に。
