@@ -6,7 +6,9 @@
 
 ## 2026-07-11
 
-### （7/19夜2）21:30の4媒体夜間監査タスク新設＋apple-designスキル導入（content-factory cc2bc8d）
+### （7/20夜）横動画ライン始動——unDraw素材庫1718点＋16:9プロト3本（content-factory 6f166d8）
+
+海の日夜の戦略会議→即実装。**戦略確定**: 横動画=案A授業形式「AIから押さえるAI術」週1主軸＋案Dドキュメンタリー月1（B対話/C週刊まとめは不採用・対話はコーナー吸収）。ショート4本/日はまだ走っていない前提に訂正（勘定から除外）。**実装**: ①unDraw全カタログ同期 `scripts/undraw-sync.mjs`——Next.jsのdata endpoint（`/_next/data/<buildId>/illustrations/<p>.json`）から43ページ・**1718点のSVGを失敗0で取得**、`assets/undraw/`（git外）＋catalog.json索引。リカラーは `undraw-pick.mjs`（#6c63ff→アクセント色置換・原本不変）②**16:9コンポジション3種新設**: YokoLesson（授業=ライトワークスペース・左縦章レール・右unDrawステージ・promptカード）/ YokoDialogue（対話=ダークスタジオ・話者照明シフト・EQバー・AI役はpitch-8ptの2声）/ YokoDocu（ドキュメンタリー=明朝×右端タイムライン点灯・スタット）③`yoko-build.mjs`=行単位TTS実測秒→props確定（ショートと同じズレゼロ方式）④1分プロト3本を製造→QA検品で2欠陥（テロップ孤立行折返し・字幕とプレート干渉）を修正して再レンダー→**3本とも final.mp4 納品**（59.2s/49.5s/48.6s・BGM込み・-18dB）。`output/yoko-proto-preview/` でユーザーレビュー待ち。**note戦略**: 週報は新規が読まない（ユーザー指摘に同意）→②は新規向けクリック型（プロンプト全文集ストック等）・週報素材はBrain月次追記へ回す方針。
 
 ユーザーFB「22:45は遅すぎ・その日のうちの情報なのに。21:30に4プラットフォーム全部見渡せ」→実装: ①**verify-socialにYouTube確認を追加**（Data APIでprivacyStatus=public照合）＝YT/X/TikTok/IGの4面監査へ ②**TORU-SocialAuditタスク新設**（毎日21:30・WakeToRun=True・失敗トースト・無人なら再スリープ）③22:45の番人同乗便は廃止——**調査でRebootSentinelがWakeToRun=Falseと判明**（PCが寝てると監査ごと不発＝時刻と構造の二重欠陥だった）④手動テストラン=4媒体全green・在席判定でPC維持。検知網は6:25/18:25/21:30の3回に整理（21:30がX21:00投稿の直後=当夜救済に間に合う）。**apple-designスキル導入**（emilkowalski/skills・WWDC「Designing Fluid Interfaces」をWeb向けに蒸留した282行——応答性/直接操作/中断可能性/スプリング/慣性投影/ラバーバンド/マテリアル/タイポの17章。TORU webのUI磨きとLP系で発動）。横動画「AIに教わるAI術」対話形式の構想はユーザーから提起・議論中（週1ペース推奨・収益化4000時間要件に効く）。
 
