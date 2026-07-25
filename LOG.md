@@ -6,6 +6,22 @@
 
 ## 2026-07-11
 
+### （7/25夜）Opus 5 到来でモデル固定を廃止＝「梯子」化＋大タイトルの句読点を3層で根治
+
+**ユーザー決定（重要・恒久ルール）**: 運用を特定モデル名に縛らない。**その時点の最上位を使い、使えなければ次に優位なモデルへ落ちる**。「Fable優先」「Opus 4.8が既定」のような固定表現は書かない（今後さらに上位が出る前提での自由度確保）。
+
+**Opus 5 の事実確認**（Web突合・私の内蔵知識は1月カットオフで誤答したため訂正）: **2026-07-24リリース・API id `claude-opus-5`**。ほぼ全ベンチでFable 5を上回り**価格は半額**（$5/$25・1Mコンテキスト既定・128k出力・thinking既定ON）。Claude Codeでは一覧に出なくても `/model claude-opus-5` で選択可（安定版2.1.187のまま利用可）。
+
+**実測で判明した静かな事故**: プローブしたら `claude-fable-5` が `You're out of usage credits` で応答せず。ログ突合すると**7/24以降の夜間ビルドは毎回Fableで1回失敗→`opus`へリトライして完走**していた（＝CLAUDE.mdの「Fable優先」方針は既に空文化＋毎晩1回分の無駄失敗）。今日の3本も実質Opus製。
+
+**実装①モデル梯子** `content-factory/scripts/model-ladder.ps1` 新設: `$MODEL_LADDER = claude-opus-5 → claude-fable-5 → opus → sonnet`（末尾はエイリアス＝家族の最新に自動追従するので「モデルが無くて止まる」が起き得ない）。1往復の実プローブで上から疎通確認し、応答した最上位を primary・次を fallback に採用（2本見つかったら打ち切り・120秒でハードkill・全滅時は宣言順の上2つで従来同等に劣化）。**4ライン（daily-brief / morning-demo / midday-longform / weekly-review）の `$model='claude-fable-5'` 固定を全廃**して梯子1本に集約＝**新しい最上位が出たら先頭に1行足すだけ**。実測: 梯子選択7秒で primary=claude-opus-5 / fallback=opus、Fableは自動スキップ。ASCII-only・parseError 0 も確認。
+
+**実装②大タイトルの句読点を廃止**（ユーザーFB「点とか丸はいらない」・#20「取引先の重複、\n名寄せ。」）。**根本原因はDEMO-RUNBOOKのテンプレ例そのもの**（`["レシート整理、\n丸投げ。"]`）でモデルが毎回模写していた（#19も同型）。3層で塞ぐ: ①RUNBOOKの例を句読点なしに直し規範を明記 ②`pipeline/04-video/src/compositions/onscreen-text.ts` 新設＝`titleText()` で描画時に必ず落とす（`。`は削除・改行前/行末の`、`は削除・文中の`、`は空白に）DemoIntro＋Kaisetsu IntroCardに適用（`市場×AI`/`PALANTIR`/`× ANTHROPIC` は不変を確認） ③verify-briefに**警告（非合否）**追加＝propsを書いた無人エージェントに気づかせる。**実証**: 新コードでDemoSplitのframe0を静止画レンダー→「取引先の重複／名寄せ」で句読点なし・字の収まりも改善。tsc --noEmit 通過。今日のぶんは再ビルドせず（ユーザー指示）。
+
+**今日の3本＝全ライン成功（証拠）**: demo-name-merge（06:28 exit=0 verified=True・YouTube AHnUuG7f_6Q・7/26 08:00公開予約）／daily-brief（18:28 exit=0・jX98Sd5wBnk・7/25 20:00）／company-palantir（DZGY6bkEG-M・7/28 12:00）。X/TikTok/Instagram もPostizで3本とも予約済み、verify-social PASS（公開済み6件・予約5件の突合）。
+
+**無人ビルドの自己修復も取込**: yomi.json に誤読12語追加（在庫表/発注書/仕入先/大幅/全面安高/下落/原油等）・TermClipの `ok` 行で実ログ由来の`✓`と自動付与が二重になる不具合修正（#18で実発生）。
+
 ### （7/23夜3）バーン帯v3=明朝体×筆順マスク＋実録チョークSE（content-factory b5612d8）
 
 ユーザーFB「書き音はもっとリアルなコツコツ・スクラッチやめて・文字は明朝体（1分サンプルの見出しと同系）・締めコンコンも微妙、On-Jinのチョーク/シャーペン音を」→ ①**明朝体×筆順の両立**: KanjiVGの書き順ストロークを太マスク（strokeWidth17）にして**明朝グリフを書き順どおりに開いていく**方式へ（骨格描画をやめフォントの美しさを維持・書き終わり6fで全面リビール=字形差分の取り残し防止）②**実録SE採用**: On-Jin「チョーク・黒板に書く」（8.2s・ピーク-1.1dB）をセッションCookie＋正しい相対パス（/sound/起点）でDL。書いている間だけ再生し末尾フェード＝テキスト長に自動追従。シャーペン書きも在庫（pen-write.mp3）。合成chalk/scratchは削除・アジェンダ行は実録頭0.35秒のchalk-tapに置換 ③On-Jinは商用可・クレジット不要（再配布のみ禁止）をRUNBOOKに記載。**納品**: 2026-07-23-yoko-lesson-v06c/final.mp4（明朝筆順の書き途中/完成/数字30をQA突合済）。
