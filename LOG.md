@@ -4,6 +4,28 @@
 
 ---
 
+## 2026-08-05 午前
+
+**B/C型の本番実装を完遂（ユーザーGO「今日のうちに中身の実装・ショートも長尺も本番に組み込める状態まで」）**
+
+- **Kaisetsu スキンシステム**: `skin` プロパティ（MAGAZINE/BROADCAST/FINANCE/SHINBUN）。モジュールパレット
+  差し替え方式で全visualが自動追従・**A型は定数同値＝1px不変**（8/4本番propsで回帰静止画確認）。
+  経過バーはB/Cで廃止・BROADCASTは章切替が赤斜めワイプ・MAGAZINEのみaccent可変（差し色）。
+  シグネチャvisual新設: `sokuho`（速報帯）/`figcam`（大図解カメラワーク）/`bignum`（LEDカウントアップ）/
+  `pressline`（活字プレス）/`nenpyo`（年表スクロール）
+- **DemoSplit スキンシステム**: `skin`（CYBER/AKAPEN）＋DemoIntroテーマ対応。C型= `stamp`（失敗/通過の捺印）、
+  B型= `transition: rewind/glitch`（結果ファーストの巻き戻し）。ダーク地の沈み文字3箇所をQAで修正
+- **YokoKarte 新設**（長尺C・相談室）: kind 8種（op/karte/talk/shindan/shohousen/beforeafter/board/cta）・
+  yoko-build契約そのまま・尺は自動算出・相談の出所を常時表示・✓は話し終えた行だけ
+- **YokoLab 新設**（長尺B・検証ラボ・実ログ・リプレイ）: streams（chunk実時刻由来）をタイプ再生・
+  非バッシング宣言は**省略しても既定文が必ず出る設計**・スコアボードに「この条件・この日の記録」常設・
+  quoteシーン（原文ママ拡大）。**実験ハーネス**: experiments/run-experiment.mjs（3社ストリーミング・
+  chunk時刻JSONL・キー無い社は「実行できない」と記録）＋logs-to-props.mjs（JSONL→streams機械生成・×N倍速明示）
+- **QA**: 全スキン・全コンポをテストprops＋静止画21枚で突合（output/_samples/_skin-test/）。tsc全パス
+- **readiness更新**: ショート6型＋yoko-C を ready:true。**今夜18時のbriefからMAGAZINE実弾**・
+  明朝demo=AKAPEN・明夜company=FINANCE。yoko-Bのみ**OpenAI/Gemini APIキー待ち**（ハーネスは実装済み）
+- RUNBOOK 3本に skin/visual/シーンkindの書き方を追記。作業後PCスリープ（ユーザー指示・RTC 5:40で朝ビルド起床）
+
 ## 2026-08-05 未明2
 
 **型ローテを無人ワークフローに組込み（ユーザーGO「明日から3パターンでローテーション」）**
