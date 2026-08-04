@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-08-05 未明2
+
+**型ローテを無人ワークフローに組込み（ユーザーGO「明日から3パターンでローテーション」）**
+
+- **ユーザー決定**: ショートB/C全6スキン承認・3型ローテ本番投入／長尺もローテGO／タイトルは全ライン
+  メタファー宣言型を即時開始／サムネは現行のまま後日協議で刷新
+- **`scripts/pattern-today.mjs` 新設**: 日付から決定論で「今日の型」を返す（状態ファイル不要・8/5開始・
+  ライン間オフセットで同日同型を回避・長尺はEP番号巡回 EP05=A→EP06=C→EP07=B）。8/5〜8/7の出力を実行確認済み
+- **`pattern-readiness.json` 新設（readiness退避方式）**: 本番コンポーネント実装が済んだ型から ready:true。
+  未実装型の日は自動でA型退避＝無人ビルドが絶対に落ちない。実装が入った日からその型の実スキンで走る
+- **3 RUNBOOK組込み**: demo/DAILY-BRIEF（brief+企業）/YOKO に「ビルド冒頭で pattern-today 実行・
+  effectiveに従う・props.pattern記録・初回本番は人間ゲート・タイトルはメタファー（briefは報道原則と両立）」。
+  YOKOは旧「B対話」との名前衝突を明記して回避・EDの次回予告は「テーマの公約であって型の公約ではない」を規定
+- **残る実装（デビュー日程に前倒しで ready 化）**: ①DemoSplitスキン対応（CYBER/AKAPEN） ②Kaisetsuスキン対応
+  （FINANCE/SHINBUN/BROADCAST/MAGAZINE） ③yoko-C相談室 ④yoko-B検証ラボ＝**OpenAI/Gemini APIキーのユーザー取得待ち**
+- memory: pattern-rotation-live 新設
+
 ## 2026-08-04 深夜（→8/5未明）
 
 **ショートB/C残り4本の10秒サンプル制作（ユーザーGO「昼+2と夜+2」）**
