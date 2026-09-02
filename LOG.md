@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-09-02 夜
+
+**Fable 5.1リリース当日に全ライン5.1化・「新最上位は即投入」を恒久ルール化・週次枠温存しない方針を記録**
+
+- **Fable 5.1即応（ユーザー指示「常に最新モデルが来たらやれるようにしておいて・今回だけでなくずっと」）**:
+  ①settings.json `autoUpdatesChannel` stable→**latest** ②`claude update`で2.1.236→**2.1.258**（5.1は2.1.255+必須）
+  ③ID=**claude-fable-5-1** を実プローブで確定（"ok"応答）④model-ladder.ps1先頭に追加
+  ⑤検証プロトコル通りラッパー同一バイナリ（.local\bin\claude.exe=2.1.258）で`Get-BuildModels`実走→
+  **primary=claude-fable-5-1 / fallback=claude-opus-5** 確認。今夜18時ビルドから全ライン5.1。
+  **明日の運転成否確認までワンセット（未完扱い）**。対話側は次回セッション起動後に/modelでFable 5.1選択
+- **恒久ルール**: 新最上位が出たら確認なしでCLI更新→ID特定→梯子先頭追加→実走検証（model-no-pinningメモリに追記）。
+  週次枠は温存しない＝水曜6%はもったいない・ユーザー不在でも50%目安まで自走投下OK（新メモリweekly-quota-spend-freely）
+- **24h突合: 全ライン緑**。朝demo-kakeibo-graph（9/3 8:00予約）・昼kiso-mcp（9/5 12:00・3491s）・
+  EP20学び方（9/2 20:00）・brief（20:30）・note当日分公開済み（n92f94a1d35d6）・thumb-research/shop/x-daily完走
+- **🔴要ユーザー対応**: ①xAIクレジット切れ（9/2 3:50 HTTP403）→console.x.aiで補充（Grokサムネ・noteカバー停止中、
+  thumb.mjsエンジンで代替継続）②Supabaseギャラリー（akizfkdzlcqsvmcuacfl）ドメイン消失→EP13〜20がスタジオ未反映、
+  ダッシュボードでプロジェクト復旧＋.env差し替え要 ③note未公開6件（products系・pending-manual参照）
+- **backup**: content-factoryの8/28〜9/2未コミット分（yoko EP16-20・kiso5本・products4点・retention報告）を一括退避push
+
 ## 2026-08-22 夜
 
 **昼12時枠を「AI企業ファイル」→「きほんのAI（kiso）」へ入れ替え・明日以降の無人運転に配線完了**
