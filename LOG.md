@@ -22,6 +22,16 @@
   thumb.mjsエンジンで代替継続）②Supabaseギャラリー（akizfkdzlcqsvmcuacfl）ドメイン消失→EP13〜20がスタジオ未反映、
   ダッシュボードでプロジェクト復旧＋.env差し替え要 ③note未公開6件（products系・pending-manual参照）
 - **backup**: content-factoryの8/28〜9/2未コミット分（yoko EP16-20・kiso5本・products4点・retention報告）を一括退避push
+- **xAI復旧（ユーザーが上限$50へ引き上げ）**: Grok実生成で疎通確認→アラート自動解除。kiso-handbookカバーを
+  Grok新版へ差し替え（検品済み・push済み・Gumroad貼りは人間の1クリック待ち）。停止中に作られたサムネ4本の
+  Grok作り直し＋YT差し替えは**提案済みGO待ち**（EP20/brief/9,3朝demo/9,5昼kiso-mcp）
+- **週次枠50-60/40ルールを当日中に成文化（ユーザー指示）**: 無人＋成長自動化=週50〜60%日割り・対話40%・
+  週内100%絶対回避。ルートCLAUDE.md §資源配分に追記＋メモリ更新。**ハーネス形式（マルチエージェント）の
+  常設オプトイン**を成長自動化に得た。実装計画正本= content-factory/improvements/GROWTH-HARNESS-PLAN.md
+  （予算ガバナー→duty重量化→ハーネス回顧→Notion提案9/1配線の順・次セッション着手）
+- **Notion改善提案9/1読了**: ①サムネ=登場AIロゴが面積半分のインパクト型＋ロゴ収集拡大（ソニー/トヨタ/SB/海外）
+  ＋配置学習をTHUMB-RESEARCHへ追加 ②発信名「Aoki」に肩書（@AI教室等）→候補提示はユーザー決定待ち
+- **セッション終了**: ユーザーがCursor再起動→次セッションはFable 5.1初回。着手順はsession-handoff-pendingメモリ
 
 ## 2026-08-22 夜
 
