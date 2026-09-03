@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-09-03 夜
+
+**5.1 初日で 5h 窓を 18:49 に使い切り回顧2連死＋ユーザー21時ロックアウト → 実コスト台帳・5h ガード・回顧の安価化・朝チェーン移設**
+
+- **24h 突合**: 朝 demo-meishi（5.1 初運転・完走・9/4 8:00 予約 nQydfOZh25o）／昼 EP21 はじめ方編（全11段階・note 18:00 公開
+  n7194dbb8c5d9）／夜 brief adSnx5Mu0KA 20:30・kiso#15 K8fJsIxkLSg 9/6 12:00 = **本番は全部緑**。
+  **赤**: thumb-research/回顧 18:26・19:00 とも「You've hit your session limit」で即死、camera-lab 20:45 も同死因、
+  22:00 保険起動は旧設計で走り出したため 22:10 に私が停止。ギャラリー（Supabase）は引き続きユーザー対応待ち（9本）
+- **死因の実測**（`content-factory/scripts/analytics/run-cost.mjs` 新設: transcript を message.id で重複排除し list price 換算）:
+  5h 窓 100% ≈ $50・7d 100% ≈ $580（5.1）。本番ラインだけで $61/日 = 10.5%/日 = **74%/週**、旧回顧（5人×画像≈100枚）は
+  $27 で未完＝5h 窓の 4 割。Opus 5 の日（9/2）は list $73 で 7d 5% → **Opus 5 は枠消費が 5.1 の 1/2.7（list $ あたり）**
+- **設計変更（1ライン=thumb-research・翌朝検証）**: ①budget-governor が台帳で 7d 実推定＋**5h ガード**（無人は窓 60% まで・
+  heavy→normal→lean→defer）②回顧を digest-once（sheet.png→Sonnet の証拠シート→テキストのみのパネル→反証だけ原画）
+  ③朝チェーン（morning-demo.ps1 終端）へ移設・保険タスク 22:00→07:20 ④limit 死は fallback を回さない
+- **実践検証**: verify-ps1 All clear／retro-frames で sheet.png 6本生成／ガバナー実走=22:2x 5h 66% で **defer 判定**／
+  `thumb-research -Force -RetroOnly` 実走で defer 分岐が END exit=75 を書いて終了（トークン0）。回顧パイロットは
+  ガバナー判定どおり見送り（対話窓保護）。**9/4 06:31 の朝チェーンが検証日**（確認点は GROWTH-HARNESS-PLAN.md）
+- **提案（GO待ち）**: 本番の組み立て=Opus 5／判断工程=Fable 5.1 の役割分担（試算 8%/日=56%/週）。詳細 §5
+- 保守: 9/2 の fork セッション残骸（d24bde37・limit で停止したまま常駐）を kill
+
 ## 2026-09-02 夜
 
 **Fable 5.1リリース当日に全ライン5.1化・「新最上位は即投入」を恒久ルール化・週次枠温存しない方針を記録**
