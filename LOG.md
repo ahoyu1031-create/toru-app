@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-09-06 夜
+
+**日中シャットダウン（14:21）で夜のラインが飛んだ件 — 実害の確定・起動後の自己回復を確認・ラボが本番の横で一斉発火する穴を修正・「シャットダウンOK」案内を訂正**
+
+- **事実（イベントログ）**: 14:21 スタートメニューから「電源を切る」（User32 1074）→ 21:27 起動（6005）。この間に飛んだもの:
+  14:30 YokoLab保険・17:45 PreWake・**18:00 DailyBrief**・18:00/18:40 NoteRetry・20:45 YtComment。BIOS RTC は 5:40 の 1 回だけ、
+  WakeToRun はスリープからしか効かない＝**日中のシャットダウンは夜のラインを殺す**（朝は無事）。memory の「シャットダウンOK」は朝限定だった→訂正
+- **起動後の自己回復（実測）**: 21:29 Catchup（logon トリガー）が brief を Build 開始（production 梯子＝Opus 5、通常 24〜26 分）。
+  20:00 を過ぎているので `upload-youtube --today-20` は「今+10分」予約＝**22 時台に公開見込み**。21:34 に StartWhenAvailable が溜まったトリガーを
+  **一斉発火**: NoteRetry が ep24 の note を公開（3.5h 遅れ）・YtComment 対象なし・PreWake no-op・**YokoLab と CameraLab が本番ビルドの真横で起動**
+  （budget 5h 3%／7d 9% で heavy 判定・judgment=Fable）。20:00 の EP24 長尺は YouTube 側予約なので無傷
+- **穴と修正**: ラボの保険トリガーに「本番が走っている」チェックが無かった（同日ガード＋予算ゲートのみ）。`yoko-lab.ps1` / `camera-lab.ps1` に
+  **本番ロック（build/demo/midday.lock が 100 分未満）なら exit=74 で defer（$0）** を追加。待機ではなく defer にした理由: 本番ラッパーは無人なら
+  終了時に suspend する→待機中のラボが凍って 05:45 に再開し 06:00 窓を食う（9/6 ルールの死因そのもの）。鎖（midday→yoko／demo→camera）は
+  ロック解放後に呼ぶので影響なし（midday-longform 251 行で解放→272 行で呼出・morning-demo 236→292）
+- **検証**: Parser 0 エラー・非 ASCII 0。GateOnly 実走（build.lock 12 分）で両方とも defer 行（yoko L36／camera L35）の Out-File まで到達し exit 0
+  ＝ガード経路は通った。ログ行だけは「稼働中のラボが同じログファイルを掴んでいる」ため書けず（同時実行時のみの事象）。
+  **次の実運転検証＝9/7 朝の鎖で camera-lab が deferred にならず走ること・07:45 保険は同日ガード SKIP**
+- **恒久策の選択肢（ユーザー判断待ち）**: ①日中の「電源を切る」に理由画面を出す常駐（ShutdownBlockReasonCreate・¥0・押した瞬間に気づける）
+  ②スマートプラグ＋BIOS「AC 復帰で電源 ON」（設定済み）＋クラウド cron で 17:38 に電力ゲート付き通電サイクル（約 ¥2k・完全無人）
+  ③WoL（NIC の Shutdown WOL は Enabled・Magic Packet は Disabled・LAN 内に送信元デバイスが要る）。推奨は①今すぐ＋②年末の人手ゼロ運転向け
+- **赤（残）**: note followup キューが 61 件失敗・try 26/30（Supabase ギャラリー不通が主因・30 回で打ち切り）／Supabase ギャラリー未復旧は継続
+
 ## 2026-09-06 昼
 
 **トークン枯渇の構造要因を実測 → Opus 5／Fable 5.1 の役割分担を投入・成長ラインを「本番の後」へ・無駄の $0 スキップ・ElevenLabs 復旧で #63/#17 予約・Notion 運営メモ DB 新設**
@@ -131,6 +154,17 @@ note 有料（実装）・Gumroad Discover 最適化。BOOTH は pixiv 規約で
   thumbnail スキル同文。プロンプトは回ごとに 8 行以上・thumb-prompt.txt に残す・vision で「AE 経験者がスクロールを止めるか」
 - **サンプル再生成** `output/_samples/2026-09-06-thumb-plan/`: yoko-sandan-hoshi.png（三段活用＋3アイコン）・yoko-style14-v2.png（白カード無し）・
   short-photo-v2.png（アイコンを文字と重ねない位置へ）
+
+**（昼9・ユーザー「三段活用＋無理やりのアイコンは変。すぐルール化するな。制約を外して自分なりにデザイン一新して」）**
+
+- **ルール化を撤回**: YOKO-RUNBOOK 段階7・thumbnail スキル・THUMB-CRAFT の「三段活用本線」を取り消し、**確定まで暫定＝10/11/13 ローテ・
+  `--logo none`** に戻した（今夜・明日の無人運転が半端な案を出さないため）。正本には確定した設計だけを書く
+- **再設計案（提案・未確定）「写真の一枚絵＋組版システム＋固定の登場AI帯」**: ①写真は題材の実物1点を Grok に撮らせる（文字を描かせない・
+  レンズ/光/色3色/余白の方向まで指示）②文字は必ず同じ組版（BIZ UDPGothic/Noto Sans JP・kicker 小＋見出し 8字以内＋差し色1語・
+  細い縁取りと柔らかい影のみ・板やカード無し）③登場 AI は素の公式アイコンを左下の決まった位置に小さく並べる（無くてもよい）
+  → `scripts/thumb-photo-type.mjs` 新設（Playwright 組版）。サンプル `output/_samples/2026-09-06-thumb-redesign/`:
+  A-naosu-jikan.png（EP24「AIをやめる合図は／直す時間。」赤ペンと赤入れ原稿）・同 noicons 版・B-machigaeru.png（kiso #17 9:16・
+  「自信たっぷり／でも、間違える」赤い承認スタンプ）。**ユーザー判定待ち**
 
 ## 2026-09-03 夜
 
