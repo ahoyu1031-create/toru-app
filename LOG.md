@@ -35,6 +35,26 @@
   note 側に下書きは無い（ユーザーのスクショどおり）。続けるか外すかはユーザー判断待ち
 - **赤（残）**: X カード 08:15 が 9/3〜在庫切れ exit=1（補充は公開直結のためユーザー確認待ち）／Supabase ギャラリー未復旧／ASK-HUMAN Q-001〜Q-007 open
 
+**（昼2）長尺サムネが「エヴァ系エンジン型」に逆戻りしていた死因＝旧 thumbnail スキル → スキル書換・機械ゲート・ロゴ半分ヒーロー型新設／ElevenLabs Creator 化**
+
+- **ユーザー叱責**「エヴァ風も既存も全部なくせと言ったのに無くなってない。note は日々改良、YouTube だけ全く改善しない」。
+  実測: EP19（9/1・Grok クレジット切れの正当なフォールバック）→ **EP20〜23（9/2〜9/5）は全部 `banners/thumb.mjs` エンジン型**
+  （fullbleed/sanyatsu/shukushou/akaobi）。型ログの reason は「プロンプト指示どおりエンジンで生成」。**死因＝`~/.claude/skills/thumbnail/SKILL.md`
+  （8/2 作成）が「YouTube長尺（9型）＝必ずエンジンで」と書いたままで、8/26 の全廃決定（RUNBOOK 段階7は更新済み）を反映していなかった**。
+  ヘッドレスの長尺ラインは thumbnail 段階でこのスキルを読み、RUNBOOK より優先してしまった。成長の自動化のせいではなく、私の正本不一致
+- **是正**: ①SKILL.md を全面書換（長尺＝Grok 型ローテ・既定 style-14・エンジンは X カード等の静的レイアウト専用・エンジン長尺は Grok 3回失敗の
+  FALLBACK のみ）②`banners/thumb-styles/style-14-logohero.txt` 新設（左半分に白い空カード→公式ロゴタイルを合成＝ロゴ面積約半分）
+  ③`scripts/thumb-logo-hero.mjs` 新設（左/右半分へ高さ62%のタイルを合成・.nologo.png 保持）④`scripts/verify-yoko-thumb.mjs` 新設
+  （エンジン型は FAIL・直近2本ローテ・thumb-prompt.txt 痕跡・1280x720）⑤`upload-youtube.mjs --yoko` がゲートを呼び FAIL なら上げない
+  （`--thumb-unchecked` は手動修復専用）⑥midday プロンプトに THUMBNAIL 節・YOKO-RUNBOOK 段階7 冒頭に最優先指示
+- **検証**: node --check 3本 OK・midday Parser OK・ゲート実走 EP23=FAIL（エンジン型検出）／EP18=PASS（style-08）・
+  ヒーロー合成を EP18 の複製で実走→左半分に Claude タイル 446px（目視 OK）。**初運転＝本日 12:00 の EP24**（スキル書換が 12:3x、
+  同セッションが thumbnail 段階でスキルを読む前なら新文面が効く。ゲートで拒否された場合は同日中に Grok で作り直す）
+- **ElevenLabs Creator 化（ユーザー決済）**: `.env` に `ELEVENLABS_OUTPUT_FORMAT=mp3_44100_192` を追記。実 TTS で 192k 受理を確認
+  （ffprobe 201kbps）。新 API キーの権限は「テキスト読み上げ=アクセス」「ユーザー=アクセス」の2つだけで足りる（残高 API 用）
+- **X カード**: 経路が Postiz 公開 API（8/24 解約）なので**現状は有料**。無料でやるなら X API Free（開発者アプリ作成＝ユーザー作業）→直叩き実装
+- **有料 note**: `note-publish.mjs` に有料設定（価格・有料ライン）は未実装。note 側の販売者登録（口座）が未了なら人間の一回作業。実装は次
+
 ## 2026-09-03 夜
 
 **5.1 初日で 5h 窓を 18:49 に使い切り回顧2連死＋ユーザー21時ロックアウト → 実コスト台帳・5h ガード・回顧の安価化・朝チェーン移設**
