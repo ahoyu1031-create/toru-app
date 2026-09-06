@@ -4,6 +4,37 @@
 
 ---
 
+## 2026-09-06 昼
+
+**トークン枯渇の構造要因を実測 → Opus 5／Fable 5.1 の役割分担を投入・成長ラインを「本番の後」へ・無駄の $0 スキップ・ElevenLabs 復旧で #63/#17 予約・Notion 運営メモ DB 新設**
+
+- **実測（run-cost 4日分・list価格）**: 9/5 フル1日＝本番＋成長で **$80/日 ≒ 7d枠の14%/日 ≒ 週97%**（全ライン 5.1）。
+  内訳 midday 18.0・brief 11.7＋19:00再走 6.7・shop 10.7・demo 9.8・camera-lab 9.4・yoko-lab 6.9・retro(lean) 6.8。
+  梯子プローブだけで $18/4日（週5%相当）。「毎回使い切る」感覚は構造（本番を全部最上位で回している）が原因
+- **役割分担（9/3 §5 提案にユーザーGO）**: `model-ladder.ps1` に tier 新設。**production**（demo/shop/midday/brief+kiso）＝
+  claude-opus-5→opus→fable-5-1→sonnet／**judgment**（thumb-research・yoko-lab・camera-lab・weekly-review）＝fable-5-1→opus-5→…。
+  プローブ結果を 6h キャッシュ（`output/_logs/model-probe.json`・失敗は 45 分）。実プローブ検証: production=opus-5/opus・
+  judgment=fable-5-1/opus-5、2回目はキャッシュ命中を確認。**初運転＝9/6 12:00 midday（Opus 5）・18:00 brief・9/7 06:00 demo**
+- **成長は本番の後（ユーザー「絶対」）**: 死因実測＝camera-lab 20:45 が 21:30 の自動スリープで凍結→05:45 PreWake で再開し
+  06:00 demo と同じ 5h 窓を $9 食っていた（9/5・9/6）。yoko-lab 16:45 も 18:00 brief と同窓。朝チェーンを demo→thumb-research→camera-lab、
+  昼を midday→yoko-lab に。単独タスクは 07:45／14:30 の保険へ（Set-ScheduledTask 実施・次回=明日）。両ラボに同日ガード＋
+  budget-governor ゲート（defer/stop＝$0 終了）＋ `-GateOnly` 検証スイッチ。GateOnly 実走: heavy 判定・exit=76・2回目も同日ガードで誤スキップせず
+- **無駄スキップ**: daily-brief 19:00 の在庫再走は tts-quota マーカー 6h 以内なら $0 SKIP、fallback 再走も同ガード（morning-demo と同型）。
+  tts.mjs は成功時にマーカーを自動削除＋ `ELEVENLABS_OUTPUT_FORMAT` で 192kbps 切替可。verify-ps1 All clear・全ラッパー Parser OK
+- **ElevenLabs**: ユーザーが Starter を継続決済→復旧。#63（3sfWhQjwmBw・**9/7 8:00**）と kiso #17（afrMlzpBxfc・**9/8 12:00**）を
+  対話セッションで仕上げて予約（両方 verify PASS・upload-brief は Supabase 不通で再試行キュー）。消費実測 1,150〜1,300字/日 ≒ 月 35〜40k
+  → **Starter 30k は 24 日で尽きる**（8/12→9/5 と一致）。Creator は 121k・192kbps・PVC。推奨＝Starter＋usage-based billing。
+  API キーに user_read 無し（残高 API が 401）→ユーザー作業。Q-008 回答済み
+- **note 編集方針（ユーザー指示 3 点）**: 時事優先（ARTICLE-RUNBOOK §1 0.5）・タイトル【】込み≤15字（【≤5】＋5〜10）・画像は大見出しごと1枚。
+  `verify-article` に長さゲート新設。midday/daily-brief のプロンプトも同文に。Grok ヒーロー画像は未決（保留）
+- **ロゴ半分サムネ**: 回顧が「仮説→上位9本で反対9」と処理していたのは読み違い（ユーザー指摘）。Q-004 を「採用・方針」で回答し
+  THUMB-CRAFT §4.5.1 に方針化。エンジン実装（thumb.mjs 新 `--type`）は座標協議→GO 後
+- **Notion「運営メモ（1日1枚）」DB 新設**（AI ページ配下・新しい順／状態ボード）: 9/1・9/5・9/6 のユーザー提案＋Claude の open 質問 6 件を移設。
+  毎セッション冒頭で未読を確認する運用に（CLAUDE.md 冒頭提示表に追加）
+- **note 未公開 10 件の正体**: `output/_logs/note-queue.json`（Claude 側台帳）。shop ラインが毎日 1 商品の有料 note を積む→人間の手貼り待ち。
+  note 側に下書きは無い（ユーザーのスクショどおり）。続けるか外すかはユーザー判断待ち
+- **赤（残）**: X カード 08:15 が 9/3〜在庫切れ exit=1（補充は公開直結のためユーザー確認待ち）／Supabase ギャラリー未復旧／ASK-HUMAN Q-001〜Q-007 open
+
 ## 2026-09-03 夜
 
 **5.1 初日で 5h 窓を 18:49 に使い切り回顧2連死＋ユーザー21時ロックアウト → 実コスト台帳・5h ガード・回顧の安価化・朝チェーン移設**

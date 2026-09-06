@@ -110,6 +110,8 @@ node scripts/db/verify-cleanup.mjs
 | 提示するもの | 取得コマンド | 頻度 |
 |---|---|---|
 | note の未公開記事・概要欄への未反映 | `node scripts/pending-manual.mjs`（content-factory） | **毎セッション**（残があるときだけ表示される） |
+| Notion「運営メモ（1日1枚）」の未読・協議中（ユーザーの出先メモ） | `notion-fetch` で DB https://app.notion.com/p/4c8b55b555514eb2829d0ab493b0f8f0 を読む（2026-09-06 新設） | **毎セッション** |
+| ラインからの質問（人間にしか決められない事） | `node scripts/ask-human.mjs`（content-factory）／Notion 運営メモにも転記 | 毎セッション |
 | 週次レポート | `reports/weekly/<date>.md` | 月曜夜 |
 
 **note を手動運用にした理由（2026-07-29 ユーザー決定）**: note に公式の投稿APIは無く、非公式APIは
@@ -128,13 +130,18 @@ note が無い状態は動画が嘘をついていることになる。導線は
 のような固定表現は書かない。
 
 - **対話セッション**: `/model` で当時の最上位を選ぶ。重い分析・設計・市場判断・コードレビューに惜しまない
-- **夜間の無人ビルド**: モデル選択は `content-factory/scripts/model-ladder.ps1` の**梯子1本に集約**。
-  上から順に実プローブ（1往復）で疎通確認し、応答した最上位を primary・次を fallback に使う。
-  4ライン（daily-brief / morning-demo / midday-longform / weekly-review）が全部これを読む。
+- **夜間の無人ビルド**: モデル選択は `content-factory/scripts/model-ladder.ps1` に**集約**。
+  上から順に実プローブ（1往復・結果は 6h キャッシュ）で疎通確認し、応答した最上位を primary・次を fallback に使う。
+  全ラッパー（daily-brief / morning-demo / midday-longform / shop-daily / thumb-research / yoko-lab / camera-lab / weekly-review）が読む。
   **新しい最上位モデルが出たら `$MODEL_LADDER` の先頭に1行足すだけ**（スクリプト側の修正は不要）
-- 梯子の現状（2026-07-25 実測）: `claude-opus-5` → `claude-fable-5` → `opus` → `sonnet`。
-  Fable 5 は**クレジット切れで応答せず**、7/24 以降の夜間ビルドは実質 Opus で走っていた
-  （プローブ導入で「毎晩1回無駄に失敗してからリトライ」も解消）
+- **役割分担（2026-09-06 ユーザーGO・恒久）**: 梯子は2段。**judgment**（`$MODEL_LADDER`＝その時点の最上位から。回顧・ラボ・
+  週次レビュー＝判断が価値の工程）と **production**（`$MODEL_LADDER_PRODUCTION`＝枠消費の安い階級から。demo/shop/midday/brief+kiso の
+  組み立て）。理由: 本番を全部最上位で回すと $80/日≒週97%（9/5 実測）、Opus 5 は list $ あたり枠消費 1/2.7。
+  新最上位は judgment 側に即投入、production 側は「安い階級」と確認できてから昇格
+- **成長の自動化は本番の後（2026-09-06 ユーザー指示・絶対）**: 回顧・camera-lab・yoko-lab は本番ラッパーの終端から鎖で起動
+  （朝 demo→retro→camera-lab／昼 midday→yoko-lab）。単独タスクは保険トリガーのみ。各ラボは同日ガード＋budget-governor ゲート。
+  本番より先に 5h 窓を食う配置は作らない（詳細は memory growth-after-production）
+- 梯子の現状（2026-09-06 実測）: judgment `claude-fable-5-1` → `claude-opus-5` → …／production `claude-opus-5` → `opus` → `claude-fable-5-1` → `sonnet`
 - 検証系の自動化はトークン使ってOK（後の効率化リターンが大きい）
 
 ## 作業規範（最上位モデルの公式プロンプティングガイド由来・2026-07-05 取込）
