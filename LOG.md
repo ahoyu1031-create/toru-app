@@ -119,6 +119,19 @@ note 有料（実装）・Gumroad Discover 最適化。BOOTH は pixiv 規約で
   （yoko-style14-logohero.png・short-photo-fullbleed.png）。look-bible §4 に「字は動く」（キネティックタイポ）を追加
 - **新規質問 Q-009〜Q-012 を Notion に追加**（look proof の題材／長尺既定 14 の可否／ショート検索面サムネ置換／kiso の字の太さ）
 
+**（昼8・ユーザー叱責「サムネが弱すぎる・全てが下手くそ」）白カード／モヤ全廃・複数アイコン・三段活用へ戻す・プロンプトを毎回書く**
+
+- **指摘**: Claude のロゴ自体は良いが「2段階の白背景」「モヤ」は不要・絶対やめて／Claude 以外（GPT・Gemini・Grok）が出たことがない、全部
+  使ってよい／星さんの三段活用のような形でやってほしい／毎回プロンプトを突き詰めて Grok に細かく指示する（適当に作らない）。
+  **自己診断**: 8/30 に `make-logo-tile --bare`（白カード無し）を作っておきながら、合成側（grok-thumb・make-note-cover）は白角丸タイルのまま
+  ＝2度目の逆戻り。サムネ学習（thumb-research）は digest を書くだけで、生成プロンプトはテンプレ穴埋めだった
+- **是正（コード）**: `make-logo-tile --bare` から影を除去／`grok-thumb.mjs` は `--logo a,b,c` で素のアイコンを並べる（`--logo-pos tr|mr|br|bl`・
+  `--logo-size`）／`thumb-logo-hero.mjs`・`make-note-cover.mjs` も logo-bare へ／style-14 テンプレから白カードを削除
+- **是正（正本）**: THUMB-CRAFT §4.5 冒頭に最優先ルール4点、YOKO-RUNBOOK 段階7＝本線は三段活用（hoshi 参照＋--l1/--l2/--l3）・第2＝14、
+  thumbnail スキル同文。プロンプトは回ごとに 8 行以上・thumb-prompt.txt に残す・vision で「AE 経験者がスクロールを止めるか」
+- **サンプル再生成** `output/_samples/2026-09-06-thumb-plan/`: yoko-sandan-hoshi.png（三段活用＋3アイコン）・yoko-style14-v2.png（白カード無し）・
+  short-photo-v2.png（アイコンを文字と重ねない位置へ）
+
 ## 2026-09-03 夜
 
 **5.1 初日で 5h 窓を 18:49 に使い切り回顧2連死＋ユーザー21時ロックアウト → 実コスト台帳・5h ガード・回顧の安価化・朝チェーン移設**
