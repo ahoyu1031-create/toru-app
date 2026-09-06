@@ -106,6 +106,19 @@ note 有料（実装）・Gumroad Discover 最適化。BOOTH は pixiv 規約で
   タイトル15字以内、画像が H2 ごと
 - improve-log に FINDINGS 3件（yoko/kiso/brief の画）を追加＝回顧と週次が読む
 
+**（昼7）Notion の回答6件を反映・サムネ方針のサンプル2枚・EP24 でサムネゲートが初日から機能**
+
+- **EP24（12:00 Opus 5・exit 0・3630s）**: 旧プロンプトで動いていたためエンジン型 nidan を先に作ったが、**upload-youtube のゲートが拒否**
+  → Grok style-11 で作り直して 20:00 予約（RruiRjEUCik）。ゲートは初運転で機能。yoko-lab は 5h 60% で defer（設計どおり）
+- **Notion コメント→回答転記（ask-human）＋RUNBOOK 反映**: Q-001 進行ステッパー撤去（DAILY-BRIEF-RUNBOOK）／Q-002 kiso は型番を出さず
+  簡易説明まで・brief は型番可（KISO-RUNBOOK 13）／Q-003 ダイジェスト切り抜きは方向 OK・形は協議後（保留）／Q-005 タイトル板は
+  現状維持＋後ろへ回す型もローテ（YOKO-RUNBOOK 13）／Q-006 体験談は工場の実験に限定（ARTICLE-RUNBOOK）／Q-007 brief の順番ローテ
+  ＋速報カード短縮（DAILY-BRIEF-RUNBOOK）。状態を Notion に書き戻し
+- **サムネ方針（ユーザー質問）**: 長尺＝style-14 ロゴ半分ヒーロー既定＋10/11/12/13 ローテ、ショート＝フィード面は冒頭3秒の画
+  （kiso は写真背景＋つかみ）・検索面は「実物写真全面＋巨大2行＋ロゴ」へ置換。サンプル `output/_samples/2026-09-06-thumb-plan/`
+  （yoko-style14-logohero.png・short-photo-fullbleed.png）。look-bible §4 に「字は動く」（キネティックタイポ）を追加
+- **新規質問 Q-009〜Q-012 を Notion に追加**（look proof の題材／長尺既定 14 の可否／ショート検索面サムネ置換／kiso の字の太さ）
+
 ## 2026-09-03 夜
 
 **5.1 初日で 5h 窓を 18:49 に使い切り回顧2連死＋ユーザー21時ロックアウト → 実コスト台帳・5h ガード・回顧の安価化・朝チェーン移設**
