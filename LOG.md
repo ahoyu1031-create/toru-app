@@ -4,6 +4,28 @@
 
 ---
 
+## 2026-09-09 夜
+
+**恒久策① シャットダウン抑止の常駐を投入（ユーザーGO）・9/7〜9/9 の無人運転突合・ラボは予算ゲートで 3 日間ほぼ不稼働と判明・週報 9/6 の遅延提示**
+
+- **シャットダウン抑止**: `scripts/shutdown-guard.ps1`（隠し窓が WM_QUERYENDSESSION に「否」を返し ShutdownBlockReasonCreate で理由を登録→
+  Windows 標準の「このアプリがシャットダウンを妨げています」画面に日本語の理由が出る。05:00〜21:45 のみ・`output/_logs/allow-shutdown.flag` で解除・
+  強制はいつでも可・ENDSESSION_CRITICAL は対象外）＋ `shutdown-guard.vbs`（HKCU Run キー `TORU-ShutdownGuard`・gallery.vbs と同型）＋
+  `config/shutdown-guard-message.txt`（本文は UTF-8 別ファイル、.ps1 は ASCII のみ）。**検証**: Run キー登録→vbs 経由で実起動→
+  ログ `armed (reason registered=True)`→別プロセスから EnumWindows で窓を特定し ShutdownBlockReasonQuery が日本語の理由文を返した。
+  実クリック（スタート→電源→シャットダウン→画面→キャンセル）はユーザー実施。22:45 の RebootSentinel は窓外なので影響なし
+- **9/6 夜の残件の答え合わせ**: ①ラボ defer ガードは 9/7 朝の鎖で誤発動なし（06:31 demo END→07:31 camera-lab 呼出→exit=75「予算 defer」＝
+  ロック理由ではない）②9/6 21:45 の週次レビューは **Fable・Opus 5 とも 5h セッション上限**（brief catch-up＋ラボ 2 本＋週次が同窓）で exit=1、
+  ただしレポート本体 `reports/weekly/2026-09-06.md` は生成済み ③9/6 の brief catch-up は exit=1（news note 未公開）。9/7 以降は
+  yoko 連動＋news の **1 日 2 本が 3 日連続で公開**（import-log 9/7・9/8・9/9 とも published=true）
+- **無人運転 9/7〜9/9**: demo/thumb/shop/midday/brief/NoteRetry すべて rc=0。**camera-lab は 9/7・9/8・9/9 とも exit=75（予算 defer）で 1 回も走らず**、
+  yoko-lab は 9/7 のみ完走（9/8・9/9 は defer）。本番の所要が伸びている（demo 31→46 分・midday 55→63 分・brief 37→48 分）ため、
+  本番直後の 5h 窓に成長ラインの余地が無い。「成長の自動化でトークン使いすぎ」の実態は**先週（8/31〜9/6）は retro $110＋ラボ $80 で無人側の約 1/3**、
+  今週はゲートが効いてほぼゼロ（詳細はコスト監査の結果を追記）
+- **週報 9/6（月曜提示が遅れた・ここで提示）**: brief が唯一の上向き（再生中央値 171→219・登録 13/19）、yoko は維持 2.5% 以下が 4 本連続、
+  提案1 DEMO2 scene1 の3本目ビートを画に・提案2 回顧の既定を heavy(5名)→normal(3名) で日曜のみ heavy・提案3 weekly-digest の kiso/DEMO2 追随（6 週連続再提出）
+- **note 有料化（ユーザー指示）**: 実装計画を調査中（別掲）
+
 ## 2026-09-06 夜
 
 **日中シャットダウン（14:21）で夜のラインが飛んだ件 — 実害の確定・起動後の自己回復を確認・ラボが本番の横で一斉発火する穴を修正・「シャットダウンOK」案内を訂正**
