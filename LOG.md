@@ -24,6 +24,20 @@
   成長ラインを自動 defer するので、日曜リセットまで成長系は止まる（意図どおり）。対話は軽めに
 - **引き継ぎ書**: `content-factory/docs/HANDOFF-YOUTUBE-AUTOMATION-2026-09-10.md`（ChatGPT に画像生成を頼むための全体像＋サムネ仕様＋禁止事項＋依頼形）
 
+**（夜2・成長の軽量化）ユーザー指示「60% で止まるのはもったいない。軽くして 1 週間続けられる設計に」→ ガバナーを Fable 換算＋日次アローワンス制へ・ラボ交互**
+
+- **診断（台帳 9/6 08:00〜9/10 20:00）**: list $556 ＝ Fable 換算 $357（61.6%・実測 66%）。内訳＝回顧 $142（24.5%・うち 9/7〜9/9 の normal 3 連死 $87＝15%）・
+  本番 4 ライン $119（20.5%・list では $307）・対話 $81（14%）。**止まっていた真因**: ①ガバナーが Opus の本番を list 価格のまま足し（見積 +10〜12%/日・実際 +4.4%/日）
+  pace line を本番だけで超えていた ②回顧 normal $32 が朝の 5h 窓で死んで二重払い ③5h ガードも list 価格で midday が 70% 換算（実際 26%）→ 昼のラボが入れない
+- **実装**: `run-cost.mjs --json` に `quota`/`byLineQuota`（Opus・Sonnet・Haiku ÷2.7）／`budget-governor.ps1`: quota を読む・`$BUDGET_GROWTH_DAY_PCT=3.5`
+  （retro/camera-lab/yoko-lab/weekly の当日合計・lean 回顧＋ラボ 1 本が入る）・normal は回顧だけ週 1（`$BUDGET_NORMAL_PER_WEEK`）・heavy オフ・
+  ラボは常に lean・caller 別の見積表・`-NoRecord`／`camera-lab.ps1`＝月水金・`yoko-lab.ps1`＝火木土（オフ日 exit=77・`TORU_LAB_ANYDAY=1`）／
+  `thumb-research.ps1` は caller 'retro'。設計値の週収支＝本番 31%＋成長 24%＋対話 40%＝95%
+- **同セッション検証**: 台帳 quota 出力 OK／4 本の .ps1 Parser 0 エラー・非 ASCII 0／`Get-BudgetMode -NoRecord`: retro＝lean（今週 normal/heavy 決定 8 回で cap）・
+  camera-lab＝lean・履歴の行数不変／`camera-lab.ps1 -GateOnly`（木）＝exit=77 オフ日／`yoko-lab.ps1 -GateOnly`＝mode=lean（5h 24%＋16%・当日成長 1.6%＋1.4%≤3.5%）
+- **翌運転の確認点（9/11 金）**: thumb-research の governor 行に `(Fable-eq)`＋`growth today`・END exit=0／**camera-lab が exit=0 で実走**（9/7 以来初）／yoko-lab は exit=77／09:30 shop exit=0。
+  9/12（土）は yoko-lab 実走。CLAUDE.md・GROWTH-HARNESS-PLAN §6・memory に反映
+
 ## 2026-09-09 夜
 
 **恒久策① シャットダウン抑止の常駐を投入（ユーザーGO）・9/7〜9/9 の無人運転突合・ラボは予算ゲートで 3 日間ほぼ不稼働と判明・週報 9/6 の遅延提示**

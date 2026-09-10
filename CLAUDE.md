@@ -141,6 +141,9 @@ note が無い状態は動画が嘘をついていることになる。導線は
 - **成長の自動化は本番の後（2026-09-06 ユーザー指示・絶対）**: 回顧・camera-lab・yoko-lab は本番ラッパーの終端から鎖で起動
   （朝 demo→retro→camera-lab／昼 midday→yoko-lab）。単独タスクは保険トリガーのみ。各ラボは同日ガード＋budget-governor ゲート。
   本番より先に 5h 窓を食う配置は作らない（詳細は memory growth-after-production）
+- **成長の軽量化（2026-09-10 ユーザー指示「60% で止まるのはもったいない・軽くして 1 週間続く設計に」）**: ガバナーは台帳を Fable 換算で読む
+  （Opus ÷2.7）・成長ラインは日次アローワンス 3.5%/日（retro＋ラボ 1 本）・lean が日常で normal は回顧だけ週 1 回・heavy は強制時のみ・
+  ラボは交互（camera 月水金／yoko 火木土・日曜なし）。正本は content-factory/improvements/GROWTH-HARNESS-PLAN.md §6（9/11 朝が検証日）
 - 梯子の現状（2026-09-06 実測）: judgment `claude-fable-5-1` → `claude-opus-5` → …／production `claude-opus-5` → `opus` → `claude-fable-5-1` → `sonnet`
 - 検証系の自動化はトークン使ってOK（後の効率化リターンが大きい）
 
