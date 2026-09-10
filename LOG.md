@@ -38,6 +38,25 @@
 - **翌運転の確認点（9/11 金）**: thumb-research の governor 行に `(Fable-eq)`＋`growth today`・END exit=0／**camera-lab が exit=0 で実走**（9/7 以来初）／yoko-lab は exit=77／09:30 shop exit=0。
   9/12（土）は yoko-lab 実走。CLAUDE.md・GROWTH-HARNESS-PLAN §6・memory に反映
 
+**（夜3・サムネ確定）ユーザー自作の見本3枚で「三段ロゴ型」に決定 — 朝昼晩の全動画に適用・エンジン/ロゴ台帳/RUNBOOK/検証ゲートまで実装**
+
+- **ユーザー指示**: 見本 3 枚（Claude「やらないと AI がバカになる？／3選」・OpenAI「最強AI登場／GPT6」・NVIDIA「世界1位!?／徹底解説」）を提示し
+  「共通しているのは **3 段階でロゴを絶対入れている**ところ。これは絶対徹底してほしい」「朝昼晩の動画、全部をこういう形式に」。地は毎回変えてよい
+  （単色でも紙のコラージュでも写真でも）。企業ロゴは Web から公式配布物を引いて使ってよい
+- **型（正本 `banners/THUMB-CRAFT.md` §5）**: ①公式ロゴ＝主役・面積最大 ②引きの一言（「／」改行・【語】で 1 語だけブランド色）③名詞・落ち（3選/GPT6/徹底解説/題材名＝最大の字）。
+  要素はこの 3 つだけ。**9/6 の暫定運用（Grok 10/11/13・`--logo none`）は終了**。Grok は写真地を作る時だけ使う
+- **実装**: `banners/thumb.mjs` に `s-3tier`（9:16）/`yt-3tier`（16:9）／`banners/brands.json`（21 社のブランド色・公式ロゴ所在・別名）／
+  公式ワードマーク SVG を Wikimedia Commons から取得し `banners/assets/logos/wordmark/`＋`MANIFEST.json`（出所・licence）に保存、濃い地用の白版も生成／
+  実行口は `scripts/make-3tier-thumb.mjs <slug> --media short|yt --logo --l2 --l3 [--bg] [--font3]`（check-layout→公称サイズへ縮小→縮小テスト→型ログ style=`3tier`）／
+  `make-short-thumb.mjs` は props.thumb に `logo/l2/l3` があれば自動委譲（旧 a1/b1 は保険で存続）／`verify-yoko-thumb.mjs`・`kiso/verify-kiso.mjs` が三段形式を受理
+- **途中で直した実バグ 2 件**: ①`spans`（【語】差し色）の素の span が和文フォントの ascent/descent で測られ check-layout が「16% 重なり」と誤判定 →
+  `inline-block`＋`line-height:1` で実測どおりに ②`⁉`（U+2049）を半角幅で数えて右へはみ出し → `widthFactor` の全角判定に追加
+- **同セッション検証**: エンジン全型 **34/34 PASS**（回帰）／見本 3 枚の再現＋朝 demo（Claude Code 暗地）＋kiso 写真地（`bg.png` の平均輝度から自動で白文字）
+  ＋長尺 16:9 の計 6 枚を実生成しユーザーへ送付／`verify-yoko-thumb` が 3tier で PASS（1280x720 も一致）／`verify-kiso` は三段=PASS・旧形式=PASS・l3 欠落=FAIL の 3 経路／
+  旧形式ジョブは従来どおり `s-kiso-a`／型ログにテスト痕跡なし。写真地は 3.5MB だが `setThumbnail` が 2MB 超を JPEG 再圧縮する既存経路で吸収
+- **回答済み**: ASK-HUMAN **Q-009**（提案レンダラーの承認待ち）と Notion 運営メモ **Q-013** を「不採用・三段ロゴ型で確定」で回答しクローズ
+- **翌運転の確認点（9/11）**: 06:00 demo・12:00 長尺・18:00 kiso/brief の各 thumb.png が三段ロゴ型で出るか（型ログ style=`3tier`・`_thumb/` の縮小テスト）
+
 ## 2026-09-09 夜
 
 **恒久策① シャットダウン抑止の常駐を投入（ユーザーGO）・9/7〜9/9 の無人運転突合・ラボは予算ゲートで 3 日間ほぼ不稼働と判明・週報 9/6 の遅延提示**
