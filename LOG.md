@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-09-10 夜
+
+**Claude ログインの確認・Supabase 2 案件が世界の DNS から消えている実態（TORU 本番 DB も）・無人運転 9/10 の突合・ChatGPT 向け引き継ぎ書**
+
+- **Claude Code のログイン**: `claude auth status` は loggedIn=true（claude.ai・max）。資格情報ファイルの有効期限は 9/11 02:00 で
+  refresh token あり＝18:00 の brief ラインが自動更新した痕跡。**無人ラインへの影響なし**。ユーザーが見た「切れた」表示は別窓の可能性
+- **Supabase（P0・要ユーザー操作）**: `haydjnybdqwuzibljdqk.supabase.co`（**TORU 本番 DB**・toru-app.vercel.app のバンドルに焼き込み済み）と
+  `akizfkdzlcqsvmcuacfl.supabase.co`（ホスト型スタジオ）の両方が Google/Cloudflare の DoH でも **NXDOMAIN**＝この PC の問題ではなくホスト側で消えている。
+  TORU の keep-alive（daily-brief 内 ping）は **8/26 以降毎日 ENOTFOUND**、スタジオは 8/24 のログから fetch failed。9/2 の LOG に
+  「ダッシュボードで復旧＋.env 差し替え要」と書いたまま未着手。影響: TORU 本番のログイン/DB が死んでいる・スタジオへの動画/記事アップが
+  2 週間以上未反映（note-finish-followup に 14 件滞留・try 4/30）。**対処はユーザーの Supabase ダッシュボードで「一時停止→復元」か再作成**（Claude はアクセス不可）
+- **無人運転 9/10（証拠＝各ログの END 行）**: demo #67 scan-table exit=0（46 分・fallback なし）／thumb-research（回顧）**mode=lean で完走 exit=0**
+  ＝9/9 のガバナー再較正の実運転検証 PASS／**shop 09:47 exit=0**（9/7〜9/9 の 3 日死から復帰）／midday ep28 exit=0（69 分）／brief 18:31 exit=0（32 分）／
+  note 2 本公開（daily 13:03・news 18:18）。**タグ修正の実運転検証 PASS**（18:00 の公開後実ページ「3 個 #AI #ChatGPT #Claude」＝指定どおり）。
+  camera-lab 07:09/07:45・yoko-lab 13:08/14:30 はいずれも exit=75（予算 defer）＝camera-lab は 9/7 から 4 日間ゼロ稼働。
+  18:40 NoteRetry は PC スリープで飛び、19:51 の起動時に発火（followup は Supabase 起因で全滅・verify-article の FAIL 2 件は別問題）
+- **枠**: 19:58 実測 7d **65%**（リセット 9/13 08:00）・5h 14%。ペース線 37%。本番だけで +12%/日→土曜夜に 90% 前後。ガバナーは 7d 60% 超で
+  成長ラインを自動 defer するので、日曜リセットまで成長系は止まる（意図どおり）。対話は軽めに
+- **引き継ぎ書**: `content-factory/docs/HANDOFF-YOUTUBE-AUTOMATION-2026-09-10.md`（ChatGPT に画像生成を頼むための全体像＋サムネ仕様＋禁止事項＋依頼形）
+
 ## 2026-09-09 夜
 
 **恒久策① シャットダウン抑止の常駐を投入（ユーザーGO）・9/7〜9/9 の無人運転突合・ラボは予算ゲートで 3 日間ほぼ不稼働と判明・週報 9/6 の遅延提示**
