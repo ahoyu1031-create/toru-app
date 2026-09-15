@@ -33,6 +33,20 @@
   Grok Imagine Image 2.0 $0.04（1K low）〜$0.08（2K medium）。GPT Image 2.5（flare／sunburst・9/8 API 公開）はトークン課金で 1024² の目安 low $0.006／medium $0.053／high $0.211。
   工場の消費は直近 7 日で bg 11＋note カバー 15＋長尺サムネ 8 ≒ 5 枚／日 ≒ 150〜200 枚／月 → Grok 約 $10〜16／月、GPT medium 約 $8〜12／月、GPT high 約 $30〜40／月。
   **推奨: 日次の写真地は Grok 継続、note カバーと look proof で GPT Image 2.5 Flare（medium）を 5 枚ずつ A/B（$1 未満）→ 勝った方に寄せる**
+- **ユーザー第 3 便（22 時台）への対応**:
+  - ナレ v2/v3「遅くてイライラする・いつもと違う」→ 原因は私がテンポを +30%→+12% に落としたこと（目的は途切れの解消で、速度は別のつまみ）。
+    **v4＝1本どり＋テンポ +30%（従来）＋行間 0.36 秒**を生成（48.6 秒・発話 46.0 秒・空白 2.7 秒）→ `_listen-2026-09-14-narration/3-v4-ippondori-hayai.mp4`
+  - 「PC では綺麗だがモバイルで左右が見切れる・モバイル基準に」→ `Demo2.tsx` に `safe` prop（録画ペインを左 108〜右 972・下端 1500 のスマホ安全帯に収める）。
+    「指示文の黄色い囲いが多すぎて読めない」→ DEMO2-RUNBOOK §4 に「見せる指示文は 3 行・条件は work/rules.md に分離」。全部入りサンプル
+    （safe＋S1 カメラ＋S2 録画＋v4 ナレ）を `demo2-2026-09-14-fuseji-s1cam-s2rec` でレンダ
+  - 「ストックと Excel 風カットが 2 カットずつ交互＝繰り返し多い・1 回ずつ・30〜40 秒でいい」「初心者でも使いたくなる簡単ですごい題材を」→ DEMO2-RUNBOOK §1/§4 に方針、
+    ネタ案 10 を Notion「朝の実演」ページに（キュー投入は GO 後）
+  - 「ロゴ半分を絶対ルール化」→ `make-3tier-thumb.mjs --media yt` の既定を **yt-half** に切替（style=half・verify-yoko-thumb 対応・THUMB-CRAFT §5.1）。
+    **初運転＝9/16 12:00 の長尺**。試験生成 `output/_samples/thumb-half/ep33-test/thumb.png` は見本どおり
+  - 「GPT Image 2.5 を API で叩くなら」→ `scripts/gpt-image.mjs`（grok-thumb と同じ呼び口・generations／edits・使用台帳）。
+    初回実測: `gpt-image-2.5-flare` 1024×1536 medium 14.7 秒・usage 183 in／343 out トークン（$30/M なら約 $0.01・請求で要確認）。denki 回の背景プロンプトで
+    データセンターの写真地が Grok と同等以上の質で出た（`output/_qa/gpt-image-test-1-denki-bg.png`）
+  - ポケモン風バトル比較の 1 分サンプル（BGM 込み）をサブエージェントで制作中（任天堂の名前・素材・UI は使わず自作の戦闘 UI）
 
 ## 2026-09-14 夜
 
