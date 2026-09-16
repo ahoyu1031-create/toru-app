@@ -25,6 +25,18 @@
   **GPT Image 2.5 で一枚絵テスト 3 枚**（`output/_samples/thumb-gptimage-2026-09-16/`・medium 16:9・各 12〜14 秒・計約 $0.2）: ①EP34 ロゴ半分＝公式マークを参照画像で渡す ②同・参照なし ③対戦カード＝OpenAI＋Claude の公式マーク 2 枚を参照。
   結果: **日本語の文字は 3 枚とも 1 字も崩れず**（質問で止まる？／Claude 質問役／予行演習／どっちが賢い？）。参照ありのロゴは形が保たれる（③は公開級）。参照なし（②）は Claude マークが手描き風の近似＝規範違反リスク＝**ロゴは必ず参照画像で渡す**。①は「タイル無し」と書かなかったのでアプリタイル形に寄った（プロンプトで直せる）。
   → 提案（GO 待ち）: `gpt-thumb.mjs <slug> --style half|vs --logo <key> --l1/--l2/--l3` を新設（プロンプトはテンプレから機械生成・公式ロゴは --ref・246px 縮小まで出す・vision 検品は昼の Claude が 1 字ずつ）→ YOKO-RUNBOOK 段階 7 と midday-longform.ps1 の**古いサムネ指示（8/26 全廃の thumb.mjs 型を選べと書いたまま）**を差し替え → 初運転検証 9/17 12:00。ショートは長尺が緑になってから
+- **サムネ製法の切替＝本組み完了（22 時台・ユーザー GO「全部任せるのがいい・Grok はやめてそっちで」）**: 追加テスト 12 枚（対戦 v2 ×2・ロゴ半分 v2 ×3・Claude 地 3 案＋NVIDIA・最背面レイヤー 3 枚・ショート 3 ライン）。
+  ユーザーの選択: 対戦＝`4-battle-v2-industrial`（斜体工業書体・上の一言なし）／単独回＝`10-claude-dark-matte`・`12-nvidia-graphite` の「濃色マット地＋ロゴと文字を物体として影」／
+  白黒ロゴ（OpenAI）は白紙可・色ロゴは白地だと浮く→**地はブランド色から決める**／単色は面白みが欠ける→**最背面に公式ワードマークの透かし（5%）・素材・光を毎回 1 つ以上**（見本の Canva 手法を翻訳・`13/14/15-*backlayer`）。
+  ショート 3 ライン見本 `s1-demo-claude-code`・`s2-kiso-mistral`・`s3-brief-nvidia`（縦・下端 18% 空け・日本語無崩れ。「／」は文字として描かれるので行ごとに書く）。
+  **費用実測**: 出力 343 トークン／枚・参照 1 枚 400 入力トークン → 公式単価（出力 $30/M・画像入力 $8/M）で **1 枚 $0.012〜0.02**、今夜 20 枚で約 $0.35。OpenAI の自動リロードはユーザーがオン（残高 $39.63・$10 で $40・月上限 $40）。
+  **実装（分身・content-factory `6503ce0`）**: `scripts/gpt-thumb.mjs`（single|vs・yt|short・brands.json から地とアクセント・公式ロゴ＋ワードマークを --ref・直近 2 本と同じ地×素材は避ける・
+  `thumb-prompt.txt` を毎回残す・246px 縮小・型ログ gpt-single/gpt-vs・exit 2 で make-3tier-thumb へ退避）・テンプレ `banners/gpt-thumb/{single-yt,single-short,vs-yt}.txt`・`svg2png.mjs`・
+  `verify-yoko-thumb` に gpt-* 免除・YOKO-RUNBOOK 段階 7 を差し替え・**midday-longform.ps1 の古いサムネ指示（8/26 全廃の thumb.mjs 型を選べ）を撤去**。実走 2 枚 PASS（`output/_samples/gpt-thumb-test/`）。
+  **初運転検証＝9/17 12:00**（`midday-20260917.log` に gpt-thumb・`output/<slug>/thumb-prompt.txt`・verify PASS）。緑なら **ショート 3 ラインを 9/17 18:00 から切替**（make-short-thumb 側は未着手・Grok の kiso 地と note カバーも未着手）
+- **バトル比較長尺の構成正本 v0.1**（ユーザー「1 分では収まらない・5〜8 分・OP/ED とトランジション・対戦形式の説明・リザルトは公式ソース明示・細かく構成を」）: `content-factory/series/BATTLE-FORMAT.md`。
+  本編＝戦闘画面・前後＝机の上（端末に寄る／引くで接続）・HP はゲーム演出で記録は API 実ログ・採点表は実行前固定（3 観点×0〜2・差×10）・出典は公式ドメインのみ・非バッシング lint・推奨 8 分版 5 課題。
+  Notion「長尺動画　比較の時」に要点転記。**GO 待ち 3 点**: 初回 6 分→8 分／判定者方式（採点表＋客観優先＋2 社クロス）／机の端末で接続
 - **残り**: 今夜 20:30 公開の brief wlQe2Pd8owQ（18:45 の夜掃引でコマ選び済み・公開前は「変更」がフレーム選択しか出ないので直せない）→ 公開後にこのセッションで直す（→ 20:31 復旧済み・上記）／20:55 の保険タスクが無人検証。
   明日 08:00 の実演 z9OnRtDTcfI も同じ（08:25 の保険が直す＝**初運転検証**）。9/17 12:00 の深掘り J_GyDXaj8Wk はコマ選び未適用＝API のまま出るはず（12:25 で確認）
 - DEMO2-RUNBOOK §8・HANDOFF・メモリ yt-frame-pick・Notion 運営メモ（9/14「候補コマ選びをやめる」→ 実装済）を更新
