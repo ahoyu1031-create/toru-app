@@ -4,6 +4,28 @@
 
 ---
 
+## 2026-09-16 夜
+
+**ショート棚サムネ「今日はできてない」（ユーザー報告）→ 原因＝朝掃引のコマ選びが API の棚サムネを消していた・恒久修正＋3 本復旧**
+
+- **症状**: 9/16 に公開された 3 本（実演 n7YnmJQadu4・深掘り biNmUQGTa90・昨夜の brief c7TIL3RSkt0）のショートタブ画像が三段ロゴ型ではなく本編のコマ。
+  ショートタブの HTML が参照する画像＝ `oar2/oar1/oar3.jpg`（コマ）・`sardefault.jpg`（自作サムネ）は 404。対照群（9/14 に Studio でカスタムアップした denki・AGI）は sardefault 200
+- **原因（確定）**: `yt-pick-frame.mjs --sweep`（朝/夜ラッパー末尾のコマ選び）が 9/16 06:35 に 3 本へ candidate 1 を適用 → **Studio でコマを選ぶと API thumbnails.set で付いた棚サムネ（sardefault）が消える**。
+  台帳の cand=1 の動画（9/9〜9/15 の 16 本）は全部 sardefault 404・custom の 2 本だけ 200＝完全一致。9/15 の「コマ選びは oar2 しか変えず実害なし」は誤りだった。
+  「先日はできてた」＝9/15 時点では brief が未掃引で API のサムネが出ていた
+- **復旧**: API の再設定（`yt-set-thumb.mjs`）では戻らない（c7TIL3RSkt0・7 分待って 404）。Studio のカスタムアップ（`yt-set-shorts-thumb.mjs`）で 3 本とも **保存後 10〜60 秒で sardefault 200**・ショートタブ HTML が sardefault を参照するのを確認。
+  9/15〜16 の「保存後もカードの画像が変わっていない（未反映）」は偽陰性（Studio のカードは API の同じ画像を出す）
+- **恒久修正（同セッションで実走検証）**: ①`morning-demo.ps1`／`daily-brief.ps1` から yt-pick-frame の掃引を撤去（コマ選びは手動専用・`targets()` に thumbSet ガード）
+  ②`yt-set-shorts-thumb.mjs --sweep`＝公開済みで sardefault 404 の動画だけ対象・3 点メニューの「ファイルをアップロード」だけを使う（他の「変更」を掴んでコマ選びダイアログに落ちる誤判定を修正）・
+  裏取りは sardefault 200（最大 90 秒）・公開前は API に任せて飛ばす・noUpload は公開前には書かない ③保険タスク TORU-ShortsThumb を公開後の 08:25/12:25/20:55 へ（WakeToRun 維持）
+  ④実走: `--sweep` が c7TIL3RSkt0・biNmUQGTa90 を `saved + verified (sardefault.jpg 200 after 10s)`・n7YnmJQadu4 は `棚サムネ出ている` で exit 0
+- **残り**: 今夜 20:30 公開の brief wlQe2Pd8owQ（18:45 の夜掃引でコマ選び済み・公開前は「変更」がフレーム選択しか出ないので直せない）→ 公開後にこのセッションで直す／20:55 の保険タスクが無人検証。
+  明日 08:00 の実演 z9OnRtDTcfI も同じ（08:25 の保険が直す＝**初運転検証**）。9/17 12:00 の深掘り J_GyDXaj8Wk はコマ選び未適用＝API のまま出るはず（12:25 で確認）
+- DEMO2-RUNBOOK §8・HANDOFF・メモリ yt-frame-pick・Notion 運営メモ（9/14「候補コマ選びをやめる」→ 実装済）を更新
+- **冒頭の定例**: note 未公開 13 件（shop の有料 note・変化なし）／ASK-HUMAN Q-010〜Q-020 未回答（Notion 転記済み）／Notion 運営メモの未読＝Q-009（look proof 題材）のみ・協議中は 9/13-14 の長尺 2 件と 9/6 の 5 件
+
+---
+
 ## 2026-09-15 夜
 
 **長尺サムネ「ロゴ半分型」をユーザー見本からエンジン化・棚サムネの実効性が判明（API だけで棚に出ている）・深掘り 2 回目も緑**
