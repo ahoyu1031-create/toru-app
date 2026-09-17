@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-09-17 夜
+
+**ユーザー「今夜の brief の GPT サムネが真っ黒。昨日のショートのこだわりは実装されてる？ 今日から Image 2.5 で動いてる？」→ 長尺は緑・ショートは未切替だったので今夜切替**
+
+- **昼の長尺（初運転）＝緑**: `2026-09-17-yoko-ep35-kikiyaku` は型ログ `gpt-single`（墨マット・Claude ワードマーク透かし）・`midday-20260917.log` exit=0。無人で GPT Image 2.5 が動いた
+- **ショート 3 本は旧エンジン（3tier）のまま**（demo／brief／kiso）。9/16 深夜に「昼が緑なら 18:00 から切替」と書いて、バトル制作に入って**忘れていた**。brief の黒地＝三段エンジンの openai 暗色地
+- **今夜の切替**: `make-short-thumb.mjs`（demo／brief）と `scripts/kiso/assemble-deep.mjs`（kiso）が `gpt-thumb --media short --style single` に委ねる（引きの「／」「【】」は gpt-thumb が読み替え・API 失敗時だけ三段エンジンへ退避）。
+  KISO／DAILY-BRIEF／DEMO2 の RUNBOOK を更新。実走: 明日 08:00 の実演 `tLghpd-G-PE`（Claude Code・墨の刷毛目）と 12:00 の深掘り `l8g-sS1JhRs`（Google G を物体化・紺カーボン）を作り直して API 再設定済み。
+  **無人の初運転検証＝9/18 `morning-demo-20260918.log` と `daily-brief-20260918.log` に gpt-thumb の行・`output/<slug>/thumb-prompt.txt`**。make-short-thumb の props 探索に `deep-props.json` を追加（kiso の手動作り直しが落ちていた）
+- **棚サムネ保険の初運転＝緑だが前提を訂正**: 08:25／12:25／20:55 とも `saved + verified` で復旧。ただしコマ選びを受けていない `J_GyDXaj8Wk`・`g7y_h17DtPI` も公開時点で sardefault 404
+  ＝ **API の thumbnails.set だけでは棚に出ない。棚は Studio のカスタムアップだけ**（9/15 の結論は保険の偽陰性を見誤ったもの）。保険タスクを **08:02／08:25／12:02／12:25／20:32／20:55** の 6 回に（公開 2 分後に上げる）。
+  `morning-demo-20260917.log` にコマ選び掃引は無し（撤去が効いている）
+- content-factory `8ad68e1`
+
+---
+
 ## 2026-09-16 夜
 
 **ショート棚サムネ「今日はできてない」（ユーザー報告）→ 原因＝朝掃引のコマ選びが API の棚サムネを消していた・恒久修正＋3 本復旧**
