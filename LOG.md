@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-09-20 夕方（日）
+
+**無人バトルラインを実装（スイッチは切ったまま）・第 2 回「Gemini 登場」を新しい道具で通した（オーナー「もう書いちゃっていいよ…やってしまおうよ」・18:00 の夜ラインに干渉しないよう 17:40 で重い処理を止める）**
+
+- **昼ラッパー `scripts/midday-longform.ps1` に route=battle**: `config/battle-line.json` の `enabled` が true の時だけ、長尺枠を解説⇄バトルで 1 日おきに交互（live-dates の最後の slug に `-battle` があるかで判定）。作りかけのバトル（`output/_logs/battle-flow-state.json`）は同じ回を再開。データ段階が 13:00 までに立たない時だけ `battle-fallback-<日付>.json` を見て解説を 1 本だけ作る（二重制作なし）。
+  dry-run 用の擬似フラグ（`-SimLastSlug -SimDaysSince -SimBattleOn -SimBattleActive`・DryRun の時だけ効く）で **7 通りのルートを実走確認**。**スイッチは false で出荷＝今の動きは 1 ミリも変わらない**（実状態の dry-run＝route=articles を確認）。
+- **`BATTLE-RUNBOOK.md`（新設）**: 段階（plan → facts → logos → experiment → judge → explain → script → assemble → qa → thumbnail → meta → upload → note-draft）・flow-state の形・オーナーの掟 10 個・公式データの掟・切り替えの例外・止め方。`series/battle-queue.md`（新設）＝対戦の順番（第 2 回 Gemini vs GPT-6 → 第 3 回 Claude vs Gemini → Grok → 軽量級 → 公式データだけの回 → NVIDIA vs AMD）。
+- **混成ラウンド**: `build-draft4.mjs` が `official.json` を読み、実測（api）と公式データ（official）を 1 本の中で混ぜる。片側だけの指標・出典 URL 無しは機械で止まる。出荷済みの第 1 回で回帰＝scenes 完全一致。器 `YokoBattle4` に official の場面（fork・3fb05da）。`assemble` の最短 5.0 秒。
+- **道具の一般化（fork・984e0d1）**: run-experiment に xAI と usage の記録／judge・explain は config.models の順で左右を決める（どの 2 選手でも回る）／`scripts/battle/prep-logos.mjs`・`scripts/battle/make-note.mjs` 新設。make-note の動画リンクは無料部分へ移した。
+- **gpt-thumb**: vs を `--media note` でも使える（バトル note のカバー）。左 Claude（朱）× 右 白黒ブランド（既定の朱）で両陣営が同色になる不具合を修正（既定色の側を反対色へ）。
+- **昼ラッパーの日付判定を修正（3feedb4）**: live-dates に未来の日付（2 日以上先の予約）が入ると、間の日の長尺が記事ルートに落ちる罠があった → 「今日までの最後の 1 本」で判定。予約後に実台帳で 9/21 articles／9/22 longform／9/23 articles／9/24 longform を dry-run 確認。**翌運転の検証＝9/21・9/22 の昼ログ**。
+- **第 2 回を公開予約: https://youtu.be/Kdk_oDsfHdk ・9/23（水・祝）20:00**・サムネ gpt-vs（青の Gemini × 朱の GPT-6）。QA 静止画 28 枚を確認し、3 点を直して出した（選手窓のコンテキスト長の書き方を左右でそろえた／長いモデル ID の折り返し／窓の後ろからマークが半端にのぞく → 窓の間はマークを消す）。
+- **第 2 回 `output/2026-09-23-yoko-battle02-gemini-vs-gpt6`**（3 分 28 秒）: Gemini 3.1 Pro（gemini-3.1-pro-preview）vs GPT-6 Astra。実測 2（資料の抜き出し・日程調整のメール）＋公式 2（API の値段・最大出力）。物差しと指示文は**実行前に commit（8b4f15a）**。
+  結果: 実測 2 つは中身が互角で速さは ChatGPT（3.8 秒 vs 7.3 秒／4.8 秒 vs 11.7 秒）・値段は Gemini（$2 vs $10）・最大出力は ChatGPT（128,000 vs 65,536）＝ ChatGPT 3／Gemini 1。コンテキスト長は 0.14% 差なので勝負の項目から外した。
+  **API 代の実測: 1 本あたり 0.5 ドル未満**（実測 2 ＋判定＋説明＋サムネ 1 枚）。
+- **残り**: スイッチを入れるのは見守りつきの 1 回（この第 2 回）が公開まで緑になってから。make-note の official 分岐は未実行（18:00 の note 公開タスクが下書きを拾うのを避けた）。Grok は枠なしの公式シンボルが手元に無い（prep-logos が警告）。
+
 ## 2026-09-20 昼（日）
 
 **今週のタスク整理・バトル動画 第 1 回を公開予約（オーナー「もう出していってもいい」）**
