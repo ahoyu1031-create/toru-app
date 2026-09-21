@@ -10,7 +10,7 @@
 
 - **突合**: 9/20 夜の残り（19:00 skip→自動スリープ・20:32 棚サムネ保険が brief を `saved + verified`・21:45 週次レビュー exit=0 report=True・1,139 秒）／9/21 実演 exit=0・**昼＝route=articles exit=0（昼ラッパーを触った翌運転の検証 1 日目＝緑）**・shop・夜ライン exit=0。9/20 18:43 のスリープは `manual-sleep.log` に記録あり。バトル第 1 回は 20:00 公開。
 - **対戦カード**: vs の既定を各社の世界に（OpenAI＝白い石と紙・Claude＝テラコッタの画用紙・Gemini＝青〜紫〜桃のオーロラ・Grok＝黒い宇宙 ほか 6 社）。明るい世界の側は文字面を濃色・白の隣は金の衝突光・Grok は板を外して図形だけ。旧来の赤×青は `--vs-ground team`。content-factory cffd72e。
-  見本 3 枚 `output/_samples/vs-brand-worlds/`（Gemini 対 GPT-6／Fable 5.1 対 Gemini／Grok 対 GPT-6）。第 2 回（9/23 公開）のサムネ差し替えはオーナーの GO 待ち。
+  見本 3 枚 `output/_samples/vs-brand-worlds/`（Gemini 対 GPT-6／Fable 5.1 対 Gemini／Grok 対 GPT-6）。**第 2 回（9/23 公開・Kdk_oDsfHdk）のサムネはオーナー GO で差し替え済み**（yt-set-thumb・YouTube 側の署名つき URL から実画像を落として新しい絵を目視確認・旧版は `thumb-v1-team.png` に退避）。
 - **週報（9/20 生成）をパネル提示**: 推奨＝brief の章順を営業日は市場先出しに固定。GO 待ち。
 
 ## 2026-09-20 夜（日）
