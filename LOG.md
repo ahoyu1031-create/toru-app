@@ -19,6 +19,12 @@
 - **Gumroad の訂正**: 私が朝の返事と Notion カードに書いた「Gumroad 未公開 14」は誤り。台帳 SHOP-PLAN の「残: Publish」が 9/6 の UI 自動化（gumroad-ui.mjs --attach --publish）以降も残っていたのを読んだ。実態＝**24 点全部公開済み（公開 URL 200）・累計売上 0 件**。台帳の 14 行を「公開済」に直し、Notion カードも訂正。
 - **オーナー「改善の Claude 側の意見を追加してほしい」→ 運営メモに改善カード 8 枚**（brief 章順固定／深掘りの切替コマ／実演の実測テロップ＝提案 1 つだけ／note の穴 2 つ／商品は Kindle＋新規週 1／Supabase 向け呼び出しの停止＝復元の話ではない／バトル無人スイッチ ON の条件／登録者 74 人の道筋）。各カード＝事実・意見・変える点 1 つ・測り方・聞きたいこと。
 - 買い物メモに「品目」（1 行 1 品）・本のメモを「本の一文／自分の考え」に（オーナー依頼）。週報の kindOf を直した（kiso が 8 週間 other・battle を yoko と分ける・183fbea）。
+- **オーナー GO（1・3・4・5・6・7）を 1 度に配線（content-factory c68ae56・3154d68）**:
+  ①brief 章順＝営業日は市場先出しに固定（DAILY-BRIEF-RUNBOOK・検証 9/22 18:00）③実演の時間テロップは rec.mp4 の面だけ＝assemble-demo2 が機械で止める（検証 9/23 06:00）
+  ④note の後処理 {NOTE_URL} は同じ日付の記事にだけ入る・待ちは試行回数に数えない・TORU-NoteRetry に WakeToRun ⑥スタジオ同期停止＝`config/studio-sync.json` false＋`studio-switch.mjs`（4 本の入口で exit 0・夜ラッパーは retention/keep-alive を飛ばす・後処理 75 件を退避。検証 9/22 18:00 のログ）
+  ⑦バトル無人スイッチ ON（dry-run: 9/22 longform・9/23 articles・9/24 longform・**最初の無人バトル 9/25**）＋BATTLE-RUNBOOK の note-draft をコマンドで明記＋第 2 回の note を下書き（make-note の official 分岐を実走・238 行・表紙 vs 別カット）→ **9/23 18:05 に一回限りタスク TORU-Once-Battle02Note が shop 枠で公開し概要欄を差し替える**（昼の daily 枠と衝突しない）
+  ⑤Kindle: `scripts/shop/kdp-pack.mjs` 新設（原稿 HTML・表紙 1600×2560 を HTML で組んで描画・貼る文・手順）。第 1 冊 `products/ai-starter-handbook-en/kdp/`。アップロードは人の手（KDP に API 無し・ブラウザ自動化は規約リスク）
+  ②深掘りの切替コマは説明待ち（未着手）⑧登録者は「ラインを減らす」ではない（説明）。
 - **YouTube ショッピング アフィリエイト（オーナーの問い）**: 日本は 2026-02-19 開始（楽天市場が初の提携）。条件＝YouTube パートナー プログラム加入（登録者 1,000 人＋4,000 時間 or ショート 1,000 万回／90 日）。**チャンネルは登録者 74 人**なので今は対象外。タグ付けできるのは提携ストアの商品で、SaaS の登録・課金のようなデジタル商品は公式の記述に無い。
 
 ## 2026-09-21 夜（月・祝）
