@@ -23,6 +23,13 @@
   実測: `--check` 53 本 180 秒・未読 0・新着 0（9/11 の記事はオーナーの返信を返信済みと判定）。ゲート: 違反文（感嘆符・定型お礼）で exit=3。`--post-approved --dry`＝0 枚。**直した落とし穴**: node が fetch 直後の `process.exit()` で `UV_HANDLE_CLOSING` の assert で落ちて終了コードが壊れる（notion.mjs --db でも同じ症状）→ exitCode 方式に。ラッパー全体の通し（post→check）＝23:03:36→23:06:38 の 3 分 2 秒・post-approved exit=0・check exit=0 new=0・END exit=0（`note-comments-20260928.log`）。
   GO なら `growth-daily-notion.ps1` の末尾に 1 行（21:30 の鎖の最後・約 3 分）→ 翌晩 `note-comments-<日付>.log` で検証。
 - **オーナーの追加 3 件（9/28 23 時）**: ①**人狼動画の実物**（ラクルゥ「最強AIたちに人狼やらせよう！」8/2・13:39・**37 万再生／登録 859**）＝AI VTuber 2 人の実況＋AI の発言は API の文をそのまま画面に・50 試合中 2 試合＋集計（Claude 33 勝／$77 で最遅・Gemini 最多発言・GPT 最短・DeepSeek 20 試合で初日処刑）・偽名制。持ち込める要素と「同じ空間」演出（丸テーブル 5 席・声は無料ローカル TTS、ElevenLabs は 1 日 1,250 字に収まらない）を「5 体のゲーム 3 案」カードに追記。枠は朝の実演ではなく昼の長尺、盤の録画には DEMO2 の技術を借りる。②**アカウント名に AI の語**: 今は YouTube「aoki」（@aoki-1031・83 人）／note「aoki」（aoki_ai）。賛成・ただし aoki は残し、**推し「aoki AIラボ」**、「AI相談室」は質問に答える型が無い今は期待とずれる（コメント自動返信が回れば再検討）。**note の URL 名は変えない**（過去 72 本の概要欄リンクが切れる）。Notion に協議カード。
+- **オーナー GO（9/28 23 時「コメントの自動化は鎖に繋いでいい・名前も aoki AIラボで」）→ 配線と改名**:
+  ①`growth-daily-notion.ps1` の末尾に `note-comments.ps1` を接続（21:30 の鎖の最後）。手動で鎖を 1 回通した＝日報 23:15:36 exit=0・カードは同日ガードで skip・note コメント 23:15→23:18:58 exit=0 new=0。**翌運転の検証＝9/29 21:30 の `growth-daily-20260929.log` に `---- note comments ----` と `note-comments-20260929.log` の END exit=0**。
+  ②YouTube: Data API の channels.update は title を受け取っても変えない（200 で戻るが旧名のまま）→ Studio を `.yt-profile` で開いて名前欄を書き換え「公開」（`scripts/yt-channel-name-studio.mjs`）＝**読み直しで「aoki AIラボ」**。ハンドル @aoki-1031 は不変。
+  ③note: `/settings/profile` の `editNickname` を書き換え「保存」（`scripts/note-display-name.mjs`・PUT /api/v2/creators/aoki_ai 204）＝公開 API の nickname が「aoki AIラボ」・URL 名 aoki_ai は不変。
+- **オーナー「似たテイストで 1〜3 分の複数 API のサンプルを」→ 伝言ゲームの長尺サンプル**: 進行役はコード `scripts/game/telephone.mjs`（旗艦 4 席・事実 9 個の残存を機械で数える・発言はそのまま記録）。**結果＝1 回戦 80 字: 4 体とも 9/9／2 回戦 50 字: 4/9・消えた 5 つは全部 1 人目（GPT-6）の要約で、2〜4 人目は 1 つも減らさず**（消えたのは単価・数量・送料・支払い・件名＝お金の話）。API 代 2 回戦で約 $0.3。
+  器＝新合成 `YokoTable.tsx`（ドット絵の草原に紺の丸テーブル・奥の弧に席＝公式マークの額＋名札・発言中は金枠で持ち上げ・上の生成り窓に打鍵・中央に事実チップ 9 個＝消えると赤で打ち消し・下は会話ボックス）。`build-telephone-draft.mjs`（記録＋narration.json → scenes-draft）・`assemble-table.mjs`（tts→props→render→mix→QA・battle の v4 と同じテンポと BGM）。tsc OK。1 回目の QA で直した 3 点＝発言窓の 3 行目が切れる（32/40px・窓 250px）・冒頭の帯が席に被る（帯を上へ）・結果と ED で額と名札が窓の端から覗く（席を消す）。直した後の QA 5 枚（冒頭・元の指示・1 人目・結果・ED）＝切れ・被り・覗き無し。`final.mp4` 96.43 秒・−15.0 LUFS。
+  Notion「5 体のゲーム 3 案」カードに結果と見てほしい点 4 つを追記。公開はしない。
 
 ## 2026-09-27 朝（日）
 
