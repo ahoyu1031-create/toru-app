@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-09-29 夜（火）
+
+**バトル第 4 回（Grok vs ChatGPT・HChbvvkOgAA・20:00 公開）のサムネが平らな白地 → 公開 7 分前に差し替え・原因と再発防止（オーナー「レベル低すぎ・絶対に防いで」）**
+
+- **差し替え（19:51→19:53）**: `gpt-thumb --style vs` で作り直したら昼と同じく Grok の図形が別の形（結び目）に描かれた → `--style single --logo grok --l1 "安さか、速さか" --l2 "Grok vs ChatGPT" --l3 "AIバトル"`（参照 1 枚）で形が公式どおりの一枚絵＝verify PASS → 新設 `scripts/yt-set-thumb.mjs` で 19:53:46 に設定。元の平らな板と崩れた vs は `_thumb/thumb-flat-fallback.png`／`thumb-vs-fake-grok.png`。
+- **原因**: ①vs（参照 2 枚）では GPT Image が Grok の図形を OpenAI 風に描き換える（昼ラインが 4 回試して全滅・左右入替も同じ）②ラインは「ロゴは描かせない」を守って vs を捨てたが、**退避先を 9/10 以前の古い道具 `make-3tier-thumb`（白地に素の文字＝平らな組版）にした**③`verify-yoko-thumb` がその古い型（3tier/half）をまだ PASS にしていたので止まらず予約まで通った。ラインは質問を 1 行残したが出荷は止めなかった。
+- **再発防止（実装済）**: `verify-yoko-thumb.mjs`＝GPT Image の一枚絵（gpt-single／gpt-vs）だけ PASS・3tier/half は FAIL（upload が止まる）／`gpt-thumb.mjs`＝Grok 入りの vs は exit 3 で拒み single のコマンドを出す（`VS_SINGLE_ONLY`）／BATTLE-RUNBOOK thumbnail 段階＝Grok の回は最初から single・崩れた時の退避も single・平らな組版に絶対に落とさない・API が落ちていれば 3 回再試行→駄目なら ASK-HUMAN で止める。Notion に気づきカード（残る課題＝Grok の回だけ対戦カードが使えない → マーク抜きで描かせて本物の PNG を重ねる合成、GO なら 1 時間）。
+
 ## 2026-09-28 夜（月）
 
 **9/27〜9/28 の突合＝全部緑・#Shorts を題から外す・成長の結果を運営メモに毎日 1 枚・オーナーの 4 つの問いへの答えを Notion に**
