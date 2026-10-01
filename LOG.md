@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-10-01 夜（木）
+
+**18:00 の brief が私の編集ミスで即死 → 18:55 に直して 19:00 の救済運転で建て直し・YouTube 返信を投稿・冒頭ヒーロー型 GO・昼の深掘りに「ロゴ／グラフ／同じ数字の停止」を今夜入れる**
+
+- **事故**: 10/1 18:00 の TORU-DailyBrief が 1 秒で exit 1（ログ無し）。原因＝9/30 23:20 に私が `daily-brief.ps1` の DRAFT-ONLY プロンプト（単引用符の長文）へ `day's` と書き、引用符が閉じて構文エラー。1 回目の編集は ParseFile で検査したが、2 回目（hero への書き換え）の後に検査を飛ばした。18:53 に `-DryRun` で再現→語を直して ParseFile 0 件・`-File` 実走で START まで通ることを確認（DryRun は claude -p を呼ぶので即 kill）。**19:00:02 の救済運転が mode=Build で開始**（brief→note→kiso。公開は 20:00/20:30 の枠を script が決める）。再発防止＝メモリ [[windows-ps-gotchas]]「ラッパー編集のたびに ParseFile＋-DryRun」。
+- **YouTube 返信**: オーナー「Notion に書いてあった。送信していい」→ 18:51 に `--post-approved` で投稿（ヌッキーふうさん・46 字）。カードは実装済・台帳 posted。今夜 21:30 の初の無人運転は「投稿 0・新着 0」になる見込み。
+- **冒頭ヒーロー型（オーナー「だいぶいい感じ。これでやっていこう」）**: 初の本番＝今夜の救済運転の brief。**BGM はヒーローの冒頭が終わってから入れる**（オーナー案）→ `pipeline/05-assemble/assemble.mjs` に hookSeconds ぶんの遅れを入れる＝今夜の運転が終わってから編集（走っているフローに触れない）・明日 18:00 が検証。
+- **19:26 救済運転の brief が完成＝冒頭ヒーロー型の初の本番**: hook.style hero・`brief/2026-10-01-daily-brief-hero.png`（ラインが自分で `brief-hero.mjs --world market` を回した＝金色の折れ線の相場の世界）・topic「日経が2203円高」・voice-intro「10月1日、木曜日。今日は、日経が動きました。」・hookSeconds 3.5。1.6 秒目のフレーム＝縦書き「十月一日 木曜日」＋明朝の一言＋白罫で、サンプルと同じ見た目。
+- **BGM は冒頭の後から（オーナー案・採用）**: `pipeline/05-assemble/assemble.mjs` が body-props の hookSeconds ぶん `adelay` で BGM を遅らせ、本編の頭で 1 秒フェードイン（フェードアウトの開始も同じぶん前倒し）。今夜の brief のコピーで実走・BGM 単体で 0〜3.4 秒 −91 dB → 3.5 秒から −44 dB → −39 dB を確認。**検証＝10/2 18:00 の brief**。
+- **YouTube コメント返信を完全自動に（オーナー「完全自動化していい」）**: `config/yt-comments.json` autoPost=true ＝ 夜の運転で書いた返信をゲート通過後に即投稿し、運営メモに「自動投稿」の記録カード。失敗時だけ承認待ちカード。二重投稿ガード 3 段は共通。dry で auto:true を確認。**初の無人＝今夜 21:30**（新着 0 なら何も起きない）。
+- **話し合いの長尺サンプル（オーナー「5 人の声を揃えて話し合う 1 分」）**: `scripts/game/discuss.mjs`（進行役＝コード・4 席＝旗艦・議題「AI が勝手に契約を結んだら責任は誰に」・2 回戦・11 行・API 約 $0.2）＋席ごとの声 `config/voices.json`（進行役＝いつものナレ・GPT=Daniel・Claude=Brian・Gemini=Lily・Grok=Callum・DeepSeek=Sarah＝鍵待ち。ElevenLabs の鍵は voices_read 無しで一覧が取れず既製の id 直指定・日本語は読める）。器＝新合成 `YokoTalk.tsx`（MotionLabChat の見た目・話す席が光って寄る・gm は上中央の帯）＋`assemble-talk.mjs`。中身は 4 体とも「使った人や会社に責任」で一致＝声の確認用。
+- **昼の深掘り（オーナー「同じ数字をまだ出している。ロゴやグラフは対応しているのか。全然見受けない」）**: 9/28 の提案カード（重複の機械停止・非文字面 2 つ義務・logos／timeline 面）を GO 待ちにしたまま実装していなかった＝**今夜入れる**（KisoDeep の新しい面・verify-kiso のゲート・KISO-RUNBOOK）。10/2 18:00 の kiso 製造から効く（10/3 12:00 公開）。
+
 ## 2026-09-30 夜（水）
 
 **YouTube コメントの自動返信を組んだ（オーナー GO・ただし「システムの確認が先」＝鎖には未接続・投稿なし）・Notion の書き方を人間向けに・夜の突合は 21:52 の自動起動で**
