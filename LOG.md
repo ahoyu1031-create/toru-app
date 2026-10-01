@@ -15,7 +15,7 @@
 - **BGM は冒頭の後から（オーナー案・採用）**: `pipeline/05-assemble/assemble.mjs` が body-props の hookSeconds ぶん `adelay` で BGM を遅らせ、本編の頭で 1 秒フェードイン（フェードアウトの開始も同じぶん前倒し）。今夜の brief のコピーで実走・BGM 単体で 0〜3.4 秒 −91 dB → 3.5 秒から −44 dB → −39 dB を確認。**検証＝10/2 18:00 の brief**。
 - **YouTube コメント返信を完全自動に（オーナー「完全自動化していい」）**: `config/yt-comments.json` autoPost=true ＝ 夜の運転で書いた返信をゲート通過後に即投稿し、運営メモに「自動投稿」の記録カード。失敗時だけ承認待ちカード。二重投稿ガード 3 段は共通。dry で auto:true を確認。**初の無人＝今夜 21:30**（新着 0 なら何も起きない）。
 - **話し合いの長尺サンプル（オーナー「5 人の声を揃えて話し合う 1 分」）**: `scripts/game/discuss.mjs`（進行役＝コード・4 席＝旗艦・議題「AI が勝手に契約を結んだら責任は誰に」・2 回戦・11 行・API 約 $0.2）＋席ごとの声 `config/voices.json`（進行役＝いつものナレ・GPT=Daniel・Claude=Brian・Gemini=Lily・Grok=Callum・DeepSeek=Sarah＝鍵待ち。ElevenLabs の鍵は voices_read 無しで一覧が取れず既製の id 直指定・日本語は読める）。器＝新合成 `YokoTalk.tsx`（MotionLabChat の見た目・話す席が光って寄る・gm は上中央の帯）＋`assemble-talk.mjs`。中身は 4 体とも「使った人や会社に責任」で一致＝声の確認用。
-- **昼の深掘り（オーナー「同じ数字をまだ出している。ロゴやグラフは対応しているのか。全然見受けない」）**: 9/28 の提案カード（重複の機械停止・非文字面 2 つ義務・logos／timeline 面）を GO 待ちにしたまま実装していなかった＝**今夜入れる**（KisoDeep の新しい面・verify-kiso のゲート・KISO-RUNBOOK）。10/2 18:00 の kiso 製造から効く（10/3 12:00 公開）。
+- **昼の深掘り（オーナー「同じ数字をまだ出している。ロゴやグラフは対応しているのか。全然見受けない」）**: 9/28 の提案カードを GO 待ちにしたまま実装していなかった → **20:00 に実装**（救済運転が kiso を作り終えてから）。KisoDeep に `timeline`（横線に日付の点が順に灯る）と `logos`（公式マークの列・最大 4・同じ会社の製品や提供先だけ）の面／verify-kiso ②c＝数字の主張が 2 場面以上に出たら FAIL（締めの 1 回は可）・②d＝グラフ面（bars/timeline）1 以上＋絵の面（logos/shot）1 以上が無いと FAIL／KISO-RUNBOOK §2 に 16・17 と props 例。tsc OK・今夜の kiso（Gemini 4 Argon）の render-props に面を足して still で 2 枚確認。**新ゲートを今夜の回に当てると「100万 が場面 5,6 に重複」「絵の面 0」で FAIL＝オーナーの指摘どおり**。効くのは 10/2 18:00 の製造（10/3 12:00 公開）から。
 
 ## 2026-09-30 夜（水）
 
