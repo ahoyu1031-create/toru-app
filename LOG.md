@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-10-04 朝（日）
+
+**X を全停止（オーナー「X も止めていいよ、やってないから」）・10/3 のスリープ止めを一晩残した件**
+
+- **X の全停止**: Postiz は 8/24 に解約済みなのに、昼ラインが X カードと X 告知を作って後処理に積み続け、毎晩 18:00/18:40 に 401 で 2 件失敗していた（週末リスト A8 の GO 待ち）。
+  - スクリプト側: 新設 `scripts/social-switch.mjs`（`.env` の `SOCIAL_ENABLED=1` が無ければ 1 行出して exit 0＝post-social と同じスイッチ）を `post-x-card.mjs`・`post-x-article.mjs`・`x-daily-post.mjs` の先頭に入れた。カードの描画もしない。
+  - 指示文側: `midday-longform.ps1` の 4 つの指示文と共通の締め（battle もここから派生）から X の仕事を外した＝postiz-announce 段階は `postiz-announce(skip:x-stopped)` と記録して飛ばす・PART 2 のカードなし・記事ルートのカード節なし・後処理に post-x を積まない。YOKO-RUNBOOK §2 段階 11 と §4 も同じ内容に。
+  - 実走: ParseFile 0 件・非 ASCII 0・`-DryRun` で longform／articles／resume／battle の 4 ルートとも指示文が組める。`note-retry-check.mjs` を実走＝残っていた 2 件が exit 0 で抜けて `note-finish-followup.json` が消えた。`x-daily-post --dry` も exit 0。
+  - **翌運転の検証＝10/4 12:00 の昼（longform）**: flow-state に `postiz-announce(skip:x-stopped)`・`output/<slug>/announce-x.md` と card-post.txt が無い・`note-finish-followup.json` に post-x が無い／**10/4 18:00 の note-retry.log** に X の失敗行が無い。
+  - 気づき: `midday-longform.ps1 -DryRun` はスリープの待ち時間を 0 にしたまま終わる（元からの作り）。今回は 20 分に戻した。DryRun を回したら必ず確認する。
+- **10/3 のスリープ止め**: 10/3 12:10 にオーナー「昼のタスクが終わってもつけておいて」→ 5 分ごとにマウスを 1px 動かす常駐を立てたが、期限を付けなかったので 10/4 09:46 まで動き続け、PC が 17:50 から一晩起きたままだった（製造への影響なし・全ライン緑）。10/4 09:48 に停止。次に同じ依頼が来たら、止める時刻を決めてから立てる。
+- **10/3 昼〜10/4 朝の突合＝全部緑**: バトル第 7 回（NVIDIA vs AMD・eork36rgsEo・20:00 公開）12:44 exit=0／brief KwP6y_47LpI 20:30 公開・棚サムネ付き／深掘り N-MS5wHwZO4 は 10/4 12:00 予約（尺 52.5 秒で警告）／時事 note と有料 note 公開／21:30 の鎖 exit=0／10/4 実演 exit=0（FI0KQ3ghI1E・10/5 08:00 予約）。Fable は 10/3 朝から枠切れで、本番は Opus 5 で完走。
+
 ## 2026-10-01 夜（木）
 
 **18:00 の brief が私の編集ミスで即死 → 18:55 に直して 19:00 の救済運転で建て直し・YouTube 返信を投稿・冒頭ヒーロー型 GO・昼の深掘りに「ロゴ／グラフ／同じ数字の停止」を今夜入れる**
