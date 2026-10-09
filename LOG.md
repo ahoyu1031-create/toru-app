@@ -14,6 +14,7 @@
   - **自動返信の仕組みの確認**: `yt-comments.ps1`（夜の鎖で 1 日 1 回）→ `--post-approved` → `--check`（14 日・トークン 0）→ 新着があれば judgment 1 回で返信文 → 機械ゲート（2 文・90 字・感嘆符／定型お礼／絵文字／URL なし・相手の語を含む）→ **`config/yt-comments.json` autoPost=true（10/1 オーナー「完全自動化していい」）なのでその場で投稿し、運営メモに「自動投稿」の記録カード**。失敗時だけ承認待ちカード。note 側は承認待ちカード（投稿に画面ありブラウザが要る）。前夜 21:33 の check は 0 件（コメントは 10/9 19:59）＝今夜の鎖で処理される予定だったのを、手で `--draft-card` を回して 20:36 に返信（「たしかに「1文字も同じ」は日本語として変ですね。サムネと概要欄は「1文字も違わない」に直しました。」・replyId 記録・YouTube 側で確認）。
   - **成長の自動化への組み込み**: ①`scripts/check-copy-ja.mjs` 新設（題とサムネの文字を安い階級のモデルが 1 往復で見る・呼応／誤字／意味の通らない語だけ・env COPY_CHECK_MODEL）→ `verify-yoko-thumb` ⑥・`verify-brief` ⑱ に組み込み＝NG なら upload が止まる（旧コピーで exit 2・新コピーと直近 4 本で PASS を確認）②`thumb-research.ps1` の RETRO に VIEWER FEEDBACK（コメントの指摘は毎朝必ず 1 件の BAD・2 票の決まりを飛ばす・サムネの指摘は THUMB-RESEARCH.jsonl に platform:viewer）、RESEARCH に VIEWER REMARKS ON THUMBNAILS（thumb-inspo §3 に slug と直し方）＝ASCII・ParseFile 0 エラー ③CHECKLIST 視聴者接点に明記 ④GROWTH-HARNESS-PLAN §7 に全体を記述。**翌運転の検証＝10/10 朝の回顧（VIEWER FEEDBACK が走るか）・10/10 12:00 と 18:00（⑥⑱ が本番で通るか）**。
 - note のコメント: 30 日・61 本を確認、新着 0。
+- **返信を 1 日 4 回に（オーナー GO）**: 視聴者への返信は 21:30 の鎖だけだった（最長 24 時間待ち）→ `yt-comment-due.ps1`（TORU-YtComment 08:10／12:10／20:45）の末尾で `yt-comments.ps1` を呼ぶ（読むのはトークン 0・新着がある時だけ judgment 1 回・seen 台帳で冪等・ガバナーが defer なら返信は次回）。ASCII・ParseFile 0・実走 1 回（新着 0・resleep は在席で不発）。**翌運転の検証＝10/10 08:10 の yt-comment.log に viewer-replies exit=0 が出るか**。
 
 ## 2026-10-08 夜（木）
 
