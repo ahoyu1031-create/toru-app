@@ -15,6 +15,9 @@
   - **成長の自動化への組み込み**: ①`scripts/check-copy-ja.mjs` 新設（題とサムネの文字を安い階級のモデルが 1 往復で見る・呼応／誤字／意味の通らない語だけ・env COPY_CHECK_MODEL）→ `verify-yoko-thumb` ⑥・`verify-brief` ⑱ に組み込み＝NG なら upload が止まる（旧コピーで exit 2・新コピーと直近 4 本で PASS を確認）②`thumb-research.ps1` の RETRO に VIEWER FEEDBACK（コメントの指摘は毎朝必ず 1 件の BAD・2 票の決まりを飛ばす・サムネの指摘は THUMB-RESEARCH.jsonl に platform:viewer）、RESEARCH に VIEWER REMARKS ON THUMBNAILS（thumb-inspo §3 に slug と直し方）＝ASCII・ParseFile 0 エラー ③CHECKLIST 視聴者接点に明記 ④GROWTH-HARNESS-PLAN §7 に全体を記述。**翌運転の検証＝10/10 朝の回顧（VIEWER FEEDBACK が走るか）・10/10 12:00 と 18:00（⑥⑱ が本番で通るか）**。
 - note のコメント: 30 日・61 本を確認、新着 0。
 - **使い方 3 コマの道具名の札を外した**（オーナー「Gemini のような札は出さなくていい。基礎はどの AI でも同じ」）: tip3 は genre を描かない（データは残す）・RUNBOOK §3 と style-profile を更新・静止画で確認。初回＝10/10 18:00。
+- **残り方の実測（RETENTION.jsonl・9/25〜）**: ブリーフ＝AI の頭 66%・使い方の頭 28%・締め 19%／実演＝3 面目 33%・4 面目 26%・CTA 12%（1〜2 面目で 105→33%）／深掘り＝発表の直後 68%・締め 30%。→ オーナー「1（ブリーフの順番＝速報→市況→使い方→AI→締め）と 3（実演の入門回を 1 日おき）はやってよい。ただし先に見本を」「深掘りで発表直後に問うのは意味が通らない」。
+  - 見本①ブリーフ: 市況 → 使い方 3 コマ → コメントの合言葉 CTA（新図解 `commentcta`・『プロンプト』・返信はリンク）の 27 秒（10/9 の声 seg2・seg5＋CTA の TTS/polish・BROADCAST）: `output/_samples/brief-order-cta-20261009/sample.mp4`。
+  - 見本②実演の入門回: 台本だけ（録画なし）: `output/_samples/demo-beginner-script-20261009/script-test.md`（メール 1 通の返信案・8 面・4 面目の直後に『テンプレ』・入門の題材 7 本）。
 - **コメント CTA の全体設計はオーナー提案を受けて協議中**（「コメント数が伸びに効く。実演の『指示のポイント 3 つ』の直後に『欲しい方はコメント欄に「テンプレ」』と音声で言う。最後の『note で公開中』だけでは誰もコメント欄を開かない。ブリーフと深掘りも同じ。深掘りは企業の話なので慎重に」）→ 3 ラインの設計案を提示（下の 10/9 夜の返答）。GO 後に 1 ライン 1 変更で入れる。
 - **返信を 1 日 4 回に（オーナー GO）**: 視聴者への返信は 21:30 の鎖だけだった（最長 24 時間待ち）→ `yt-comment-due.ps1`（TORU-YtComment 08:10／12:10／20:45）の末尾で `yt-comments.ps1` を呼ぶ（読むのはトークン 0・新着がある時だけ judgment 1 回・seen 台帳で冪等・ガバナーが defer なら返信は次回）。ASCII・ParseFile 0・実走 1 回（新着 0・resleep は在席で不発）。**翌運転の検証＝10/10 08:10 の yt-comment.log に viewer-replies exit=0 が出るか**。
 
