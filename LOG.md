@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-10-09 夜（金）
+
+**視聴者の指摘（サムネの日本語）を直し、成長の輪に組み込んだ／10/9 の初回検証は緑**
+
+- **10/9 の突合＝全部 result=0**: 06:00 実演・12:00 深掘り（route=longform・verify-kiso PASS）・**18:00 ブリーフ＝10/8 夜の 7 項目の初回検証が通った**（C 型 MAGAZINE・figcam なし・note/summary/indices なし・newscard 26/90 字以内・使い方 tip3「数字の記事を貼る時／この数字に何が入る?／見出しの数字をそのまま受け取らない」・ロゴは図版プレートの最上段・verify-brief PASS・20:30 公開）。
+- **視聴者の指摘**: 10/7 バトル「【同じ答え】Claude対Grok」に 19:59 コメント「(「一文字も同じ」…日本語おかしくないか?)」。事実: サムネ 1 段目「答えは1文字も同じ」・概要欄 2 か所・ナレ 1 文目が同じ言い回し（「一文字も」は打ち消しと呼応する）。
+  - 直した: サムネを gpt-thumb single で「答えは1文字も違わない」に作り直し → thumbnails.set・verify-yoko-thumb PASS（前のサムネは `_thumb/thumb-before-20261009.png`）／概要欄と章を「1文字も違わない」に（`yt-update-yoko-desc`・予約時刻は不変）／ナレは音声なので触らない。
+  - **自動返信の仕組みの確認**: `yt-comments.ps1`（夜の鎖で 1 日 1 回）→ `--post-approved` → `--check`（14 日・トークン 0）→ 新着があれば judgment 1 回で返信文 → 機械ゲート（2 文・90 字・感嘆符／定型お礼／絵文字／URL なし・相手の語を含む）→ **`config/yt-comments.json` autoPost=true（10/1 オーナー「完全自動化していい」）なのでその場で投稿し、運営メモに「自動投稿」の記録カード**。失敗時だけ承認待ちカード。note 側は承認待ちカード（投稿に画面ありブラウザが要る）。前夜 21:33 の check は 0 件（コメントは 10/9 19:59）＝今夜の鎖で処理される予定だったのを、手で `--draft-card` を回して 20:36 に返信（「たしかに「1文字も同じ」は日本語として変ですね。サムネと概要欄は「1文字も違わない」に直しました。」・replyId 記録・YouTube 側で確認）。
+  - **成長の自動化への組み込み**: ①`scripts/check-copy-ja.mjs` 新設（題とサムネの文字を安い階級のモデルが 1 往復で見る・呼応／誤字／意味の通らない語だけ・env COPY_CHECK_MODEL）→ `verify-yoko-thumb` ⑥・`verify-brief` ⑱ に組み込み＝NG なら upload が止まる（旧コピーで exit 2・新コピーと直近 4 本で PASS を確認）②`thumb-research.ps1` の RETRO に VIEWER FEEDBACK（コメントの指摘は毎朝必ず 1 件の BAD・2 票の決まりを飛ばす・サムネの指摘は THUMB-RESEARCH.jsonl に platform:viewer）、RESEARCH に VIEWER REMARKS ON THUMBNAILS（thumb-inspo §3 に slug と直し方）＝ASCII・ParseFile 0 エラー ③CHECKLIST 視聴者接点に明記 ④GROWTH-HARNESS-PLAN §7 に全体を記述。**翌運転の検証＝10/10 朝の回顧（VIEWER FEEDBACK が走るか）・10/10 12:00 と 18:00（⑥⑱ が本番で通るか）**。
+- note のコメント: 30 日・61 本を確認、新着 0。
+
 ## 2026-10-08 夜（木）
 
 **SSD の件・ブリーフの見た目（ロゴ・文字・型・図解）・深掘りの統計**
