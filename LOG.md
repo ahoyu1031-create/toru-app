@@ -13,6 +13,11 @@
 - 対処: オーナーが 06:05 に起こして `/login`（成功）→ 06:08 に TORU-MorningDemo を手で起動（claude-opus-5 で走行中）。梯子のプローブ台帳 `model-probe.json`（全段 ok:false が 6h 残る）を退避して消した。
 - 週末の初回検証は全部緑: 10/10 06:00 実演＝入門回 #1「メール 1 通の返信案」（slug に -nyumon・exit 0・verified）／10/10 18:00 ブリーフ（新しい順番＋CTA）／**10/11 12:00 話し合いの最初の無人制作 route=talk exit 0（第 3 回・20:00 公開）**／10/11 実演（従来回）・ブリーフ・21:45 週次レビュー（報告書あり・今夜提示）。
 - **再発防止は検討中**: 公式の「ヘッドレス用の長期トークン（setup-token）」の有無を docs で確認してから、①長期トークンで無人の `claude -p` を認証 ②夜 21:40 と 05:50 に `claude auth status` を見る見張り（切れていたら Notion と画面に出す）③ラッパーが認証エラーを見たら resleep せずに知らせる、の順で入れる。
+- **手で起動した実演は完走**: 06:40:34 END exit=0 verified（1917 秒）。#99 入門回 #2「フォルダの中身を日付でフォルダ分け」＝題「【片づいた】24個を日付別に」・slug `2026-10-12-demo-folder-hizuke-nyumon`・S4.5 の合言葉 CTA（『テンプレ』）入り・実測 2 分 17 秒・検算 3 本＋照合 243 項目一致 → https://youtu.be/JqCrOtwvsNQ を **10/13 08:00 に予約**（実演は翌朝公開の型）。今朝 08:00 公開分は 10/11 製の #98「【打ち直すな】崩れた表の整形」 https://youtu.be/eRKm4GAThDI。
+- 鎖も復帰: 回顧（thumb-research）06:40→06:57 exit 0（lean・claude-opus-5 のプローブ ok）／camera-lab 06:57〜 claude-fable-5-1 で走行中（軸 d＝机に立つ 2.5D スマホの見本 `SampleCameraLabStand` を Root.tsx に登録中）。プローブ台帳は opus／fable-5-1／opus-5 とも ok に戻った。
+- **公式の答え＝`claude setup-token`（1 年有効の OAuth トークン・env `CLAUDE_CODE_OAUTH_TOKEN`）**: `scripts/model-ladder.ps1` が `.env` の同名行を読んでラッパー内だけに export する形にして commit（904c72e の次・ASCII・ParseFile 0）。トークン未投入なら従来どおり（今朝の回顧と camera-lab がこの経路を通った）。**オーナーの `! claude setup-token` 待ち** → 出たトークンを `.env` に保存（画面・Git に出さない）→ 無人と同じ経路で `claude -p` を 1 回。
+- 無人の変更の保存は camera-lab の END 後にまとめて commit（週末〜今朝のライン由来: RETENTION/RETRO/FINDINGS 等の jsonl・DEMO2-RUNBOOK の在庫 [x]・DEMO-RUNBOOK の #97 追補・yomi・brands・logo-catalog・yoko-plan・talk-queue）。
+- 付記: ビルド中（Remotion＋claude 11 プロセス）に空きメモリが 4.4 GB まで落ち、Claude Code がこちらの待機用バックグラウンド処理を止めた（ビルド自体には影響なし）。
 
 ## 2026-10-09 夜（金）
 
