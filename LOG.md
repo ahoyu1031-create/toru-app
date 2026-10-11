@@ -4,6 +4,16 @@
 
 ---
 
+## 2026-10-12 朝（月）
+
+**06:00 の実演が 13 秒で死んだ＝Claude Code のログイン切れ（OAuth session expired and could not be refreshed）**
+
+- 事実: PC は 05:48（BIOS）と 05:59（WakeToRun）に起きていた。06:00 にラッパーは起動したが、梯子の全段が「unavailable」→ `claude -p` が「Failed to authenticate: OAuth session expired and could not be refreshed」で exit 1（2 回）→ 06:00:15 に END exit=1 → **resleep が 06:01 に PC を寝かせた**（オーナーには「起きていなかった」ように見えた）。鎖の thumb-research・camera-lab も同じ理由で空振り。
+- 切れた時刻: 10/11 22:14 の週次レビュー（claude -p）までは生きていた → 10/12 06:00 までの間に失効。対話セッションは 10/10 未明以来使っていなかった。
+- 対処: オーナーが 06:05 に起こして `/login`（成功）→ 06:08 に TORU-MorningDemo を手で起動（claude-opus-5 で走行中）。梯子のプローブ台帳 `model-probe.json`（全段 ok:false が 6h 残る）を退避して消した。
+- 週末の初回検証は全部緑: 10/10 06:00 実演＝入門回 #1「メール 1 通の返信案」（slug に -nyumon・exit 0・verified）／10/10 18:00 ブリーフ（新しい順番＋CTA）／**10/11 12:00 話し合いの最初の無人制作 route=talk exit 0（第 3 回・20:00 公開）**／10/11 実演（従来回）・ブリーフ・21:45 週次レビュー（報告書あり・今夜提示）。
+- **再発防止は検討中**: 公式の「ヘッドレス用の長期トークン（setup-token）」の有無を docs で確認してから、①長期トークンで無人の `claude -p` を認証 ②夜 21:40 と 05:50 に `claude auth status` を見る見張り（切れていたら Notion と画面に出す）③ラッパーが認証エラーを見たら resleep せずに知らせる、の順で入れる。
+
 ## 2026-10-09 夜（金）
 
 **視聴者の指摘（サムネの日本語）を直し、成長の輪に組み込んだ／10/9 の初回検証は緑**
