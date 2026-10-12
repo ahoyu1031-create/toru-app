@@ -14,7 +14,16 @@
 - **回顧を「毎日ちがう観点」に（オーナー指示「同じものばかり見るんじゃなくて日々違うものを検査・実写なども提案して」）**: `thumb-research.ps1` に 14 の観点（冒頭 3 秒／可読性／動き／音／構成／誠実さ／サムネ＋題／CTA＋コメント／**実写**／日をまたいだ同型／初心者／他社との差／メタ情報／コストと時間）を日替わりで回顧と研究の先頭に付け、**毎晩 1 件「今の型の外」の提案**（dim outside・improve-log 経由）を義務化。`-DryRun` を足して実走（lens 6/14 honesty・プロンプト 9262 字・claude 呼び出しなし・END dry-run）。**翌運転の検証＝10/13 06:4x の `thumb-research-20261013.log` に `lens: 7/14 thumbnail+title`、RETRO.jsonl の finding に観点名、FINDINGS.jsonl に dim outside が 1 件**。週報はこの outside を読む（次回の weekly-review のプロンプトに 1 行足す＝未着手）。
 - Q-025（Postiz 401）を取り下げ（X は 10/4 全停止で問いが不要）→ 未回答 11 件。残りの 11 件は週報のあとに棚卸し。
 - 無人ライン由来の差分を保存（content-factory c57805f: jsonl 類・DEMO2-RUNBOOK の在庫 [x]・camera-lab 見本・xAI マーク）／model-ladder のトークン経路 c2e0a17／回顧の観点ローテ＋保存スクリプト（次の commit）。
-- **週報 10/11 を提示**（提案 1 速報の数字を確定値から・2 実測テロップの同期ゲート・3 深掘り 2 面目を「何が変わった」に）＝GO 待ち。先週の 10/4 分の提案は 1・3 が同じ内容、2 は取り下げ済み。
+- **週報 10/11 を提示**（提案 1 速報の数字を確定値から・2 実測テロップの同期ゲート・3 深掘り 2 面目を「何が変わった」に）→ **23 時台にオーナー「やってみてもいい」＝GO**。先週の 10/4 分の提案は 1・3 が同じ内容、2 は取り下げ済み。
+- **オーナーの返事（23 時台）**: 返信の出し分けは「#NN や人ごと」ではなく**「今回の動画のポイントは…」の書き方**に／**「1 変数・戻せる・測れる改善はマジでどんどんやっていい。ただし世間（視察・調査・トレンド）を必ず加味。独自案だけだと現実と乖離する」＝権限委譲**（memory `owner-delegation-1var`・GROWTH-HARNESS-PLAN §9）。
+- **入れたもの（全部 1 変数・戻し方つき・同セッション検証済み）**:
+  - 週報 1（GO）: `Kaisetsu.tsx` VisualSokuho の CountUpText を外し、指数・為替の値を frame 0 から確定値に → `verify-brief ⑳`（器が CountUpText を使っていないことを機械で見る）→ 今日の brief で ⑳ PASS・tsc 0・静止画 f128 で 69,030.92／51,654.95 が最初から確定値。DAILY-BRIEF-RUNBOOK 2 か所。**検証＝10/13 18:00 の brief ログに ⑳ PASS・10/14 朝の回顧で途中値 BAD 0**。
+  - 週報 3（GO）: KISO-RUNBOOK §2 構成の型を「①フック→②何が変わった→③どう使う→④代償→⑤安全→⑥締め」に（2 面目に発表／公開／公表を置かない・日付と発表元は 1 面目の facts か 3 面目へ）→ `verify-kiso` に 2 面目の章ゲート（今日の kiso は旧型なので当然 FAIL＝ゲートが効く証拠）。**検証＝10/13 18:00 製造の kiso（10/14 12:00 公開）の `deep-props.json` scenes[1].chapter と verify-kiso PASS**。
+  - 週報 2（GO）: `assemble-demo2` に `video.doneAt`（rec.mp4 で完了行が最初に見える秒）と「from + t×speed ≥ doneAt」の検査。**10/13 06:00 は未記入 WARN・10/14 から FAIL**（`DEMO2_DONEAT_STRICT=1` で前倒し）。DEMO2-RUNBOOK §4 S7 に書き方（rows.mjs で実測）。今日の props で模擬＝scene 6「実測 2分17秒」が WARN 対象。**検証＝10/13 06:00 の morning-demo ログに ⚠ doneAt か doneAt 入りの props**。
+  - 返信（自主 GO）: `yt-reply.mjs` に `{POINT_LINE}`＝「今回の動画のポイントは『…』です」（demo＝指示のポイントの 1 つ目／brief＝使い方の「いつ、打つ」）＋ `--preview <slug>`。今日の 2 本で文面を確認（『名前ではなく更新日で』／『長い会議のあとに、決まったことだけ3行で』）・`--dry` 0 件。次の合言葉から。
+  - 返信の回を **16:10** に追加（TORU-YtComment の 4 本目・WakeToRun・15〜17 時台に他のタスクなし）。**検証＝10/13 `yt-comment-20261013.log` に 16:10 の回**。
+  - 回顧の OUTSIDE PROPOSAL に「外の出典必須」（オーナー条件）→ dry-run を再実走（9844 字・lens honesty）。
+  - improve-log に 4 行（brief／kiso／demo×2）。
 
 ## 2026-10-12 朝（月）
 
