@@ -4,6 +4,15 @@
 
 ---
 
+## 2026-10-22 夜（木・23 時台）
+
+**相談室の背景を「実写質」で作り直し（オーナー「変な背景やめて。基本は今の AI の話し合いのようなグラフィックやテイストで、かなりのリアリティがいい」）**
+
+- 昨夜の w1〜w3（フラット・水彩・やわらかい立体）はイラスト調だったので取り下げ。**決まり: 新しい 4 つの世界は全部「実写質」**＝話し合いの舞台 `public/motion-lab/bg-chat.png` と同じ作り方（指示文「実写質。横長 16:9。…人・文字・ロゴ・画面・UI・キャラクター無し・被写界深度深め・淡いグレア・3D 空間の舞台の地」）。場所・明るさ・色だけ世界ごとに変える。全部暗くはしない。
+- **相談室の実写質 3 候補** `output/_samples/worlds-20261021/soudan/`（GPT Image 2.5 medium・1536×1024・計 約 $0.15）: `r1-soudan-asa`（朝の光の相談室・明るい）／`r2-soudan-kissa`（夕方の喫茶店の窓際・琥珀）／`r3-soudan-radio`（深夜のラジオブース・暖色の暗め）。
+- **本物の画面で証明**: 10/20 の話し合い第 6 回 `episode-props.json` の `bg` を `worlds/soudan/rN.png` に、`tint` を null にした props を scratchpad に作り、`npx remotion still YokoTalkEpisode --frame=768`（4 席の立場）と `--frame=2961`（1 対 1）で `proof-r1-round`／`proof-r2-round`／`proof-r3-round`／`proof-r1-duel` の 4 枚。4 枚とも札・吹き出し・集計・工程の札が読める。背景の実体は `pipeline/04-video/public/worlds/soudan/r1..r3.png`（コミット）。無人ラインは走っていない時刻（23:27）に実行。
+- 記録: 提案書 §4.18・Notion 作戦 v3 カード末尾・README・memory（longform-strategy-v3-no-forced-characters に 10/22 の訂正）。Explorer で r1 を表示。**選択待ち**。次は実演ロング → 伝言ゲーム → 週まとめ の順で同じ実写質で 3 候補ずつ。
+
 ## 2026-10-21 深夜（水・0 時台〜）
 
 **アイコンを本当に差し替え（YouTube・note）・バナー 3 候補・7 本の実在確認・月曜のサンプル v2（PixelStage）**
