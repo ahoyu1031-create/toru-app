@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-10-24 午後（土・15〜18 時台）
+
+**動かし方を網羅的に学んで正本・部品・機械検査にし、4 本のサンプルを作り直した（オーナー「テキストの被りは完全になくす・アニメーションにこだわる・AI ニュースは本当のニュース番組（一覧→選択→ぎゅわーんと拡大→図解）・今週の 1 語はなし・背景もやり直し・前は Notion でまとめただけで俺の提示分だけ→網羅的に学んできて」）**
+
+- **学び** `content-factory/config/motion-bible.md`（新・正本）: ディズニー 12 原則の動画への当てはめ／UX in Motion 12 原則／Material の motion system（イージング・長さの札・容れ物の変形ほか 4 つの転換）／Apple HIG・Liquid Glass／Emil Kowalski・Rauno Freiberg・Josh Comeau／Heer & Robertson・Bostock（整合・把握・同一性）／AE の現場の数値／キネティック・タイポと国内テロップの決まり／放送パッケージの文法と 2026 の傾向／2.5D／2026 の流れ／音の同期／J・L カット。数値の札（長さ 10・イージング 6・ばね 5・禁止 5）と 7 型への当てはめ、出典 §11。Web 検索 30 本超＋一次資料の読み込み。
+- **部品** `pipeline/04-video/src/motion/`（新）: tokens.ts（EASE/DUR/SPRINGS/tween/stag/sprung/squash/countValue）・components.tsx（WordReveal・MaskUp・Counter・BarGrow・LineDraw・LightSweep・Ticker・LowerThird・Morph・Parallax(Layer/PhotoBg)・Grain・Pill・Globe・qa()）・qa.tsx（QaOverlay＝毎フレーム data-qa の箱を実測し重なりと安全域を赤枠＋console.log）。
+- **機械の検査** `scripts/stage-samples/qa-layout.mjs`（新）: @remotion/renderer で 0.5 秒ごとに描画 → qa.json＋contact.png。重なり 1 つで exit 2。build.mjs の終端で自動（`--no-qa` で省略・並列は `STAGE_CONC`）。**見つけて直した 5 件**: パネル裏の札の文字／ロワーサードの箱が 1 文字ずつ折り返して測られる（nowrap）／カメラの押し寄りで端の文字が安全域の外（箱は x 111〜1809・y 84〜1046）／伝言の題が上端 34px・紙の弧が板に 18px かかる・残像のコピー同士を重なりと数える／実演ロングの札の包みが横一杯。
+- **週まとめ＝ニュース番組**（`WeeklySample` 作り直し）: OP（題が語ごと・期間の札・ロワーサード・ティッカー）→ 項目出し 7 枚 → 6 枚目が選ばれる → 容れ物の変形でパネルに → 見出し・310 万マイルのカウント・地球 125 周の図・ゼロの札 3 つ・出典と注意 → 縮んで一覧へ（7 枚目が光る）。1 語は無し。背景は夜のスタジオ n2（新・$0.05×3 候補 n2/n3/n4）。35.4 秒。
+- **他 3 本の直し**: 伝言＝紙を机の上（622〜）に下ろして板（304〜584）と分離・弧＋残像・バッジの潰れ伸び（27.7 秒）／相談室＝便箋が語ごと・チップが着地で跳ねる・返事の窓に光の帯・板が脈打つ（27.6 秒・返事は Anthropic API の実物）／実演ロング＝OP の題を右の列に・録画は左から滑り込む・段階の枠が滑る・チェックが跳ねる（24.3 秒）。**4 本とも重なり 0・安全域の外 0**（qa.json）。
+- 途中、バックグラウンドの描画がメモリ不足で止められた（同じ PC で 8.7GB のゲームが走っていた）→ 以後は 1 本ずつ前面で・並列 3。
+- 記録: `output/_samples/stage-20261023/README.md`（表・検査が見つけた物・背景候補）・提案書 §4.21・`LONGFORM-7-CONTENT-PLAN.md`（週まとめの決定・§3 更新）・memory `motion-learning-comprehensive`・Notion 運営メモ 1 枚。**感想待ち**（週まとめの背景 n2／n4、残す型と直す点）。
+
+---
+
 ## 2026-10-23 深夜（金・23 時〜）
 
 **新 4 型の「軽いサンプル」4 本（相談室・伝言・週まとめ・実演ロング）＋ 立ち位置のある相談室の背景（オーナー「軽くサンプル作ってみて、それぞれ」「相談室の背景はバトルのように立ち位置が確立して相互性が取れている背景がいい」）**
