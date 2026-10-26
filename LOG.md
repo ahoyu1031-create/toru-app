@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-10-26 夜（月・19〜22 時台）
+
+**長尺 7 型を「今日から」無人ラインに組み込み、k サムネを本番化、週まとめの器を作り、自律エージェントの計画を書いた（オーナー「サムネはあの方向で回していい・中身は決めたやつで・週まとめは任せる・MVP で出して指摘が来たら直す・ルール化して今日から組んで」＋「Claude の自律型エージェントで年末までに YouTube→客→何を売るかまで落とし込む計画を詳しく」）**
+
+- **正本** `content-factory/LONGFORM-7-RUNBOOK.md`（新）: 曜日の回り番（月授業・火バトル・水話し合い・木相談室・金実演ロング・土伝言・日週まとめ）、全型共通の決まり、MVP の直しループ、機械検査のゲート、新 4 型の段階表（flow-state・切り替え・絶対）、k サムネの引数表、止め方、組み込み予定（各初回が検証日）、費用。
+- **曜日の回り番** `config/longform-week.json`（新・enabled・型ごとに ready／fallback）＋ `scripts/midday-longform.ps1` に weekday pinning（resume と articles は従来どおり先・未完のバトル／話し合いは再開が先・ready=false は fallback・`-SimWeekOff`／`-SimWeekReady`）と新 4 型の指示文（$promptWeekly／Soudan／Demolong／Relay）と fallback マーカー。**DryRun で 7 曜日＋再開・週オフ・ready・未完の話し合い・予約済みの 6 通りを実走して確認**（verify-ps1 All clear）。10/27 火＝battle・10/28 水＝talk・木金日＝授業・土＝話し合いへ退避（builder ができ次第 ready）。
+- **k サムネ本番** `scripts/longform/k-thumb.mjs`（新）＋ `banners/k-thumb/{mon..sun}.txt`（10/23 の仮 7 枚を型にして穴埋め・公式ロゴは参照 4 枚まで・GPT Image high・上 2%／下 13.6% を切って 1280×720・`--from-raw --crop-top` で切り直し・型ログ style `k-<day>`）。`verify-yoko-thumb.mjs` が k-* を通す。YOKO／BATTLE／TALK の thumbnail 段階を「k-thumb が本線・exit 2×3 回だけ旧経路」に改訂。ラッパーが全指示文に THUMBNAIL OVERRIDE を付ける。**実測 1 枚**（火・medium・$0.05）で上の帯が切れた → 切る位置を上 2% に変えて同じ raw から切り直し OK。
+- **週まとめの本番の器**: `StageWeekly` に棒（bars）・more・ed を追加、Counter に小数、`scripts/longform/build-weekly.mjs`（新・weekly.json → TTS → props → render → assemble → qa-layout → chapters.json・QA 不合格は exit 2）、`series/weekly-queue.md`（新）。**今週 10/20〜10/26 の 7 本の実データ**（Amazon・MiniMax・Tesla・Uber・Mistral・Kimi・ElevenLabs＝各 kiso の出典表から）で `output/2026-10-26-yoko-weekly00-test/weekly.json` を書き、`--no-render` で 51 場面・3.4 分・章 10 を確認。**描画は空きメモリ 1.7GB（ゲーム起動中）のため待機**（監視を置き、空いたら描く）。
+- **自律エージェントの計画** `content-factory/improvements/AUTONOMOUS-AGENT-PLAN.md`（新）: 目標（12/28 に人手ゼロ 1 週間・毎週入金・漏斗 5 段が測れる）、事実（28 日: kiso 17,474／demo 15,003／brief 9,586／**長尺 330**・Brain 0 部・Gumroad 10 点・note ¥300 毎日・導線のクリック未計測）、売り物の順（① note 有料の型 → ② Brain 改訂＋紹介 50% → ③ note メンバーシップ ¥980 → ④ YouTube メンバー・アフィリと SaaS はやらない）、漏斗と計器（Reporting API のジョブ・`/go/` リダイレクト・sales.jsonl）、器（Managed Agents＝予算・権限・Vault・cron／クラウド予約タスク／制作はローカル。Duet は US 限定・Dots は OpenAI）、権限表（自動 vs 人の 4 つ）、W1〜W9 の段取り、守り（汎用・反復判定・ステマ規制・特商法・Anthropic 規約・暴走）、決めてほしいこと 5 つ、出典。`config/agent-switch.json`（キルスイッチ・OFF 出荷）。調査は小エージェント 1 体（一次資料 58 件）。
+- 記録: memory `longform-7-go-mvp-loop`・Notion 運営メモ 1 枚・両 repo push。**次**: 週まとめの描画と検査 → OK なら日曜 ready・木金土の builder（10/28〜30）・Reporting API ジョブと `/go/`（今週）。
+
+---
+
 ## 2026-10-24 午後（土・15〜18 時台）
 
 **動かし方を網羅的に学んで正本・部品・機械検査にし、4 本のサンプルを作り直した（オーナー「テキストの被りは完全になくす・アニメーションにこだわる・AI ニュースは本当のニュース番組（一覧→選択→ぎゅわーんと拡大→図解）・今週の 1 語はなし・背景もやり直し・前は Notion でまとめただけで俺の提示分だけ→網羅的に学んできて」）**
