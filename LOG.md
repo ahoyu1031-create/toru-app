@@ -16,7 +16,7 @@
 - 記録: memory `longform-7-go-mvp-loop`・Notion 運営メモ 1 枚・両 repo push。**次**: 週まとめの描画と検査 → OK なら日曜 ready・木金土の builder（10/28〜30）・Reporting API ジョブと `/go/`（今週）。
 - **オーナーの返事（同夜）**: Duet は「もうそろそろ日本に来る」前提で組む／note メンバーシップは固定費なし（手数料だけ）と答えた／**対話そのものを Notion に移す**（出先で覗く・新しいメモをエージェントが拾って PC で作りコンテンツにする）→ `improvements/NOTION-COMMAND-LOOP.md`（面 3 つ・カードの書式・状態の流れと期限・見張り・段取り W1〜W4・守り）。売り物の順・/go/・予算 $10/週 は GO。`scripts/notion.mjs --unread` が読むだけの見張りとして今すぐ使える（この夜の未読はユーザー発信 0）。
 - **木・土の器も同夜に**: `scripts/longform/lib-build.mjs`（共通）・`build-soudan.mjs`・`build-relay.mjs`・`ask-one.mjs`（Gemini に実際に聞いて 74 字）・`series/{soudan,relay,demolong}-queue.md`。サンプルの材料で `--no-render` 通し。描画して qa 0 を見るまで ready は false。
-- **週まとめの描画**: ゲーム起動中で空きメモリ 1.7GB のまま 1 時間経過 → 自己終了する補助スクリプト（scratchpad `weekly-proof-when-free.ps1`・6GB 空くかゲームが閉じたら `build-weekly.mjs` を描画＋検査・期限 8 時間）を裏で起動。結果は `output/_logs/weekly-proof-20261026.log` と `output/2026-10-26-yoko-weekly00-test/{final.mp4,qa.json,contact.png}`。**次セッションの冒頭で突合**し、qa 0 なら `longform-week.json` の Sunday を ready に。
+- **週まとめの描画 → 日曜 ready ✅**: オーナー「ゲーム中は作業できないのか」→ トークンではなくメモリ（ゲーム 8GB 確保＋Filmora 等で空き 3.9GB）。描画の並列数を空きメモリから自動で決める `pickConcurrency`（lib-build）を入れ、待たずに並列 1 で開始 → オーナーがタスクマネージャで整理して空き 7.9GB → 並列 3 で描き直し。検査 1 回目: 番組ロゴが札の上端に 2px 重なる・容れ物の変形の途中の見えない部分を「外にはみ出た」と誤検知 → ロゴを下げ、QA に「overflow:hidden で切られた分は数えない」を実装。2 回目: 安全域 0.4px 不足 → 札を 6px 下げ ロゴ y90。3 回目: **重なり 0・安全域 0・3 分 23 秒・章 10**。k-sun サムネ（Tesla・Uber・ElevenLabs・Amazon のロゴ 4 枚・medium）を生成し `verify-yoko-thumb` PASS、meta.md も書いた（upload はしない）。`longform-week.json` Sunday ready=true（11/1 が初回無人運転・11/2 に突合）。英字＋数字の語（Voxtral 3）が折り返したので `splitWords` を直した（次の描画から）。
 
 ---
 
