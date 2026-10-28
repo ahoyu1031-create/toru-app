@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-10-28 夜（水・20〜22 時台）
+
+**オーナー「今日の Notion を見て返答を。タスク系にもっとこだわりたい、状況と提案を」＋途中「ショートのサムネと最初のカットのロゴが細長いのはなぜ？」**
+
+- **24h 突合: 全ライン緑**（タスクスケジューラの TORU-* は全部 LastTaskResult 0）。朝 demo-faq-top5（06:00→06:35 verified・10/29 8:00 予約 9FTh0tl1YJY）／昼 **talk09-junban＝水曜の話し合い＋k-wed サムネの初の無人運転 PASS**（verify-talk fail=0 warn=0・verify-yoko-thumb PASS・吹き出し「全部／全部／要点だけ／全部」は 4 体の実際の最後の立場・20:00 公開 hZSkoXYOyQU・229 秒・note 有料 300 円 n9635eff68578）／夜 brief（verify PASS・20:30 QDwrc0gl4rg）＋kiso-anthropic-gov40（PASS・10/29 12:00 NxziYZm0t0E）＋時事 note nf1d5d963f748 公開／コメント 12:10・16:10 とも未返信 0／成長 thumb-research・camera-lab・yoko-lab exit 0。
+- **オーナーの返事（10/27 の返事カード末尾「6 返信場所」）を読んで実装**（正本 `improvements/NOTION-COMMAND-LOOP.md` §7.5）: ①Claude が書くカードと返事の末尾に必ず `## あなたの返事（ここに書いてください）` ②`scripts/notion.mjs --replies`＝その見出しの下に文があるカードだけ出して状態を 未読 に（オーナーは印を付けない）③`--reply <id> --body-file` で同じカードの末尾に返事＋見出し（協議中へ）④**「今日の運転」1 日 1 枚** `--run-log --today`（題・YouTube・尺・note・サムネ画像を file_upload で添付・冪等）⑤3 本のラッパー（morning-demo／midday-longform／daily-brief）の START 直後に `--replies`、resleep 直前に `--run-log --today`（best effort・ASCII のみ・parse 0 エラー）。**実践検証**: `--replies --no-mark` で 49 枚を読み 8 枚検出／`--run-log --today` で「今日の運転 10/28（水）」に 4 本を追記（画像 4 枚つき・MCP fetch で確認）／`--reply` で返事カードに 29 ブロック。**初の無人運転＝10/29 06:00（検証日）**。
+- **Notion の棚卸し**: オーナーの古い 8 枚（9/6〜10/4・Claude の返事が無かった）に返事を書いて実装済／Claude の古い 38 枚を理由つきで閉じた（実装済 35・却下 3）／ask-human Q-011・Q-013 は解消で回答記録／残る決め事 16 件（ask-human 10＋週報 10/25 の 3＋キャラ対決）を「【決めたい】16 件」カード（🟡）に既定つきで一覧＝**提案「11/4 までに返事が無ければ既定を入れる」＝GO 待ち**。
+- **クラウドの予約タスク（オーナー GO）は保留**: claude.ai の connectors に Notion が無い（Google Drive・Claude Docs のみ）。オーナーが接続したら routine を作る。
+- **木 相談室 ready**: `output/2026-10-28-yoko-soudan00-test/`（上司の返信がこわい・Claude の返事そのまま・final 64 秒・qa 重なり 0／安全域 0・`k-thumb --day thu` 1 回で verify PASS・upload なし）→ `config/longform-week.json` Thursday ready=true・`series/soudan-queue.md` に記録。**10/29 12:00 が初回の無人運転**。空きメモリ 7.2GB。
+- **ショートのロゴが細長い＝非等倍の縮小が原因**: GPT Image は 1024×1536（2:3）しか出さないのに `gpt-thumb.mjs` と `brief-hero.mjs` が 1080×1920（9:16）へ `scale` で伸ばしていた（縦 18.5%・yt/note は横 18.5%）。`scale=W:H:force_original_aspect_ratio=increase,crop=W:H` に直し、プロンプト末尾に「端 8% は切るので内側に」。試し焼き `output/_samples/stretch-fix-20261028/`（brief-short-fixed.png・hero-fixed.png）で G が丸く戻った。**検証日＝10/29 06:00 実演サムネ・18:00 brief hero**。既存動画は差し替えない。
+- 両 repo push。memory `notion-ops-memo-db`・`thumbnail-gpt-image-all-in`・`session-handoff-pending` 更新。
+
+---
+
 ## 2026-10-27 夜（火・22 時台）
 
 **オーナーの出先カード（10/27 09:57・Notion）への返事: 木金土日の器の状況・Notion 対話の現実と返事の形・無人サポート系の売り物の棚（「スクショのグレーの箇所、枠組みができているか確認、カードで教えて。新たに作って」「サブスク・サポート系を自律型 Claude で無人で。用意しておくぐらい」「Notion 対話はどこまで現実的か・覗く回数・返事の形・緊急の印」）**
