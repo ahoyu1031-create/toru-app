@@ -110,7 +110,7 @@ node scripts/db/verify-cleanup.mjs
 | 提示するもの | 取得コマンド | 頻度 |
 |---|---|---|
 | note の未公開記事・概要欄への未反映 | `node scripts/pending-manual.mjs`（content-factory） | **毎セッション**（残があるときだけ表示される） |
-| Notion「運営メモ（1日1枚）」の未読・協議中（ユーザーの出先メモ） | `notion-fetch` で DB https://app.notion.com/p/4c8b55b555514eb2829d0ab493b0f8f0 を読む（2026-09-06 新設） | **毎セッション** |
+| Notion「運営メモ（1日1枚）」のまとめ（ここ数日に書かれた指示・気づき・昼の係が返した返事・あなたの番のカード） | `node scripts/notion.mjs --digest`（content-factory・2026-10-29 新設）→ 人間の文に直して冒頭に出し、決め事はその場で一緒に決める。DB https://app.notion.com/p/4c8b55b555514eb2829d0ab493b0f8f0 ・昼間は `TORU-NotionDuty`（毎時）が返事を書く | **毎セッション** |
 | ラインからの質問（人間にしか決められない事） | `node scripts/ask-human.mjs`（content-factory）／Notion 運営メモにも転記 | 毎セッション |
 | 週次レポート | `reports/weekly/<date>.md` | 月曜夜 |
 
