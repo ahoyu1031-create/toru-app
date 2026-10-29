@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-10-30 朝（金・06:37〜07 時台）
+
+**オーナー「コメント自動返信、長尺動画は自分でやる。ショートと note はそのまま自動返信を続けて。即ルール化・組み込み・漏れがないように・ショートと note は崩さない・確実に実行・終わったら Notion でログ」**
+
+- **線引き**: 長尺＝台帳 `youtube-uploads.json` の `yoko:true`（77 本・yoko-ep／battle／talk／soudan は全部付いている）。台帳に無い動画は 181 秒以上を長尺・長さ不明は長尺側に倒す（自動返信が漏れない方）。合言葉返信（`yt-reply.mjs`＝demo/brief/company/rel だけ）と 1 件目コメント（`yt-comment.mjs --due`＝yoko を飛ばす）はもともと長尺に付かない＝自動返信の経路は `yt-comments.mjs` の 1 本だけだった。
+- **組み込み（`scripts/yt-comments.mjs`・3 段の守り）**: ①`--check` が長尺の未返信を `new` に入れず `longform` に分ける（回顧は引き続き読む）＋運営メモに「長尺コメント（あなたが返す）」の記録カードを 1 回だけ置く（発信 Claude・対象 長尺・状態 返信済み＝あなたの番・動画／相手／コメント／返す場所のリンク／返事の見出し・台帳 `status:"owner"`） ②`--draft-card` が長尺を exit 3 で拒む ③`--post-approved` が長尺のカードを「採用・実装中」でも投稿せず 返信済み に戻して理由を書く。新モード `--notice-card --id`（手で置き直す）。`config/yt-comments.json` に `longform.autoReply=false / noticeCard=true`（戻すのは 1 値）。`config/yt-reply-prompt.txt` に「長尺は書かない」。正本 `config/reply-policy.md` §0（誰が返すか）＋ §5。GROWTH-HARNESS-PLAN 10/30 追補・CHECKLIST 視聴者接点・NOTION-COMMAND-LOOP §7.6。note（`note-comments.*`）とラッパー（`yt-comments.ps1`／`yt-comment-due.ps1`／21:30 の鎖）は触っていない。
+- **実走検証（06:42）**: 実の `--check`＝31 スレッド・未返信 0（長尺 0）・exit 0／偽の巡回結果で 長尺の返信案→exit 3 拒否・ショートの返信案→ゲート通過 exit 0・ショートへの記録カード→exit 3 拒否／長尺の記録カードを実物で 1 枚作成→ `--show` で 状態 返信済み・対象 長尺 を確認→アーカイブ・台帳のテスト行を削除／`--post-approved --dry`＝0 枚／ラッパー `yt-comments.ps1 -NoPost` 通し exit 0。**初の無人運転＝10/30 08:10**（以後 12:10・16:10・20:45・21:30）。
+- **毎時の係の初日**: 06:35 の初運転＝hits 0・exit 0・朝 demo が走っていたので寝なかった（otherRunning=True）＝守りどおり。
+- memory `longform-comments-owner-replies`（新）・`comments-not-budget-gated`・`anti-comments-calm-rule`・`session-handoff-pending`・MEMORY.md。Notion に記録カード。両 repo push。
+
+---
+
 ## 2026-10-29 夜（木・18〜21 時台）
 
 **オーナー「Notion を見てきて、やり取りの方法をここで決めてしまう。お互いの思いに差異があるかもしれないから、どういうルールでやっているか確認して」→「受付では足りない、気づきを書いたらちゃんと返信してほしい・PC は 24 時間つけたくない」→「返信済みの項目を足して・終了は俺が決める・夜は数日分のまとめを出して一緒に決めよう。それ以外は組み込んでいい」**
