@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-10-30 夜（金・21〜23 時台）— 引っ越しで土日 PC 停止 → 土曜 1 日分を前倒しで作った
+
+**オーナー「明日引っ越しで PC を 1 日つけられない。今夜解体する。土曜の分を今からやって。日曜の朝の分も」→ 途中で「日曜朝の分は飛ばして保留・Notion のログは要らない」**
+
+- **今日の分は済んでいた**（朝 実演 jAMg5Y4Z0rE 10/31 08:00・昼 第 53 回 wUD6KBcURCI 20:00・夜 brief cU5gAEhFMJU 20:30・深掘り G4IUXEOusUc 10/31 12:00・note 2 本公開）。足りないのは土曜の長尺・ブリーフ・深掘り・日曜 8:00 の実演。
+- **前倒しの仕組み（戻せる・既定は無変更）**: `upload-youtube.mjs` に環境変数 `YT_PUBLISH_OVERRIDE="<slug の glob>=<YYYY-MM-DDTHH:mm>;…"`（slug が合えばその日時で予約・`--yoko`／`--today-20` の「今日」を上書き）／`note-publish.mjs`・`note-retry-check.mjs` に `NOTE_TODAY`（台帳の日付枠を指定日に）／`midday-longform.ps1` に `-ForDate`（「今日の分は出ている」を止める理由にしない旨を prompt に付加）と `-HardStop`（既定 16:30）／`daily-brief.ps1` に `-ForDate`（slug・画面とナレの日付・note の日付を指定日に）／`morning-demo.ps1` の made-today ガードを `-Force` で越えられるように。寝ない守りは scratchpad の keep-awake.ps1（ES hold＋`notion-duty.lock` を 5 分ごとに更新＝全ラッパーが suspend を飛ばす）。
+- **実走**: 長尺 1 回目（21:17・ForDate なし）は「今日の分はもう出ている」と判断して作らず、代わりに**バトル回 12 本の概要欄が 4,900B の切り詰めで note リンク・教材リンク・ハッシュタグを全部失っていた**不具合を見つけて `fitYokoDescription`（頭を削って末尾のリンク束を残す）と `yt-update-yoko-desc` の `{NOTE_URL}` 対応を入れ、12 本分の後処理を followup に積んだ（運転中の本番 agent がスクリプトを変えた＝要注意だが内容は妥当・採用）。2 回目（21:31・`-ForDate 2026-10-31 -SimDow Monday -SimDaysSince 1`）＝**第 54 回「せかし方編」** `2026-10-31-yoko-ep54-sekashikata` -SLit_E2TI4 **10/31 20:00 予約**・8 分 23 秒・qa 82 件 0・k-thumb mon PASS・49 分。並行で **土曜ブリーフ**（21:31〜22:08・`-ForDate 2026-10-31`）＝ zfwN4gouxdQ **10/31 20:30**・深掘り「Suno の MCP」Xs6jEcwslaY **11/1 12:00**（`--noon-next` が自動で翌日）・時事 note 公開 https://note.com/aoki_ai/n/na61c547f3b08 ・verify 全 PASS（深掘り 51.1s 警告のみ）。**実演「誤字あらい」**（22:09〜22:54・長尺と並行で録画）＝ verify-brief/verify-audio PASS だが agent が exit 1 → ラッパーは upload せず → 手で `upload-youtube.mjs --morning-next` → -T3V-3o0qQk **11/1 08:00**。第 54 回の有料 note は `--finish`（NOTE_TODAY=2026-10-31）で公開 https://note.com/aoki_ai/n/n20360236852e （300 円・裏取り OK）。followup でバトル 11 本の概要欄を更新、**第 54 回の概要欄だけ meta.md に note URL 行が無く失敗**（同夜に手当て・下記）。
+- **保留**: 日曜朝の分（月曜 8:00 の実演）はオーナー指示で飛ばした。日曜夜に PC が戻れば `morning-demo.ps1 -Force`（`--morning-next` → 11/2 08:00）で間に合う。日曜 12:00 の週まとめは PC が 17 時までに起きなければ動かない（夜の対話で `-Force`）。土曜の毎時 Notion 係は PC 停止のため動かない。
+- **朝の分（同日・LOG 10/30 朝）**: 長尺のコメント返信をオーナー自身に（ショート・note は自動のまま）＝ `yt-comments.mjs` 3 段の守り・08:10 以降の無人運転は未突合（次の冒頭）。
+
+---
+
 ## 2026-10-30 朝（金・06:37〜07 時台）
 
 **オーナー「コメント自動返信、長尺動画は自分でやる。ショートと note はそのまま自動返信を続けて。即ルール化・組み込み・漏れがないように・ショートと note は崩さない・確実に実行・終わったら Notion でログ」**
