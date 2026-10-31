@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-10-31 夜（土・20 時台）— 引っ越し後の回線チェック（有線・問題なし）＋電源復帰の突合
+
+**オーナー「引っ越ししたんだけど、作業するに Wi-Fi の速度問題ないか調べて」→「昨日までと違いはある？」「日々のタスクでも問題なさそう？」**
+
+- **回線の実測（20:3x・Catchup 等が並走中の値）**: PC は Wi-Fi ではなく**有線**（Realtek 2.5GbE・リンク 1 Gbps・wlansvc は停止）。新ルーター 192.168.40.1（DNS もルーター・プロファイルは Public・IPv6 無し）。ping 8.8.8.8／1.1.1.1 平均 13ms・ロス 0／ルーター 3ms。**上り 16.2〜16.3 MB/s（≈130 Mbps・Cloudflare `__up` 50MB×2）**・**下り 単一 12.4 MB/s・4 本並列の合計 20.7 MB/s（≈166 Mbps・OVH 仏 100MB×4＝遠地なので下限値）**。Cloudflare `__down` は curl に 403（UA 偽装でも同じ・計測不能）。ラインが叩く 8 ホスト（anthropic／notion／elevenlabs／googleapis／youtube／openai／note／github）は DNS 21〜341ms・TLS 0.12〜0.75 秒で全部応答。
+- **判定＝日々のラインに十分**。必要なのは長尺 1 本（数百 MB）の YouTube アップ＋API 往復で、130 Mbps 上りなら 500MB が 30 秒台。**昨日までとの差は比較不能**＝旧居の回線速度の記録が LOG にも台帳にも無く、`upload-youtube.mjs` は所要時間を出さない。今日の数値を基準値としてここに残す（次に測る時はこの行と比べる）。
+- **電源復帰の突合**: 10/30 23:40 正常シャットダウン → 10/31 20:20:40 起動（新居・イベント 41／6008 なし）。ログオン起動の `TORU-DailyBrief-Catchup`（20:22:50＝起動 2 分後）は DNS 未確立で Notion replies が `ENOTFOUND api.notion.com`（best effort・落ちない）→ 直後に「brief already built - stock-only run: kiso」＝**前倒し済みの土曜ブリーフ（zfwN4gouxdQ 20:30）は重複なし**・在庫 kiso を production（claude-opus-5）で製造中。20:28 の NotionDuty（hits 0）・YtComment（1 件目コメント 1 件投稿・返信 0）・Shop（新規売上 0）は exit 0。**ShortsThumb 20:28 は exit 6**（kiso-nvidia-transcribe G4IUXEOusUc の棚サムネ sardefault 404・Studio 保存 2 回とも未反映 → 20:55 の保険で再試行）。
+- 冒頭の定例: note 未公開 13 件（products・従来どおり）・Notion は Claude の番 0／あなたの番 17・ask-human 6 件（Q-015／016／020／023／029／030）。
+- **次の冒頭で突合**: 11/1 05:45 PreWake → 06:00 実演（**新居での最初の RTC 起床＝引っ越しで BIOS の起床設定が飛んでいないかの検証**）・11/1 12:00 週まとめの初の無人運転・20:55 ShortsThumb の再試行・Catchup の在庫 kiso の END 行（`daily-brief-20261031.log`）。
+
+---
+
 ## 2026-10-30 夜（金・21〜23 時台）— 引っ越しで土日 PC 停止 → 土曜 1 日分を前倒しで作った
 
 **オーナー「明日引っ越しで PC を 1 日つけられない。今夜解体する。土曜の分を今からやって。日曜の朝の分も」→ 途中で「日曜朝の分は飛ばして保留・Notion のログは要らない」**
