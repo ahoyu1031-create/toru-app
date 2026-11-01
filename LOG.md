@@ -4,6 +4,21 @@
 
 ---
 
+## 2026-11-01 夜（日・18:50〜）— 解体日の穴の回復（週まとめ初運転＋ブリーフを 20 時台に）・残骸ロックの乗り越え・Notion「あなたの番」廃止
+
+**オーナー「今日解体してたから管理できてるか分からない。18 時からのやつもずれてると思う。全部走っていい。ログを Notion にしっかり残して結果を教えて」→「全部終わったらスリープしておいて」**
+
+- **突合（24h）**: 05:48 PreWake → 06:00 実演＝**新居で初の RTC 起床 OK**（#119 CpFbN7Fb-nE・11/2 08:00 予約）。回顧 06:5x・サムネ研究 07:20・camera-lab 休日・Shop 09:30（Gumroad dai-wa-jugoji 公開）全部緑。**11:33 オーナー操作の電源オフ**（イベント 1074・StartMenu）→ 18:17 起動。**昼 12:00 の週まとめ初運転が飛んだ**（11:45 PreWake・12:25 保険・14:30 yoko-lab も）。18:17 起動 → **18:19 Catchup が開始 → 18:24 オーナー操作の再起動で死亡 → `build.lock`（18:19）だけ残り、18:23（missed-fire）・18:28（Catchup）・19:00（保険）の 3 回全部「another build holds the lock」で SKIP**（ロックは 100 分で失効の設計＝19:59 まで誰も作れない）。起動直後は DNS 未確立（api.notion.com ENOTFOUND 18:19〜18:28・yt-comments 18:24 fetch failed・ShortsThumb 18:23 判定不能・model-probe が claude-opus-5 を 45 分だけ「不通」扱い）。**前倒しの 6 本は全部予定どおり公開済み**（yt-list）。
+- **回復（オーナー GO）**: 残骸ロックを外して `Start-ScheduledTask TORU-DailyBrief`（20:00）→ **ブリーフ 3ZVpz0BUFBE 20:29 公開**（verify-brief／verify-audio PASS・公開時刻は「今＋10 分」に自動で繰り下がった）・時事 note **【別物でした】中国のSiri** https://note.com/aoki_ai/n/n21f2409fa9ca 公開・深掘り `2026-11-01-kiso-google-carbon-junban` → **sJ1HW9eN1tY 11/3 12:00**（11/1・11/2 の昼枠は前倒し分で埋まっていたため）・END exit=0 2546s。並走で `midday-longform.ps1 -Force`（20:01）→ **週まとめ初の無人運転 ＝ `2026-11-01-yoko-weekly01-openai-terra`【週まとめ】AIのウソが3分の1・4 分 50 秒・63 場面・重なり 0／安全域 0・k-sun サムネ PASS・BFuCA35p8uQ 20:33 公開・有料 note 下書き取り込み（公開は 21:59 の `note-retry-check`＝取り込みから 90 分の決まり）・END route=weekly exit=0 1857s**。両方 production＝claude-opus-5 一発（再試行なし）。
+- **直し（1 変数・戻せる・同夜に実走）**: ①`daily-brief.ps1`／`midday-longform.ps1` に `Test-OtherWrapperAlive`＝**ロックの持ち主プロセス（powershell.exe のコマンドライン）が居なければ年齢に関わらず乗り越える**（「lock is orphaned - taking over」）。生きた工程表で単体検証（brief／midday alive=True・架空=False）。実路の検証＝次に電源断で殺された回。②両ラッパー終端の resleep: **もう片方が走っていれば眠らせない**（今夜 20:32 の midday 終端が `build.lock is live - leaving the suspend to it` で実証＝ロック版。以後はプロセス版）。③`growth-daily-notion.ps1`: チェーン全体で ES_SYSTEM_REQUIRED を持つ＋`CHAIN-END` 行。**昨夜 10/31 21:40 の OS アイドルスリープ（Sleep Reason: System Idle）が note コメント確認を凍らせ、タスクは 10 分制限で切られていた（LastTaskResult 267014）**→ 制限を **PT30M** に（Set-ScheduledTask）。検証＝今夜 21:30。
+- **Notion v1.4（オーナー「あなたの番 21 件・決め事 16 件は無限に溜まる・全部見るのは容量もトークンも無駄・俺が作ったカードだけ追う・気になる物は俺がカードを作る（いつの・昼か夜か・どの生産物か）・決め事も似た感じで整理」）**: 状態に **記録** を追加し Claude のカードの既定に。`--restate-claude 記録` で Claude 発信の 返信済み **13 枚を 記録 に**（オーナー発信 8 枚は触らず）。`--digest` は ①Claude の番 ②オーナーが書いたカード ③長尺コメント ④決め事カード 1 枚のリンク ⑤記録の件数と題（**約 200 行 → 35 行・本文を読まない**）。決め事は「【決めたい】16 件」カードに集約（`--decision-add`・`ask-human.mjs` が登録時に自動で 1 行追記・7 日で既定）。Q-029／030／032／033 を既定つきで追記（返事がなければ **11/8** に既定）。正本 NOTION-COMMAND-LOOP §7.7・memory 更新。検証＝21:35 の成長カードが 記録 で置かれるか。
+- **夜の締め**: `scripts/night-closer.ps1`（新設・単発・ASCII）＝週報 END・成長チェーン CHAIN-END・各タスク非 Running・claude.exe 無し・今日の note 公開済み（22:10 まで）を待って **1 回だけ SetSuspendState**（締切 22:45）。week review は locked の時しか眠らず、NotionDuty 21:35 は他が走っていなければ眠らせるので、単発の締め係を置いた。
+- **Duet（オーナー質問）**: Claude Duet はウェイトリスト制の研究プレビュー。iOS／Android の単体アプリと claude.ai で、デスクトップアプリの記載なし。米国の Pro／Max／Ultra から。事前登録 https://claude.com/product/claude-duet
+- 冒頭定例: note 未公開 13 件（products）・X 在庫 85（X 停止中）・ask-human 8 件（決め事カードへ集約）。content-factory 617d94f（コード）＋後続 commit（台帳・night-closer）。
+- **次の冒頭で突合**: ①11/1 21:30 成長チェーン（`growth-daily-20261101.log` に CHAIN-END・LastTaskResult 0・21:35 成長カードの状態＝記録）②21:45 週報（月曜夜パネル）③21:59 週まとめ note の公開（`note-import-log.json` 2026-11-01 published=true）④`night-closer-20261101.log`（何時に眠ったか）⑤11/2 06:00 実演＋12:00 月曜 lesson（新しいロック判定が走る初回）⑥次の回顧の問いで `--decision-add` が走るか。
+
+---
+
 ## 2026-10-31 夜（土・20:47〜）— Catchup 在庫 kiso の「verified=False → opus 再試行」はラッパーの判定漏れ（修正）
 
 - 20:22 の Catchup（claude-opus-5）は深掘り **`2026-10-31-kiso-github-copilot-fusion`** を作り切って exit 0（-W-I5Vdupm0 **11/2 12:00** 予約・final.mp4 20:44）。なのにラッパーは `verified=False` で opus に再試行させた。
