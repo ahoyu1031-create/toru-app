@@ -15,7 +15,7 @@
 - **夜の締め**: `scripts/night-closer.ps1`（新設・単発・ASCII）＝週報 END・成長チェーン CHAIN-END・各タスク非 Running・claude.exe 無し・今日の note 公開済み（22:10 まで）を待って **1 回だけ SetSuspendState**（締切 22:45）。week review は locked の時しか眠らず、NotionDuty 21:35 は他が走っていなければ眠らせるので、単発の締め係を置いた。
 - **Duet（オーナー質問）**: Claude Duet はウェイトリスト制の研究プレビュー。iOS／Android の単体アプリと claude.ai で、デスクトップアプリの記載なし。米国の Pro／Max／Ultra から。事前登録 https://claude.com/product/claude-duet
 - 冒頭定例: note 未公開 13 件（products）・X 在庫 85（X 停止中）・ask-human 8 件（決め事カードへ集約）。content-factory 617d94f（コード）＋後続 commit（台帳・night-closer）。
-- **次の冒頭で突合**: ①11/1 21:30 成長チェーン（`growth-daily-20261101.log` に CHAIN-END・LastTaskResult 0・21:35 成長カードの状態＝記録）②21:45 週報（月曜夜パネル）③21:59 週まとめ note の公開（`note-import-log.json` 2026-11-01 published=true）④`night-closer-20261101.log`（何時に眠ったか）⑤11/2 06:00 実演＋12:00 月曜 lesson（新しいロック判定が走る初回）⑥次の回顧の問いで `--decision-add` が走るか。
+- **次の冒頭で突合**: ①11/1 21:30 成長チェーン（`growth-daily-20261101.log` に CHAIN-END・LastTaskResult 0・21:35 成長カードの状態＝記録）②21:45 週報（月曜夜パネル）③済＝週まとめの有料 note は **22:01 公開** https://note.com/aoki_ai/n/n8fe55e65e456 （21:59 の係は取り込みから 89 分で 1 分足りず skip → 22:00 に同じ係を手で再実行・followup が概要欄に note URL を反映）。21:30 の成長チェーンも **21:42 に CHAIN-END・切られず**・21:35 の成長カードは 状態＝記録 で着地（新既定の初の無人検証 OK）④`night-closer-20261101.log`（何時に眠ったか）⑤11/2 06:00 実演＋12:00 月曜 lesson（新しいロック判定が走る初回）⑥次の回顧の問いで `--decision-add` が走るか。
 
 ---
 
