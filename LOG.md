@@ -17,6 +17,13 @@
   - 気づき: `notion.mjs --reply` は Claude 発信のカードの ⭐ を外す（毎時の `--stars` が付け直す・今夜は手で付け直した）。未修正。
   - commit `57650a4`（content-factory）。
 - **追記 21:14（オーナーが Google Cloud で Reporting API を有効化）**: `--ensure-jobs` でジョブ 6 本を作成（reach_basic_a1・reach_combined_a1・end_screens_a1・cards_a1・traffic_source_a3・basic_a3・作成 2026-11-21T12:14Z）。`--pull` 実走＝CSV 0 本（YouTube 側の初回生成待ち）。`daily-brief.ps1` の yt-metrics の直後に `--pull` を 2 行追加（追加分は ASCII のみ・同じ呼び方で単体実走 OK・commit `4407b3f`）。**ラッパーの中での初走は 11/22 18:00＝検証日。CSV が実際に届いたかは 11/23 夜までに `--status` で確認**。
+- **追記 21:40〜（オーナー「全部やっちゃっていい・売る側、マネタイズめっちゃ優先・動画は道でしかない・集客と商品で割合を決めて」）**:
+  - 売上: オーナー申告で note 0・Brain 0 → `sales.mjs --add` で記録。Gumroad も 0＝3 つとも 0。登録者 111・523 本・累計 175,472 再生（YouTube API）。
+  - 軽い調査（サブエージェント 1・検索 10 回）: Brain は「◯◯の教科書」型 980〜2,980 円／少フォロワーの初売上 2 例はどちらも名簿（LINE・メルマガ）への告知が起点／ショートで押せるのは関連動画リンクだけ。数字は売り手の自己申告。
+  - **正本を新設 `content-factory/improvements/MONETIZE-PLAN.md`**: 割合（集客 50／売る 25／運営 15／回顧 10）・売る道（ショート→関連動画→長尺→無料の 1 枚と LINE 登録→980 円→教科書）・売る係の仕事・順番待ち R-01〜R-08。
+  - **09:30 の TORU-Shop を「売る係」に**: `config/revenue-line.json`（enabled）＋`scripts/shop/shop-daily.ps1` に分岐（追加分 ASCII・構文 0）。Gumroad の新商品づくりは停止。戻し方＝enabled:false。**同夜にラッパーごと 1 回実走中（結果は下に追記）**。
+  - **月曜の授業の長尺を停止**: `config/longform-week.json` Monday.paused＋`midday-longform.ps1` に paused の分岐。`-DryRun -SimDow Monday -SimDaysSince 1` で「paused=true -> no build today」、Tuesday は route=battle を確認。**実際の SKIP の出口（再スリープ込み）は 11/23（月）12:00 が検証日**。11/16 に GO の出た絵巻の見た目（11/23 開始予定）は走らないまま＝戻す時に初回になる。
+  - TORU/CLAUDE.md の冒頭提示の表に「お金」を先頭行で追加。memory `monetize-first`。
 - **未決**: 概要欄リンクのクリック記録（/go/）・授業の制作費・質問 12 件のまとめ直し・`--pull` の日次タスク化（API が開いてから）。週報と回顧から【対話】カードを自動で起こす配線はまだ（同時に 1 枚の上限つきで入れる案）。
 
 ## 2026-11-09 夜（月・21:34〜）— 6 日ぶりの対話: 11/4〜11/9 の全ライン突合・「囲いなし」の検証完了（B 型のみ）・Notion の止まり所の棚卸し・週報 11/8 パネル・未コミット 101 ファイルを保存
