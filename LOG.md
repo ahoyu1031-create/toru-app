@@ -35,6 +35,14 @@
   - Notion: 対話カードに今夜のまとめと明日の動き・「商品の日誌 11/21（土）」1 枚目（https://app.notion.com/p/11-21-41fe0bf3aded81f8bd86d4b2550616d8）。
   - **検証日**: 11/22 09:30 売る係（日誌カードを自分で作るか・Gumroad を飛ばすか）／21:45 週報（お金の節・対話カードの重複を作らないか）／11/23 12:00 月曜 paused の SKIP。
 - **追記 00:20（オーナーが .env を保存）**: LINE_CHANNEL_SECRET（32 字）・LINE_CHANNEL_ACCESS_TOKEN（172 字）を確認。`scripts/line.mjs` 新設・実走: 疎通 OK「まいにちAI　公式ライン（@524pshwc）」・通数 0/200・友だち 2 人（11/21）・Webhook 未設定（404）・API のリッチメニュー 0。オーナー本人に `--test-push` 1 通（通数 1/200）・`--record` で `output/_logs/line-followers.jsonl` 初行。shop-daily.ps1 の朝に `--record` を追加（構文 0・ASCII）。commit `42a7f1a`。
+- **追記 00:22〜（オーナー「5h 枠を MAX まで・98% かスリープ」）**: 見張り（scratchpad の quota-watch.mjs: 5h≥98%／7d≥95%／04:50 で suspend）を起動し、サブエージェントで売る側を並行（計 11 本）。成果は commit `8193a7f`（content-factory）:
+  - 無料冊子 `products/free-getsuji/getsumatsu-5sagyo.pdf`（独立レビュー→8 項目直し・35p・指示文 5 本は prompt.txt と一致・.txt 同梱）。
+  - 有料の指示文集の下書き `products/paid-keiri/`（14 本・98p・見本 64 枠・note 版・価格は未定・REVIEW.md）。
+  - LINE 受け口 `line-webhook/`＋`config/line-keywords.json`（手元の試験 11 件通過・未デプロイ・この PC は Vercel／Cloudflare 未ログイン）。
+  - 特典キット 5 本 `products/gifts/`・配れる回のカタログ `products/catalog/`（147 本中 77 本）・導線 `products/funnel/R04-R05.md`（関連動画リンクは Studio のみ）・題材の 2 週間案 `TOPIC-PLAN-1123.md`・note 診断 `products/note/R07.md`。
+  - MONETIZE-PLAN §4 を R-01〜R-13 で更新（売る係が明朝やり直さないよう）。無人ラインの未保存分も `743c118` で保存。
+  - Notion の対話カードに「決めてほしいこと 8 つ」（置き場・PDF の置き場・管理画面の応答オフ・価格と売り場・有給の作業・note の無料化・題材案・閲覧数）。
+  - 枠: 終了時点で 5h はまだ余裕（98% に届く作業量は無かった＝「使い切るためのタスク作り」は避けた）。
 - **未決**: 概要欄リンクのクリック記録（/go/）・授業の制作費・質問 12 件のまとめ直し・`--pull` の日次タスク化（API が開いてから）。週報と回顧から【対話】カードを自動で起こす配線はまだ（同時に 1 枚の上限つきで入れる案）。
 
 ## 2026-11-09 夜（月・21:34〜）— 6 日ぶりの対話: 11/4〜11/9 の全ライン突合・「囲いなし」の検証完了（B 型のみ）・Notion の止まり所の棚卸し・週報 11/8 パネル・未コミット 101 ファイルを保存
