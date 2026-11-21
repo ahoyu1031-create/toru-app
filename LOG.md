@@ -10,7 +10,13 @@
 - **入れた物**（content-factory `scripts/notion.mjs`）: 題が【対話】で始まる Claude のカードに ⭐（`isTalk`・終了／却下／実装済／記録で外れる・10 日で休眠）、`--digest` に「Claude から話したいこと」の節、列「状態」に `対話中` を追加。戻し方＝`isTalk` を false に。
 - **実走**: `--db-add-state 対話中` → `--add "【対話】年末の収益化：お金の計器がまだ無い"`（https://app.notion.com/p/41fe0bf3aded8139a07af132ce71ab27）→ `--stars` で ⭐ 付与・`--digest --no-mark` に表示を確認。
 - **未検証**: オーナーがこのカードに返事を書いた時に毎時の係が拾う経路（既存の `--replies`＝編集されたカード全部を読む、に乗る想定・このカードではまだ通していない）。
-- **未決**: カードの A／B／C の返事待ち。週報と回顧から【対話】カードを自動で起こす配線はまだ（同時に 1 枚の上限つきで入れる案）。
+- **追記（同夜・オーナー「やりたいことやっちゃっていいよ」＝A で GO）**:
+  - `scripts/sales.mjs` 新設（`--add note|brain|booth` の手入力＋`--report`＝Gumroad を API で）。実走: **Gumroad 公開 10 点・売上 累計 0 件**／note 投入 188 本・有料 69 本・note と Brain の売上は未入力。先に「売上台帳は無い」と言ったが、Gumroad だけは `shop/gumroad-daily-check.mjs` が毎朝見ていた（訂正）。
+  - `scripts/yt-reporting.mjs` 新設（`--types`／`--ensure-jobs`／`--pull`／`--status`）。**実走は 403＝Google Cloud の project 472787267670 で YouTube Reporting API が無効**。オーナーが有効にするまでジョブは作れていない＝①は未完了。
+  - `scripts/weekly-review.ps1` に `$moneyClause`（週報の先頭に「お金」の節・収益に効く提案を 1 つ・開いている【対話】カードが無ければ 1 枚作る）。構文エラー 0・非 ASCII 0 を確認。**実走はまだ＝11/22 21:45 の週報が検証日**。戻し方＝`$moneyClause = ''`。
+  - 気づき: `notion.mjs --reply` は Claude 発信のカードの ⭐ を外す（毎時の `--stars` が付け直す・今夜は手で付け直した）。未修正。
+  - commit `57650a4`（content-factory）。
+- **未決**: 概要欄リンクのクリック記録（/go/）・授業の制作費・質問 12 件のまとめ直し・`--pull` の日次タスク化（API が開いてから）。週報と回顧から【対話】カードを自動で起こす配線はまだ（同時に 1 枚の上限つきで入れる案）。
 
 ## 2026-11-09 夜（月・21:34〜）— 6 日ぶりの対話: 11/4〜11/9 の全ライン突合・「囲いなし」の検証完了（B 型のみ）・Notion の止まり所の棚卸し・週報 11/8 パネル・未コミット 101 ファイルを保存
 
