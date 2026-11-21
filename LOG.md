@@ -24,6 +24,10 @@
   - **09:30 の TORU-Shop を「売る係」に**: `config/revenue-line.json`（enabled）＋`scripts/shop/shop-daily.ps1` に分岐（追加分 ASCII・構文 0）。Gumroad の新商品づくりは停止。戻し方＝enabled:false。**同夜にラッパーごと 1 回実走中（結果は下に追記）**。
   - **月曜の授業の長尺を停止**: `config/longform-week.json` Monday.paused＋`midday-longform.ps1` に paused の分岐。`-DryRun -SimDow Monday -SimDaysSince 1` で「paused=true -> no build today」、Tuesday は route=battle を確認。**実際の SKIP の出口（再スリープ込み）は 11/23（月）12:00 が検証日**。11/16 に GO の出た絵巻の見た目（11/23 開始予定）は走らないまま＝戻す時に初回になる。
   - TORU/CLAUDE.md の冒頭提示の表に「お金」を先頭行で追加。memory `monetize-first`。
+- **追記 22:10 頃（オーナー「長尺 6 本を 4 本とかに・計算資源は商品化に」「公式 LINE を API でつないで全部 Claude Code で」）**:
+  - 長尺を週 4 本に: `longform-week.json` の Thursday（相談室）・Saturday（伝言）にも `paused`。7 曜日の dry-run（`-SimDaysSince 1`）= 月 paused／火 battle／水 talk／木 paused／金 demolong／土 paused／日 weekly。実際の SKIP の出口は 11/23（月）12:00 が初回＝検証日。
+  - LINE: 公式ページを確認（web-fetch 1 回）= 無料 200 通／ライト 5,000 円 5,000 通／スタンダード 15,000 円 30,000 通・応答メッセージとあいさつは通数外・リッチメニューと一斉配信は API 可・`line/line-bot-mcp-server`（preview）。follow イベントの webhook・友だち数の取得・受け口の公開要件は今回のページでは未確認＝R-03 で確かめる。
+  - MONETIZE-PLAN §1 を 集客 45／売る 30／運営 15／回顧 10 に更新・LINE の節と R-03 を書き換え。
 - **未決**: 概要欄リンクのクリック記録（/go/）・授業の制作費・質問 12 件のまとめ直し・`--pull` の日次タスク化（API が開いてから）。週報と回顧から【対話】カードを自動で起こす配線はまだ（同時に 1 枚の上限つきで入れる案）。
 
 ## 2026-11-09 夜（月・21:34〜）— 6 日ぶりの対話: 11/4〜11/9 の全ライン突合・「囲いなし」の検証完了（B 型のみ）・Notion の止まり所の棚卸し・週報 11/8 パネル・未コミット 101 ファイルを保存
