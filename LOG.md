@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-11-21 夜（土・20:47〜）— オーナー「日々のタスクばかりで改善提案が来ない・Notion に逆の対話中がほしい」→ 【対話】カードの仕組みと 1 枚目
+
+- **事実の突合**: AUTONOMOUS-AGENT-PLAN（10/26）の W1〜W4 の計器が未着手。`scripts/yt-reporting.mjs`・`output/_logs/yt-reach.jsonl`・`/go/` リダイレクト・`scripts/sales-pull.mjs`・`output/_logs/sales.jsonl`・`scripts/notion-inbox.mjs` は全部 MISSING（`config/agent-switch.json` だけ有り）。週報 11/15 に売上・漏斗の行なし。DAILY-IMPROVE は累計 264 行＝見た目の直しは毎日入っている。ASK-HUMAN は Q-035〜Q-048 の 12 件が open。
+- **入れた物**（content-factory `scripts/notion.mjs`）: 題が【対話】で始まる Claude のカードに ⭐（`isTalk`・終了／却下／実装済／記録で外れる・10 日で休眠）、`--digest` に「Claude から話したいこと」の節、列「状態」に `対話中` を追加。戻し方＝`isTalk` を false に。
+- **実走**: `--db-add-state 対話中` → `--add "【対話】年末の収益化：お金の計器がまだ無い"`（https://app.notion.com/p/41fe0bf3aded8139a07af132ce71ab27）→ `--stars` で ⭐ 付与・`--digest --no-mark` に表示を確認。
+- **未検証**: オーナーがこのカードに返事を書いた時に毎時の係が拾う経路（既存の `--replies`＝編集されたカード全部を読む、に乗る想定・このカードではまだ通していない）。
+- **未決**: カードの A／B／C の返事待ち。週報と回顧から【対話】カードを自動で起こす配線はまだ（同時に 1 枚の上限つきで入れる案）。
+
 ## 2026-11-09 夜（月・21:34〜）— 6 日ぶりの対話: 11/4〜11/9 の全ライン突合・「囲いなし」の検証完了（B 型のみ）・Notion の止まり所の棚卸し・週報 11/8 パネル・未コミット 101 ファイルを保存
 
 **オーナー「今週のタスクどうなってる？全然やれてなかったから、ぜんぶ教えて。Notion の会話が止まっている所をまとめて」**（11/3 夜以来の対話。11/4〜11/9 は Notion カードだけ）
