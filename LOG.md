@@ -16,6 +16,7 @@
   - `scripts/weekly-review.ps1` に `$moneyClause`（週報の先頭に「お金」の節・収益に効く提案を 1 つ・開いている【対話】カードが無ければ 1 枚作る）。構文エラー 0・非 ASCII 0 を確認。**実走はまだ＝11/22 21:45 の週報が検証日**。戻し方＝`$moneyClause = ''`。
   - 気づき: `notion.mjs --reply` は Claude 発信のカードの ⭐ を外す（毎時の `--stars` が付け直す・今夜は手で付け直した）。未修正。
   - commit `57650a4`（content-factory）。
+- **追記 21:14（オーナーが Google Cloud で Reporting API を有効化）**: `--ensure-jobs` でジョブ 6 本を作成（reach_basic_a1・reach_combined_a1・end_screens_a1・cards_a1・traffic_source_a3・basic_a3・作成 2026-11-21T12:14Z）。`--pull` 実走＝CSV 0 本（YouTube 側の初回生成待ち）。`daily-brief.ps1` の yt-metrics の直後に `--pull` を 2 行追加（追加分は ASCII のみ・同じ呼び方で単体実走 OK・commit `4407b3f`）。**ラッパーの中での初走は 11/22 18:00＝検証日。CSV が実際に届いたかは 11/23 夜までに `--status` で確認**。
 - **未決**: 概要欄リンクのクリック記録（/go/）・授業の制作費・質問 12 件のまとめ直し・`--pull` の日次タスク化（API が開いてから）。週報と回顧から【対話】カードを自動で起こす配線はまだ（同時に 1 枚の上限つきで入れる案）。
 
 ## 2026-11-09 夜（月・21:34〜）— 6 日ぶりの対話: 11/4〜11/9 の全ライン突合・「囲いなし」の検証完了（B 型のみ）・Notion の止まり所の棚卸し・週報 11/8 パネル・未コミット 101 ファイルを保存
