@@ -8,7 +8,7 @@
 
 - オーナーが Cloudflare の API トークン（雛形「Cloudflare Workers 編集」・期限 2027-11-23）とアカウント ID を `.env` 71・72 行に保存（verify=active）。グローバル API キーは使わない。
 - workers.dev のサブドメインが無かった（404）→ API で `mainichi-ai` を作成。`node scripts/line-deploy.mjs --dry`＝試験 19 件通過 → 本番: Worker `mainichi-line` 配備・LINE の鍵 2 本を secret に・LINE に Webhook URL 登録。初回の LINE 疎通は TLS 失敗（新サブドメインの証明書待ち）→ 約 1 分後に `/api/webhook` 200・LINE の webhook/test success=true 200。配る物 6 つ（冊子 PDF・特典 zip 5）も `/d/k7m2xq/…` で 200。
-- **残り（オーナーの画面・API に無い）**: Webhook の利用 オン・応答メッセージ オフ・あいさつメッセージ オフ → スマホで「月末」を送って冊子の URL が返るか。ここまでで売る道の LINE 部分が初めて通る。
+- オーナーが画面の 3 タップ（Webhook の利用 オン・応答 オフ・あいさつ オフ）→ スマホで「月末」→ **冊子の URL が返った（オーナー確認「完璧に返ってきた」）**＝売る道の LINE 部分が初めて通った。Notion の対話カードに記録。
 
 ## 2026-11-21 夜（土・20:47〜）— オーナー「日々のタスクばかりで改善提案が来ない・Notion に逆の対話中がほしい」→ 【対話】カードの仕組みと 1 枚目
 
