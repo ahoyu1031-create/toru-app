@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-11-23 夜（月・22:06〜）— 公式 LINE の受け口を Cloudflare Workers に出した
+
+- オーナーが Cloudflare の API トークン（雛形「Cloudflare Workers 編集」・期限 2027-11-23）とアカウント ID を `.env` 71・72 行に保存（verify=active）。グローバル API キーは使わない。
+- workers.dev のサブドメインが無かった（404）→ API で `mainichi-ai` を作成。`node scripts/line-deploy.mjs --dry`＝試験 19 件通過 → 本番: Worker `mainichi-line` 配備・LINE の鍵 2 本を secret に・LINE に Webhook URL 登録。初回の LINE 疎通は TLS 失敗（新サブドメインの証明書待ち）→ 約 1 分後に `/api/webhook` 200・LINE の webhook/test success=true 200。配る物 6 つ（冊子 PDF・特典 zip 5）も `/d/k7m2xq/…` で 200。
+- **残り（オーナーの画面・API に無い）**: Webhook の利用 オン・応答メッセージ オフ・あいさつメッセージ オフ → スマホで「月末」を送って冊子の URL が返るか。ここまでで売る道の LINE 部分が初めて通る。
+
 ## 2026-11-21 夜（土・20:47〜）— オーナー「日々のタスクばかりで改善提案が来ない・Notion に逆の対話中がほしい」→ 【対話】カードの仕組みと 1 枚目
 
 - **事実の突合**: AUTONOMOUS-AGENT-PLAN（10/26）の W1〜W4 の計器が未着手。`scripts/yt-reporting.mjs`・`output/_logs/yt-reach.jsonl`・`/go/` リダイレクト・`scripts/sales-pull.mjs`・`output/_logs/sales.jsonl`・`scripts/notion-inbox.mjs` は全部 MISSING（`config/agent-switch.json` だけ有り）。週報 11/15 に売上・漏斗の行なし。DAILY-IMPROVE は累計 264 行＝見た目の直しは毎日入っている。ASK-HUMAN は Q-035〜Q-048 の 12 件が open。
